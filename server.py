@@ -173,7 +173,7 @@ class HttpRequestHandler(http.server.SimpleHTTPRequestHandler):
                     ser.write(b'\x81\x09\x04\x43\xFF')
                     ser.flush()
                     while (ser.in_waiting == 0):
-                       i=0
+                       pass
                     # print(ser.in_waiting)
                     x = ser.read(ser.in_waiting)
                     CAM_RGain = "{0:0{1}x}".format(16*x[4]+x[5], 2)
@@ -181,56 +181,56 @@ class HttpRequestHandler(http.server.SimpleHTTPRequestHandler):
                     ser.write(b'\x81\x09\x04\x44\xFF')
                     ser.flush()
                     while (ser.in_waiting == 0):
-                       i=0
+                       pass
                     x = ser.read(ser.in_waiting)
                     CAM_BGain = "{0:0{1}x}".format(16*x[4]+x[5], 2)
 
                     ser.write(b'\x81\x09\x04\x13\xFF')
                     ser.flush()
                     while (ser.in_waiting == 0):
-                       i=0
+                       pass
                     x = ser.read(ser.in_waiting)
                     CAM_Chroma = "{0:0{1}x}".format(16*x[4]+x[5], 2)
 
                     ser.write(b'\x81\x09\x04\x4D\xFF')
                     ser.flush()
                     while (ser.in_waiting == 0):
-                       i=0
+                       pass
                     x = ser.read(ser.in_waiting)
                     CAM_Bright  = "{0:0{1}x}".format(16*x[4]+x[5], 2)
 
                     ser.write(b'\x81\x09\x04\x42\xFF')
                     ser.flush()
                     while (ser.in_waiting == 0):
-                       i=0
+                       pass
                     x = ser.read(ser.in_waiting)
                     CAM_Aperture    = "{0:0{1}x}".format(16*x[4]+x[5], 2)
 
                     ser.write(b'\x81\x09\x04\x4A\xFF')
                     ser.flush()
                     while (ser.in_waiting == 0):
-                       i=0
+                       pass
                     x = ser.read(ser.in_waiting)
                     CAM_Shutter     = "{0:0{1}x}".format(16*x[4]+x[5], 2)
 
                     ser.write(b'\x81\x09\x04\x4B\xFF')
                     ser.flush()
                     while (ser.in_waiting == 0):
-                       i=0
+                       pass
                     x = ser.read(ser.in_waiting)
                     CAM_Iris    = "{0:0{1}x}".format(16*x[4]+x[5], 2)
 
                     ser.write(b'\x81\x09\x04\x4C\xFF')
                     ser.flush()
                     while (ser.in_waiting == 0):
-                       i=0
+                       pass
                     x = ser.read(ser.in_waiting)
                     CAM_Gain    = "{0:0{1}x}".format(16*x[4]+x[5], 2)
 
                     ser.write(b'\x81\x09\x04\x27\xFF')
                     ser.flush()
                     while (ser.in_waiting == 0):
-                       i=0
+                       pass
                     x = ser.read(ser.in_waiting)
                     CAM_AF_Mode_Active   = "{0:0{1}x}".format(16*x[2]+x[3], 2)
                     CAM_AF_Mode_Interval = "{0:0{1}x}".format(16*x[4]+x[5], 2)
@@ -238,21 +238,21 @@ class HttpRequestHandler(http.server.SimpleHTTPRequestHandler):
                     ser.write(b'\x81\x09\x04\x47\xFF')
                     ser.flush()
                     while (ser.in_waiting == 0):
-                       i=0
+                       pass
                     x = ser.read(ser.in_waiting)
                     zoompos  = "{0:0{1}x}".format(16*(16*(16*x[2]+x[3])+x[4])+x[5], 4)
 
                     ser.write(b'\x81\x09\x04\x48\xFF')
                     ser.flush()
                     while (ser.in_waiting == 0):
-                       i=0
+                       pass
                     x = ser.read(ser.in_waiting)
                     focuspos  = "{0:0{1}x}".format(16*(16*(16*x[2]+x[3])+x[4])+x[5], 4)
 
                     ser.write(b'\x81\x09\x04\x39\xFF')
                     ser.flush()
                     while (ser.in_waiting == 0):
-                       i=0
+                       pass
                     x = ser.read(ser.in_waiting)
                     if (x[2] == 0x00):
                         CAM_AEMode = '1'
@@ -262,7 +262,7 @@ class HttpRequestHandler(http.server.SimpleHTTPRequestHandler):
                     ser.write(b'\x81\x09\x04\x5C\xFF')
                     ser.flush()
                     while (ser.in_waiting == 0):
-                       i=0
+                       pass
                     x = ser.read(ser.in_waiting)
                     if (x[2] == 0x02):
                         CAM_AGCMode = '1'
@@ -272,7 +272,7 @@ class HttpRequestHandler(http.server.SimpleHTTPRequestHandler):
                     ser.write(b'\x81\x09\x04\x35\xFF')
                     ser.flush()
                     while (ser.in_waiting == 0):
-                       i=0
+                       pass
                     x = ser.read(ser.in_waiting)
                     if (x[2] == 0x00):
                         CAM_WBMode = 'Auto'
@@ -288,39 +288,35 @@ class HttpRequestHandler(http.server.SimpleHTTPRequestHandler):
                     ser.write(b'\x81\x09\x04\x38\xFF')
                     ser.flush()
                     while (ser.in_waiting == 0):
-                       i=0
+                       pass
                     x = ser.read(ser.in_waiting)
                     if (x[2] == 0x02):
                         CAM_AFMode = '1'
                     if (x[2] == 0x03):
                         CAM_AFMode = '0'
 
-                    s = '{'
-                    s += '"CAM_RGain": "'            + CAM_RGain  + '",'
-                    s += '"CAM_BGain": "'            + CAM_BGain  + '",'
-                    s += '"CAM_Chroma": "'           + CAM_Chroma  + '",'
-                    s += '"CAM_Bright": "'           + CAM_Bright  + '",'
-                    s += '"CAM_Aperture": "'         + CAM_Aperture  + '",'
-                    s += '"CAM_Shutter": "'          + CAM_Shutter  + '",'
-                    s += '"CAM_Iris": "'             + CAM_Iris  + '",'
-                    s += '"CAM_Gain": "'             + CAM_Gain  + '",'
-                    s += '"CAM_AF_Mode_Active": "'   + CAM_AF_Mode_Active  + '",'
-                    s += '"CAM_AF_Mode_Interval": "' + CAM_AF_Mode_Interval + '",'
-
-                    s += '"CAM_WBMode": "'  + CAM_WBMode + '",'
-                    s += '"CAM_AEMode": "'  + CAM_AEMode + '",'
-                    s += '"CAM_AGCMode": "' + CAM_AGCMode + '",'
-                    s += '"CAM_AFMode": "'  + CAM_AFMode + '",'
-
-                    s += '"zoompos": "' + zoompos   + '",'
-                    s += '"focuspos": "' + focuspos 
-                    s += '"}'
-                    # print(s)
+                    json_data = {
+                        "CAM_RGain":            CAM_RGain,
+                        "CAM_BGain":            CAM_BGain,
+                        "CAM_Chroma":           CAM_Chroma,
+                        "CAM_Bright":           CAM_Bright,
+                        "CAM_Aperture":         CAM_Aperture,
+                        "CAM_Shutter":          CAM_Shutter,
+                        "CAM_Iris":             CAM_Iris,
+                        "CAM_Gain":             CAM_Gain,
+                        "CAM_AF_Mode_Active":   CAM_AF_Mode_Active,
+                        "CAM_AF_Mode_Interval": CAM_AF_Mode_Interval,
+                        "CAM_WBMode":           CAM_WBMode,
+                        "CAM_AEMode":           CAM_AEMode,
+                        "CAM_AGCMode":          CAM_AGCMode,
+                        "CAM_AFMode":           CAM_AFMode,
+                        "zoompos":              zoompos,
+                        "focuspos":             focuspos,
+                    }
                     self.send_response(200)
                     self.send_header('Content-type', 'text/event-stream')
                     self.end_headers()
-                    # self.wfile.write(bytes('retry: 1000\n', 'utf-8'))
-                    self.wfile.write(bytes('data: ' + s + '\n\n', 'utf-8'))
+                    self.wfile.write(bytes('data: ' + json.dumps(json_data) + '\n\n', 'utf-8'))
 
                 if self.path.startswith('/imx8/status'):
                     fd = open('/sys/class/thermal/thermal_zone0/temp')
@@ -376,41 +372,41 @@ class HttpRequestHandler(http.server.SimpleHTTPRequestHandler):
                     global IP
                     IP = socket.gethostbyname(socket.getfqdn())
 
-                    json_txt = '{' + '"cpu_perc1":' + str(cpu_perc[0])    + ',' \
-                                   + '"cpu_perc2":' + str(cpu_perc[1])    + ',' \
-                                   + '"cpu_perc3":' + str(cpu_perc[2])    + ',' \
-                                   + '"cpu_perc4":' + str(cpu_perc[3])    + ',' \
-                                   + '"cpu_avg1":'  + str(cpu_avg[0]*100) + ',' \
-                                   + '"cpu_avg10":' + str(cpu_avg[1]*100) + ',' \
-                                   + '"cpu_avg15":' + str(cpu_avg[2]*100) + ',' \
-                                   + '"ram_usage":'     + ram_usage       + ',' \
-                                   + '"ram_total":'     + ram_total       + ',' \
-                                   + '"ram_available":' + ram_available   + ',' \
-                                   + '"ram_percent":'   + ram_percent     + ',' \
-                                   + '"ram_used":'      + ram_used        + ',' \
-                                   + '"ram_free":'      + ram_free        + ',' \
-                                   + '"eth_sent":'      + eth_sent        + ',' \
-                                   + '"eth_recv":'      + eth_recv        + ',' \
-                                   + '"eth_pkt_sent":'  + eth_pkt_sent    + ',' \
-                                   + '"eth_pkt_recv":'  + eth_pkt_recv    + ',' \
-                                   + '"temperature":'   + temp            + ',' \
-                                   + '"uptime":'        + upt             + ',' \
-                                   + '"net_in":'        + str(net_in)     + ',' \
-                                   + '"net_out":'       + str(net_out)    + ',' \
-                                   + '"rtsp1_running":' + rtsp1_running   + ',' \
-                                   + '"rtsp2_running":' + rtsp2_running   + ',' \
-                                   + '"rtsp3_running":' + rtsp3_running   + ',' \
-                                   + '"HOST_NAME":'     + '"'+HOST_NAME+'"'  + ',' \
-                                   + '"IP":'            + '"'+IP+'"'         + ',' \
-                                   + '"cpu_freq":'      + cpu_freq        + '}'
-
-                                   # + '"visca_response":'    + visca_response + ',' \
-
-                    print(json_txt)
+                    json_data = {
+                        "cpu_perc1":        str(cpu_perc[0])    ,
+                        "cpu_perc2":        str(cpu_perc[1])    ,
+                        "cpu_perc3":        str(cpu_perc[2])    ,
+                        "cpu_perc4":        str(cpu_perc[3])    ,
+                        "cpu_avg1" :        str(cpu_avg[0]*100) ,
+                        "cpu_avg10":        str(cpu_avg[1]*100) ,
+                        "cpu_avg15":        str(cpu_avg[2]*100) ,
+                        "ram_usage":        ram_usage           ,
+                        "ram_total":        ram_total           ,
+                        "ram_available":    ram_available       ,
+                        "ram_percent":      ram_percent         ,
+                        "ram_used":         ram_used            ,
+                        "ram_free":         ram_free            ,
+                        "eth_sent":         eth_sent            ,
+                        "eth_recv":         eth_recv            ,
+                        "eth_pkt_sent":     eth_pkt_sent        ,
+                        "eth_pkt_recv":     eth_pkt_recv        ,
+                        "temperature":      temp                ,
+                        "uptime":           upt                 ,
+                        "net_in":           str(net_in)         ,
+                        "net_out":          str(net_out)        ,
+                        "rtsp1_running":    rtsp1_running       ,
+                        "rtsp2_running":    rtsp2_running       ,
+                        "rtsp3_running":    rtsp3_running       ,
+                        "HOST_NAME":        HOST_NAME           ,
+                        "IP":               IP                  ,
+                        "cpu_freq":         cpu_freq            ,
+                    }
+                    
+                    print(json_data)
                     self.send_response(200)
                     self.send_header('Content-type', 'text/event-stream')
                     self.end_headers()
-                    self.wfile.write(bytes('data: ' + json_txt + '\n\n', 'utf-8'))
+                    self.wfile.write(bytes('data: ' + json.dumps(json_data) + '\n\n', 'utf-8'))
     ####### end of do_GET #######
     def do_POST(self):
 
