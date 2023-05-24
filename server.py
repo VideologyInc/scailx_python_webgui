@@ -60,7 +60,7 @@ class HttpRequestHandler(http.server.SimpleHTTPRequestHandler):
         if self.path.endswith('favicon.ico'):
             self.path = '/videologyinc_favicon.png'
         ctype = self.guess_type(self.path)
-#        try:
+        # try:
         if self.path.startswith('/imx8') == False:
  
                 if self.path.endswith(".html"):
@@ -82,7 +82,7 @@ class HttpRequestHandler(http.server.SimpleHTTPRequestHandler):
                     self.send_response(200)
                     self.send_header('Content-type',ctype)
                     self.end_headers()
-#                    self.wfile.write(bytes(f, 'utf-8'))
+                    # self.wfile.write(bytes(f, 'utf-8'))
                     self.wfile.write(open(cur_path + self.path[0:],'rb').read())
                     do_reply = True
                 if self.path.endswith(".jpg"):
@@ -98,7 +98,7 @@ class HttpRequestHandler(http.server.SimpleHTTPRequestHandler):
                     self.send_header('Content-type',ctype)
                     self.end_headers()
                     self.wfile.write(bytes(f, 'utf-8'))
-#                    self.wfile.write(open(cur_path + self.path[0:], 'rb').read())
+                    # self.wfile.write(open(cur_path + self.path[0:], 'rb').read())
                     do_reply = True
                 if self.path.endswith(".woff"):
                     f = open(cur_path + self.path[0:], 'rb').read()
@@ -106,14 +106,14 @@ class HttpRequestHandler(http.server.SimpleHTTPRequestHandler):
                     self.send_header('Content-type',ctype)
                     self.end_headers()
                     self.wfile.write(bytes(f, 'utf-8'))
-#                    self.wfile.write(open(cur_path + self.path[0:], 'rb').read())
+                    # self.wfile.write(open(cur_path + self.path[0:], 'rb').read())
                     do_reply = True
                 if self.path.endswith(".woff2"):
                     f = open(cur_path + self.path[0:], 'rb').read()
                     self.send_response(200)
                     self.send_header('Content-type',ctype)
                     self.end_headers()
-#                    self.wfile.write(bytes(f, 'utf-8'))
+                    # self.wfile.write(bytes(f, 'utf-8'))
                     self.wfile.write(open(cur_path + self.path[0:], 'rb').read())
                     do_reply = True
                 if self.path.endswith(".eot"):
@@ -162,8 +162,8 @@ class HttpRequestHandler(http.server.SimpleHTTPRequestHandler):
                     self.wfile.write(bytes(upt, 'utf-8'))
 
                 if self.path.startswith('/imx8/visca_response'):
-#                    with open("capture.py") as f:
-#                        exec(f.read())
+                    # with open("capture.py") as f:
+                        # exec(f.read())
 
                     s = '{' + '"visca_response": "' + visca_resp + '"}'
                     print(s)
@@ -179,7 +179,7 @@ class HttpRequestHandler(http.server.SimpleHTTPRequestHandler):
                     ser.flush()
                     while (ser.in_waiting == 0):
                        i=0
-#                    print(ser.in_waiting)
+                    # print(ser.in_waiting)
                     x = ser.read(ser.in_waiting)
                     CAM_RGain = "{0:0{1}x}".format(16*x[4]+x[5], 2)
 
@@ -320,11 +320,11 @@ class HttpRequestHandler(http.server.SimpleHTTPRequestHandler):
                     s += '"zoompos": "' + zoompos   + '",'
                     s += '"focuspos": "' + focuspos 
                     s += '"}'
-#                    print(s)
+                    # print(s)
                     self.send_response(200)
                     self.send_header('Content-type', 'text/event-stream')
                     self.end_headers()
-#                    self.wfile.write(bytes('retry: 1000\n', 'utf-8'))
+                    # self.wfile.write(bytes('retry: 1000\n', 'utf-8'))
                     self.wfile.write(bytes('data: ' + s + '\n\n', 'utf-8'))
 
                 if self.path.startswith('/imx8/status'):
@@ -340,8 +340,8 @@ class HttpRequestHandler(http.server.SimpleHTTPRequestHandler):
                     ram_used      = str(int(psutil.virtual_memory().used)/1024/1024)
                     ram_free      = str(int(psutil.virtual_memory().free)/1024/1024)
                     cpu_avg   = psutil.getloadavg()
-#                    print ("ETH RX "+ bytes2human( psutil.net_io_counters().bytes_sent ) )
-#                    print ("ETH TX "+ bytes2human( psutil.net_io_counters().bytes_recv ) )
+                    # print ("ETH RX "+ bytes2human( psutil.net_io_counters().bytes_sent ) )
+                    # print ("ETH TX "+ bytes2human( psutil.net_io_counters().bytes_recv ) )
                     eth_sent = str( psutil.net_io_counters().bytes_sent )
                     eth_recv = str( psutil.net_io_counters().bytes_recv )
                     eth_pkt_sent = str( psutil.net_io_counters().packets_sent )
@@ -349,7 +349,7 @@ class HttpRequestHandler(http.server.SimpleHTTPRequestHandler):
 
                     net_in, net_out = net_usage()
 
-#                    print(f"Current net-usage: IN: {net_in} MB/s, OUT: {net_out} MB/s")
+                    # print(f"Current net-usage: IN: {net_in} MB/s, OUT: {net_out} MB/s")
 
                     """
                     print('> ' + visca_resp)
@@ -359,7 +359,7 @@ class HttpRequestHandler(http.server.SimpleHTTPRequestHandler):
                         visca_response = '"' + visca_resp + '"'
                     """
 
-#                    print("RTSP running")
+                    # print("RTSP running")
                     p = subprocess.Popen(['ps', '-ax'], stdout=subprocess.PIPE)
                     out, err = p.communicate()
                     rtsp1 = kill_gst_pid(b'gst-variable-rtsp-server -p 9001', out, False)
@@ -409,7 +409,7 @@ class HttpRequestHandler(http.server.SimpleHTTPRequestHandler):
                                    + '"IP":'            + '"'+IP+'"'         + ',' \
                                    + '"cpu_freq":'      + cpu_freq        + '}'
 
-#                                   + '"visca_response":'    + visca_response + ',' \
+                                   # + '"visca_response":'    + visca_response + ',' \
 
                     print(json_txt)
                     self.send_response(200)
@@ -493,7 +493,7 @@ class HttpRequestHandler(http.server.SimpleHTTPRequestHandler):
                   print('AGCMode Inq:' + str(data[2]))
 
             if (z[2].startswith('8101') and z[2].endswith('FF')):
-#               ser = serial.Serial('/dev/ttymxc1', baudrate=9600, timeout=0)
+               # ser = serial.Serial('/dev/ttymxc1', baudrate=9600, timeout=0)
                s = []
                for x in range(0, len(z[2])-1, 2):
                   s.append(int("0x"+z[2][x]+z[2][x+1],16))
@@ -506,8 +506,8 @@ class HttpRequestHandler(http.server.SimpleHTTPRequestHandler):
                time.sleep(1)
 
                data = ser.readline()
-#               print(len(data))
-#               print(data)
+               # print(len(data))
+               # print(data)
                visca_resp = binascii.hexlify(data).decode('ascii')
                print('VISCA resp. CMD:'+visca_resp)
 
@@ -532,8 +532,8 @@ class HttpRequestHandler(http.server.SimpleHTTPRequestHandler):
                            print(str(x) +' > '+ str(ser.in_waiting))
                else:
                        print('NOT > 0 ->'+ str(ser.in_waiting))
-#                  data.append(x)
-#               print(data)
+                  # data.append(x)
+               # print(data)
                visca_resp = binascii.hexlify(data).decode('ascii')
                print('VISCA resp.:'+visca_resp)
                """
@@ -544,42 +544,42 @@ class HttpRequestHandler(http.server.SimpleHTTPRequestHandler):
             if z[2] == 'CAM_ICR':
                if z[3] == 'NIGHT':
                   ser.write(b'\x81\x01\x04\x01\x02\xFF')
-#                  ser.flush()
+                  # ser.flush()
                if z[3] == 'DAY':
                   ser.write(b'\x81\x01\x04\x01\x03\xFF')
-#                  ser.flush()
+                  # ser.flush()
 
             if z[2] == 'CAM_MENU':
-#               ser = serial.Serial('/dev/ttymxc1', baudrate=9600, timeout=0)
+               # ser = serial.Serial('/dev/ttymxc1', baudrate=9600, timeout=0)
                if z[3] == 'ENTER':
                   ser.write(b'\x81\x01\x04\x16\x10\xFF')
-#                  ser.flush()
+                  # ser.flush()
                if z[3] == 'ESC':
                   ser.write(b'\x81\x01\x04\x16\x20\xFF')
-#                  ser.flush()
+                  # ser.flush()
                if z[3] == 'UP':
                   ser.write(b'\x81\x01\x04\x16\x01\xFF')
-#                  ser.flush()
+                  # ser.flush()
                if z[3] == 'DOWN':
                   ser.write(b'\x81\x01\x04\x16\x02\xFF')
-#                  ser.flush()
+                  # ser.flush()
                if z[3] == 'RIGHT':
                   ser.write(b'\x81\x01\x04\x16\x08\xFF')
-#                  ser.flush()
+                  # ser.flush()
                if z[3] == 'LEFT':
                   ser.write(b'\x81\x01\x04\x16\x04\xFF') 
-#                  ser.flush()
+                  # ser.flush()
 
             if z[2] == 'CAM_MEMORY':
                ser = serial.Serial('/dev/ttymxc1', baudrate=9600, timeout=0)
                ser.write(b'\x81\x01\x04\x3F\x01\x00\xFF')
-#               ser.flush()
+               # ser.flush()
                time.sleep(2)
                ser.write(b'\x81\x01\x04\x3F\x01\x7F\xFF')
-#               ser.flush()
+               # ser.flush()
                time.sleep(2)
                ser.write(b'\x81\x01\x04\x00\x03\xFF')
-#               ser.flush()
+               # ser.flush()
 
 
             if z[2] == 'CAM_videotestsrc':
@@ -608,18 +608,18 @@ class HttpRequestHandler(http.server.SimpleHTTPRequestHandler):
             if z[2] == 'CAM_Zoom':
                if z[3] == 'Stop':
                   ser.write(b'\x81\x01\x04\x07\x00\xFF')
-#                  ser.flush()
+                  # ser.flush()
                if z[3] == 'Tele':
                   ser.write(b'\x81\x01\x04\x07\x02\xFF')
-#                  ser.flush()
+                  # ser.flush()
                if z[3] == 'Wide':
                   ser.write(b'\x81\x01\x04\x07\x03\xFF')
-#                  ser.flush()
+                  # ser.flush()
                if z[3] == '1X':
                   x = bytearray()
                   x = [0x81,0x01,0x04,0x47,0x00,0x00,0x00,0x00,0xFF]
                   print(x)
-#                  ser.write(b'\x81\x01\x04\x47\x00\x00\x00\x00\xFF')
+                  # ser.write(b'\x81\x01\x04\x47\x00\x00\x00\x00\xFF')
                   ser.write(bytearray(x))
                   ser.flush()
                if z[3] == 'DIRECT':
@@ -728,18 +728,18 @@ def net_usage(inf = "eth0"):   #change the inf variable according to the interfa
     
     return net_in, net_out
 
-#    print(psutil.net_if_stats())
-#    print(psutil.net_if_addrs())
-#    print(f"Current net-usage:\nIN: {net_in} MB/s, OUT: {net_out} MB/s")
+    # print(psutil.net_if_stats())
+    # print(psutil.net_if_addrs())
+    # print(f"Current net-usage:\nIN: {net_in} MB/s, OUT: {net_out} MB/s")
 
 
 def kill_gst_pid(tekst, out, kill):
     pid = 0
     for line in out.splitlines():
          if tekst in line:
-#            print(line)
+            # print(line)
             pid = int(line.split(None, 1)[0])
-#            print('Process PID: '+ str(pid))
+            # print('Process PID: '+ str(pid))
             if kill:
                os.kill(pid, signal.SIGKILL) 
     return pid
@@ -780,7 +780,7 @@ httpd.daemon_threads = True
 
 try:
 
-#    ser = serial.Serial('/dev/ttymxc1', baudrate=9600, timeout=0)
+    # ser = serial.Serial('/dev/ttymxc1', baudrate=9600, timeout=0)
 
     visca_resp = ''
 
@@ -791,10 +791,10 @@ try:
     print('IP:'+IP)
     print(f"serving at <{IP}>:{PORT}")
 
-#    print(socket.getaddrinfo(HOST_NAME, PORT))
-#    print(socket.gethostbyname_ex(socket.gethostname())[-1])
-#    print(socket.gethostbyname_ex(HOST_NAME))
-#    print(socket.gethostbyaddr(IP))
+    # print(socket.getaddrinfo(HOST_NAME, PORT))
+    # print(socket.gethostbyname_ex(socket.gethostname())[-1])
+    # print(socket.gethostbyname_ex(HOST_NAME))
+    # print(socket.gethostbyaddr(IP))
 
     httpd.server_bind()
     httpd.server_activate()
