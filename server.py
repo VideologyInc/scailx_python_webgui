@@ -416,7 +416,7 @@ class HttpRequestHandler(http.server.SimpleHTTPRequestHandler):
                     self.send_header('Content-type', 'text/event-stream')
                     self.end_headers()
                     self.wfile.write(bytes('data: ' + json_txt + '\n\n', 'utf-8'))
-
+    ####### end of do_GET #######
     def do_POST(self):
 
         global ser
@@ -441,243 +441,229 @@ class HttpRequestHandler(http.server.SimpleHTTPRequestHandler):
             #***************************************************
 
             if (z[2].startswith('8109') and z[2].endswith('FF')):
-               s = []
-               for x in range(0, len(z[2])-1, 2):
-                  s.append(int("0x"+z[2][x]+z[2][x+1],16))
-                  print(int("0x"+z[2][x]+z[2][x+1],16))
-               print(s)
+                s = []
+                for x in range(0, len(z[2])-1, 2):
+                    s.append(int("0x"+z[2][x]+z[2][x+1],16))
+                    print(int("0x"+z[2][x]+z[2][x+1],16))
+                print(s)
 
-               ser.write(bytearray(s))
-               ser.flush()
-               ser.terminator = '\xFF'
-               time.sleep(1)
+                ser.write(bytearray(s))
+                ser.flush()
+                ser.terminator = '\xFF'
+                time.sleep(1)
 
-               data = ser.readline()
-               print(len(data))
-               print(data)
-               visca_resp = binascii.hexlify(data).decode('ascii')
+                data = ser.readline()
+                print(len(data))
+                print(data)
+                visca_resp = binascii.hexlify(data).decode('ascii')
 
-               print('VISCA resp. INQUIRY:'+visca_resp)
-               if z[2][3]=='\x39':  # AE mode inq
-                  if data[2] == '\x00':
-                     CAM_AEMode='Full Auto'
-                  if data[2] == '\x03':
-                     CAM_AEMode='Manual'
-                  print('AEMode Inq:' + str(data[2]))
+                print('VISCA resp. INQUIRY:'+visca_resp)
+                if z[2][3]=='\x39':  # AE mode inq
+                    if data[2] == '\x00':
+                        CAM_AEMode='Full Auto'
+                    if data[2] == '\x03':
+                        CAM_AEMode='Manual'
+                    print('AEMode Inq:' + str(data[2]))
 
-               if z[2][3]=='\x38':  # FocusMode inq
-                  if data[2] == '\x02':
-                     CAM_AFMode='Auto'
-                  if data[2] == '\x03':
-                     CAM_AFMode='Manual'
-                  print('FocusMode Inq:' + str(data[2]))
+                if z[2][3]=='\x38':  # FocusMode inq
+                    if data[2] == '\x02':
+                        CAM_AFMode='Auto'
+                    if data[2] == '\x03':
+                        CAM_AFMode='Manual'
+                    print('FocusMode Inq:' + str(data[2]))
 
-               if z[2][3]=='\x5C':  # AGC mode inq
-                  if data[2] == '\x02':
-                     CAM_AGCMode='On'
-                  if data[2] == '\x03':
-                     CAM_AGCMode='Off'
-                  print('AGCMode Inq:' + str(data[2]))
+                if z[2][3]=='\x5C':  # AGC mode inq
+                    if data[2] == '\x02':
+                        CAM_AGCMode='On'
+                    if data[2] == '\x03':
+                        CAM_AGCMode='Off'
+                    print('AGCMode Inq:' + str(data[2]))
 
-               if z[2][3]=='\x35':  # WB mode inq
-                  if data[2] == '\x00':
-                     CAM_WBMode='Auto'
-                  if data[2] == '\x01':
-                     CAM_WBMode='Indoor'
-                  if data[2] == '\x02':
-                     CAM_WBMode='Outdoor'
-                  if data[2] == '\x03':
-                     CAM_WBMode='One push AWB'
-                  if data[2] == '\x05':
-                     CAM_WBMode='Manual'
-                  print('AGCMode Inq:' + str(data[2]))
+                if z[2][3]=='\x35':  # WB mode inq
+                    if data[2] == '\x00':
+                        CAM_WBMode='Auto'
+                    if data[2] == '\x01':
+                        CAM_WBMode='Indoor'
+                    if data[2] == '\x02':
+                        CAM_WBMode='Outdoor'
+                    if data[2] == '\x03':
+                        CAM_WBMode='One push AWB'
+                    if data[2] == '\x05':
+                        CAM_WBMode='Manual'
+                    print('AGCMode Inq:' + str(data[2]))
 
             if (z[2].startswith('8101') and z[2].endswith('FF')):
-               # ser = serial.Serial('/dev/ttymxc1', baudrate=9600, timeout=0)
-               s = []
-               for x in range(0, len(z[2])-1, 2):
-                  s.append(int("0x"+z[2][x]+z[2][x+1],16))
-                  print(int("0x"+z[2][x]+z[2][x+1],16))
-               print(s)
+                # ser = serial.Serial('/dev/ttymxc1', baudrate=9600, timeout=0)
+                s = []
+                for x in range(0, len(z[2])-1, 2):
+                    s.append(int("0x"+z[2][x]+z[2][x+1],16))
+                    print(int("0x"+z[2][x]+z[2][x+1],16))
+                print(s)
 
-               ser.write(bytearray(s))
-               ser.flush()
-               ser.terminator = '\xFF'
-               time.sleep(1)
+                ser.write(bytearray(s))
+                ser.flush()
+                ser.terminator = '\xFF'
+                time.sleep(1)
 
-               data = ser.readline()
-               # print(len(data))
-               # print(data)
-               visca_resp = binascii.hexlify(data).decode('ascii')
-               print('VISCA resp. CMD:'+visca_resp)
+                data = ser.readline()
+                # print(len(data))
+                # print(data)
+                visca_resp = binascii.hexlify(data).decode('ascii')
+                print('VISCA resp. CMD:'+visca_resp)
 
 
-               """
-               i=0
-               while (ser.out_waiting > 0):
-                   i = i+1
-               print('i=' + str(i) + ' out_waiting=' + str(ser.out_waiting))
+                """
+                i=0
+                while (ser.out_waiting > 0):
+                    i = i+1
+                print('i=' + str(i) + ' out_waiting=' + str(ser.out_waiting))
 
-               i=0
-               while (i < 300):
-                   print('i=' + str(i) + '  in_waiting=' + str(ser.in_waiting))
-                   i = i+1
+                i=0
+                while (i < 300):
+                    print('i=' + str(i) + '  in_waiting=' + str(ser.in_waiting))
+                    i = i+1
 
-               print('i=' + str(i) + '  in_waiting=' + str(ser.in_waiting))
-               print('in_waiting:' + str(ser.in_waiting))
-               if (ser.in_waiting > 0):
-                       print('in_waiting=' + str(ser.in_waiting))
-                       while (ser.in_waiting > 0):
-                           x = ser.read(1)
-                           print(str(x) +' > '+ str(ser.in_waiting))
-               else:
-                       print('NOT > 0 ->'+ str(ser.in_waiting))
-                  # data.append(x)
-               # print(data)
-               visca_resp = binascii.hexlify(data).decode('ascii')
-               print('VISCA resp.:'+visca_resp)
-               """
+                print('i=' + str(i) + '  in_waiting=' + str(ser.in_waiting))
+                print('in_waiting:' + str(ser.in_waiting))
+                if (ser.in_waiting > 0):
+                        print('in_waiting=' + str(ser.in_waiting))
+                        while (ser.in_waiting > 0):
+                            x = ser.read(1)
+                            print(str(x) +' > '+ str(ser.in_waiting))
+                else:
+                        print('NOT > 0 ->'+ str(ser.in_waiting))
+                    # data.append(x)
+                # print(data)
+                visca_resp = binascii.hexlify(data).decode('ascii')
+                print('VISCA resp.:'+visca_resp)
+                """
             else:
-               visca_resp=''
+                visca_resp=''
 
 
             if z[2] == 'CAM_ICR':
-               if z[3] == 'NIGHT':
-                  ser.write(b'\x81\x01\x04\x01\x02\xFF')
-                  # ser.flush()
-               if z[3] == 'DAY':
-                  ser.write(b'\x81\x01\x04\x01\x03\xFF')
-                  # ser.flush()
+                if z[3] == 'NIGHT':
+                    ser.write(b'\x81\x01\x04\x01\x02\xFF')
+                    # ser.flush()
+                if z[3] == 'DAY':
+                    ser.write(b'\x81\x01\x04\x01\x03\xFF')
+                    # ser.flush()
 
             if z[2] == 'CAM_MENU':
-               # ser = serial.Serial('/dev/ttymxc1', baudrate=9600, timeout=0)
-               if z[3] == 'ENTER':
-                  ser.write(b'\x81\x01\x04\x16\x10\xFF')
-                  # ser.flush()
-               if z[3] == 'ESC':
-                  ser.write(b'\x81\x01\x04\x16\x20\xFF')
-                  # ser.flush()
-               if z[3] == 'UP':
-                  ser.write(b'\x81\x01\x04\x16\x01\xFF')
-                  # ser.flush()
-               if z[3] == 'DOWN':
-                  ser.write(b'\x81\x01\x04\x16\x02\xFF')
-                  # ser.flush()
-               if z[3] == 'RIGHT':
-                  ser.write(b'\x81\x01\x04\x16\x08\xFF')
-                  # ser.flush()
-               if z[3] == 'LEFT':
-                  ser.write(b'\x81\x01\x04\x16\x04\xFF') 
-                  # ser.flush()
+                # ser = serial.Serial('/dev/ttymxc1', baudrate=9600, timeout=0)
+                if z[3] == 'ENTER':
+                    ser.write(b'\x81\x01\x04\x16\x10\xFF')
+                    # ser.flush()
+                if z[3] == 'ESC':
+                    ser.write(b'\x81\x01\x04\x16\x20\xFF')
+                    # ser.flush()
+                if z[3] == 'UP':
+                    ser.write(b'\x81\x01\x04\x16\x01\xFF')
+                    # ser.flush()
+                if z[3] == 'DOWN':
+                    ser.write(b'\x81\x01\x04\x16\x02\xFF')
+                    # ser.flush()
+                if z[3] == 'RIGHT':
+                    ser.write(b'\x81\x01\x04\x16\x08\xFF')
+                    # ser.flush()
+                if z[3] == 'LEFT':
+                    ser.write(b'\x81\x01\x04\x16\x04\xFF') 
+                    # ser.flush()
 
             if z[2] == 'CAM_MEMORY':
-               ser = serial.Serial('/dev/ttymxc1', baudrate=9600, timeout=0)
-               ser.write(b'\x81\x01\x04\x3F\x01\x00\xFF')
-               # ser.flush()
-               time.sleep(2)
-               ser.write(b'\x81\x01\x04\x3F\x01\x7F\xFF')
-               # ser.flush()
-               time.sleep(2)
-               ser.write(b'\x81\x01\x04\x00\x03\xFF')
-               # ser.flush()
+                ser = serial.Serial('/dev/ttymxc1', baudrate=9600, timeout=0)
+                ser.write(b'\x81\x01\x04\x3F\x01\x00\xFF')
+                # ser.flush()
+                time.sleep(2)
+                ser.write(b'\x81\x01\x04\x3F\x01\x7F\xFF')
+                # ser.flush()
+                time.sleep(2)
+                ser.write(b'\x81\x01\x04\x00\x03\xFF')
+                # ser.flush()
 
 
             if z[2] == 'CAM_videotestsrc':
-               if z[3] =='0':
-                   p = subprocess.Popen(os.path.dirname(__file__) + "/videotestsrc_640.sh", shell=True)
-                   p = subprocess.Popen(['ps', '-ax'], stdout=subprocess.PIPE)
-                   out, err = p.communicate()
-                   pid = kill_gst_pid(b'gst-variable-rtsp-server -p 9002', out, False)
-                   print(pid)
-               if z[3] =='1':
-                   p = subprocess.Popen(os.path.dirname(__file__) + "/videotestsrc_1920.sh", shell=True)
-                   p = subprocess.Popen(['ps', '-ax'], stdout=subprocess.PIPE)
-                   out, err = p.communicate()
-                   pid = kill_gst_pid(b'gst-variable-rtsp-server -p 9003', out, False)
-                   print(pid)
+                if z[3] =='0':
+                    p = subprocess.Popen(os.path.dirname(__file__) + "/videotestsrc_640.sh", shell=True)
+                    p = subprocess.Popen(['ps', '-ax'], stdout=subprocess.PIPE)
+                    out, err = p.communicate()
+                    pid = kill_gst_pid(b'gst-variable-rtsp-server -p 9002', out, False)
+                    print(pid)
+                if z[3] =='1':
+                    p = subprocess.Popen(os.path.dirname(__file__) + "/videotestsrc_1920.sh", shell=True)
+                    p = subprocess.Popen(['ps', '-ax'], stdout=subprocess.PIPE)
+                    out, err = p.communicate()
+                    pid = kill_gst_pid(b'gst-variable-rtsp-server -p 9003', out, False)
+                    print(pid)
 
             if z[2] == 'CAM_videotestsrc_kill':
-               p = subprocess.Popen(['ps', '-ax'], stdout=subprocess.PIPE)
-               out, err = p.communicate()
-               if z[3]=='0':
-                   kill_gst_pid(b'gst-variable-rtsp-server -p 9002', out, True)
-               if z[3]=='1':
-                   kill_gst_pid(b'gst-variable-rtsp-server -p 9003', out, True)
+                p = subprocess.Popen(['ps', '-ax'], stdout=subprocess.PIPE)
+                out, err = p.communicate()
+                if z[3]=='0':
+                    kill_gst_pid(b'gst-variable-rtsp-server -p 9002', out, True)
+                if z[3]=='1':
+                    kill_gst_pid(b'gst-variable-rtsp-server -p 9003', out, True)
 
 
             if z[2] == 'CAM_Zoom':
-               if z[3] == 'Stop':
-                  ser.write(b'\x81\x01\x04\x07\x00\xFF')
-                  # ser.flush()
-               if z[3] == 'Tele':
-                  ser.write(b'\x81\x01\x04\x07\x02\xFF')
-                  # ser.flush()
-               if z[3] == 'Wide':
-                  ser.write(b'\x81\x01\x04\x07\x03\xFF')
-                  # ser.flush()
-               if z[3] == '1X':
-                  x = bytearray()
-                  x = [0x81,0x01,0x04,0x47,0x00,0x00,0x00,0x00,0xFF]
-                  print(x)
-                  # ser.write(b'\x81\x01\x04\x47\x00\x00\x00\x00\xFF')
-                  ser.write(bytearray(x))
-                  ser.flush()
-               if z[3] == 'DIRECT':
-                  s = [0x81, 0x01, 0x04, 0x47, int("0x0"+z[4][0],16), int("0x0"+z[4][1],16), int("0x0"+z[4][2],16), int("0x0"+z[4][3],16), 0xFF]
-                  ser.write(bytearray(s))
-                  ser.flush()
-               if z[3][0] == 'X':
-                  if len(z[3]) == 2:
-                       s = [0x81, 0x01, 0x04, 0x47, 0x00, 0x00, 0x00, int("0x0"+z[3][1],16), 0xFF]
-                  if len(z[3]) == 3:
-                       s = [0x81, 0x01, 0x04, 0x47, 0x00, 0x00, int("0x0"+z[3][1],16), int("0x0"+z[3][1],16), 0xFF]
-                  if len(z[3]) == 4:
-                       s = [0x81, 0x01, 0x04, 0x47, 0x00, int("0x0"+z[3][1],16), int("0x0"+z[3][2],16), int("0x0"+z[3][3],16), 0xFF]
-                  if len(z[3]) == 5:
-                       s = [0x81, 0x01, 0x04, 0x47, int("0x0"+z[3][1],16), int("0x0"+z[3][2],16), int("0x0"+z[3][3],16), int("0x0"+z[3][4],16), 0xFF]
-                  print(s)
-                  ser.write(bytearray(s))
-                  ser.flush()
+                if z[3] == 'Stop':
+                    ser.write(b'\x81\x01\x04\x07\x00\xFF')
+                    # ser.flush()
+                if z[3] == 'Tele':
+                    ser.write(b'\x81\x01\x04\x07\x02\xFF')
+                    # ser.flush()
+                if z[3] == 'Wide':
+                    ser.write(b'\x81\x01\x04\x07\x03\xFF')
+                    # ser.flush()
+                if z[3] == '1X':
+                    x = bytearray()
+                    x = [0x81,0x01,0x04,0x47,0x00,0x00,0x00,0x00,0xFF]
+                    print(x)
+                    # ser.write(b'\x81\x01\x04\x47\x00\x00\x00\x00\xFF')
+                    ser.write(bytearray(x))
+                    ser.flush()
+                if z[3] == 'DIRECT':
+                    s = [0x81, 0x01, 0x04, 0x47, int("0x0"+z[4][0],16), int("0x0"+z[4][1],16), int("0x0"+z[4][2],16), int("0x0"+z[4][3],16), 0xFF]
+                    ser.write(bytearray(s))
+                    ser.flush()
+                if z[3][0] == 'X':
+                    if len(z[3]) == 2:
+                        s = [0x81, 0x01, 0x04, 0x47, 0x00, 0x00, 0x00, int("0x0"+z[3][1],16), 0xFF]
+                    if len(z[3]) == 3:
+                        s = [0x81, 0x01, 0x04, 0x47, 0x00, 0x00, int("0x0"+z[3][1],16), int("0x0"+z[3][1],16), 0xFF]
+                    if len(z[3]) == 4:
+                        s = [0x81, 0x01, 0x04, 0x47, 0x00, int("0x0"+z[3][1],16), int("0x0"+z[3][2],16), int("0x0"+z[3][3],16), 0xFF]
+                    if len(z[3]) == 5:
+                        s = [0x81, 0x01, 0x04, 0x47, int("0x0"+z[3][1],16), int("0x0"+z[3][2],16), int("0x0"+z[3][3],16), int("0x0"+z[3][4],16), 0xFF]
+                    print(s)
+                    ser.write(bytearray(s))
+                    ser.flush()
 
             if z[2] == 'CAM_Focus':
-               if z[3] == 'AUTO':
-                  ser.write(b'\x81\x01\x04\x38\x02\xFF')	# auto focus
-                  ser.flush()
-               if z[3] == 'MANUAL':
-                  ser.write(b'\x81\x01\x04\x38\x03\xFF')	# manual focus
-                  ser.flush()
-               if z[3] == 'Far':
-                  ser.write(b'\x81\x01\x04\x08\x27\xFF')
-                  ser.flush()
-               if z[3] == 'Near':
-                  ser.write(b'\x81\x01\x04\x08\x37\xFF')
-                  ser.flush()
-               if z[3] == 'Near_near_limit':
-                  ser.write(b'\x81\x01\x04\x28\x0F\x00\x00\x00\xFF')
-                  ser.flush()
+                if z[3] == 'AUTO':
+                    ser.write(b'\x81\x01\x04\x38\x02\xFF')	# auto focus
+                    ser.flush()
+                if z[3] == 'MANUAL':
+                    ser.write(b'\x81\x01\x04\x38\x03\xFF')	# manual focus
+                    ser.flush()
+                if z[3] == 'Far':
+                    ser.write(b'\x81\x01\x04\x08\x27\xFF')
+                    ser.flush()
+                if z[3] == 'Near':
+                    ser.write(b'\x81\x01\x04\x08\x37\xFF')
+                    ser.flush()
+                if z[3] == 'Near_near_limit':
+                    ser.write(b'\x81\x01\x04\x28\x0F\x00\x00\x00\xFF')
+                    ser.flush()
 
             if z[2] == 'CAM_DispSel':
-                  x = int(z[3][3])*8 + int(z[3][2])*4 + int(z[3][1])*2 + int(z[3][0])
-                  s = [0x81, 0x01, 0x04, 0x14, 0x00, x, 0xFF]
-                  print(s)
-                  ser.write(bytearray(s))
-                  ser.flush()
-                  
-
-    extensions_map = {
-        '': 'application/octet-stream',
-        '.manifest': 'text/cache-manifest',
-        '.html': 'text/html',
-        '.png': 'image/png',
-        '.jpg': 'image/jpg',
-        '.svg':	'image/svg+xml',
-        '.css':	'text/css',
-        '.js':'application/x-javascript',
-        '.wasm': 'application/wasm',
-        '.json': 'application/json',
-        '.xml': 'application/xml',
-    }
-
+                x = int(z[3][3])*8 + int(z[3][2])*4 + int(z[3][1])*2 + int(z[3][0])
+                s = [0x81, 0x01, 0x04, 0x14, 0x00, x, 0xFF]
+                print(s)
+                ser.write(bytearray(s))
+                ser.flush()
+    ####### end of do_POST #######
+########## end of class HttpRequestHandler ##########
 
 
 def uptime():  
@@ -687,12 +673,12 @@ def uptime():
 
 
 def convert_to_hrs_min_sec(sec):
-   sec = sec % (24 * 3600)
-   hour = sec // 3600
-   sec %= 3600
-   min = sec // 60
-   sec %= 60
-   return "%02d:%02d:%02d" % (hour, min, sec) 
+    sec = sec % (24 * 3600)
+    hour = sec // 3600
+    sec %= 3600
+    min = sec // 60
+    sec %= 60
+    return "%02d:%02d:%02d" % (hour, min, sec) 
 
 
 def bytes2human(n, format="%(value).1f%(symbol)s"):
