@@ -53,6 +53,7 @@ class HttpRequestHandler(http.server.SimpleHTTPRequestHandler):
         global visca_resp
 
         with serial.Serial(SERIAL_DEV, baudrate=9600, timeout=0) as ser:
+            ser.terminator = '\xFF'
 
             do_reply = False
             cur_path = os.path.dirname(__file__)
@@ -417,6 +418,8 @@ class HttpRequestHandler(http.server.SimpleHTTPRequestHandler):
         global visca_resp
 
         with serial.Serial(SERIAL_DEV, baudrate=9600, timeout=0) as ser:
+            ser.terminator = '\xFF'
+
             print("POST: " + self.path)
             self.send_response(301)
             self.send_header('content-type', 'text/html')
@@ -434,15 +437,10 @@ class HttpRequestHandler(http.server.SimpleHTTPRequestHandler):
                 #***************************************************
 
                 if (z[2].startswith('8109') and z[2].endswith('FF')):
-                    s = []
-                    for x in range(0, len(z[2])-1, 2):
-                        s.append(int("0x"+z[2][x]+z[2][x+1],16))
-                        print(int("0x"+z[2][x]+z[2][x+1],16))
-                    print(s)
-
-                    ser.write(bytearray(s))
+                    s = bytes.fromhex(z[2])
+                    print(f"sending raw visca command: {s}")
+                    ser.write(s)
                     ser.flush()
-                    ser.terminator = '\xFF'
                     time.sleep(1)
 
                     data = ser.readline()
@@ -494,7 +492,6 @@ class HttpRequestHandler(http.server.SimpleHTTPRequestHandler):
 
                     ser.write(bytearray(s))
                     ser.flush()
-                    ser.terminator = '\xFF'
                     time.sleep(1)
 
                     data = ser.readline()
