@@ -255,7 +255,7 @@ hr.footerline {border-top: 1px rgba(115, 190, 68, 1.0) solid;}
 .slider::-moz-range-thumb {
   width: 25px;
   height: 25px;
-  background: #04AA6D;
+  background: rgba(115, 190, 68, 1.0);
   cursor: pointer;
 }
 </style>
@@ -402,8 +402,8 @@ hr.footerline {border-top: 1px rgba(115, 190, 68, 1.0) solid;}
 			//	x[0]["x"] = graph.data.datasets[0].data.length + 1;
 				x[0]["x"] = 101;
 
-console.log('data  : '+graph.data.datasets[0].data.length)
-console.log('labels: '+graph.data.labels.length)
+//console.log('data  : '+graph.data.datasets[0].data.length)
+//console.log('labels: '+graph.data.labels.length)
 
 	  			if (graph.data.datasets[0].data.length == 100){
 					graph.data.datasets.forEach((dataset) => { dataset.data.shift(x[0]); });
@@ -426,14 +426,16 @@ console.log('labels: '+graph.data.labels.length)
 			//
 			//**************************************************
 
-			function update_graph_tempcpu(cpu, temp, tijd){    
-console.log('GRAPH TEMP/CPU')
+			function update_graph_tempcpu(cpu, temp, max_temp, tijd){    
+//console.log('GRAPH TEMP/CPU')
 				x1 = cpu;
 				x2 = temp;
-console.log(cpu);
-console.log(temp);
+				x3 = max_temp;
+//console.log(cpu);
+//console.log(temp);
 				x1[0]["x"] = 101;
 				x2[0]["x"] = 101;
+				x3[0]["x"] = 101;
 
 
 
@@ -455,10 +457,12 @@ console.log(temp);
 	  			if (graph.data.datasets[0].data.length == 100){
 					graph.data.datasets[0].data.shift(x1[0]);
 					graph.data.datasets[1].data.shift(x2[0]);
+					graph.data.datasets[2].data.shift(x3[0]);
 			//		y = graph.data.labels.shift(1);
 				} else {
 					graph.data.datasets[0].data.push(x1[0]);
 					graph.data.datasets[1].data.push(x2[0]);
+					graph.data.datasets[2].data.push(x3[0]);
 					graph.data.labels.push(graph.data.datasets[0].data.length);
 
 	 		//		graph.data.labels.push(tijd);
@@ -471,7 +475,7 @@ console.log(temp);
 //console.log(graph.data.datasets[1].data[0]["x"])
 	
 				graph.update();
-console.log(graph);
+//console.log(graph);
 			};
 
 			//**************************************************
@@ -481,11 +485,11 @@ console.log(graph);
 			//**************************************************
 
 			function update_graph_tcpip(dat1, dat2, tijd){    
-console.log('GRAPH TCP/IP');
+//console.log('GRAPH TCP/IP');
 				x1 = dat1;
 				x2 = dat2;
-console.log(x1);
-console.log(x2);
+//console.log(x1);
+//console.log(x2);
 				x1[0]["x"] = 101;
 				x2[0]["x"] = 101;
 
@@ -522,7 +526,7 @@ console.log(x2);
 //console.log(graph_tcpip.data.datasets[1].data[0]["x"])
 	
 				graph_tcpip.update();
-console.log(graph_tcpip);
+//console.log(graph_tcpip);
 			};
 	</script>
 
@@ -592,6 +596,7 @@ document.getElementById("af_mode_interval_value").innerHTML = parseInt(obj.CAM_A
 				document.getElementById("IP1").innerHTML = obj.IP;
 				document.getElementById("IP2").innerHTML = obj.IP;
 				document.getElementById("IP3").innerHTML = obj.IP;
+				document.getElementById("IP4").innerHTML = obj.IP;
 //console.log(obj.HOST_NAME)
 //console.log(obj.IP)
 
@@ -614,18 +619,20 @@ document.getElementById("af_mode_interval_value").innerHTML = parseInt(obj.CAM_A
 				document.getElementById("label_temp").innerHTML     = "CPU temperature = " + obj.temperature + " &#176C";
 				document.getElementById("label_CPU_temp").innerHTML = "CPU temperature = " + obj.temperature + " &#176C";
 
+				document.getElementById("label_min_temp").innerHTML     = "CPU min. temp. = " + obj.min_temp + " &#176C";
+				document.getElementById("label_max_temp").innerHTML     = "CPU max. temp. = " + obj.max_temp + " &#176C";
+
 				document.getElementById("label_CPU_IP_address").innerHTML = "IP address = "+obj.IP;
 				document.getElementById("label_cpu_IP_address").innerHTML = "IP address = "+obj.IP;
 
 				if (obj.rtsp1_running == '1'){ document.getElementById("label_rtsp1_running").innerHTML = "Running";} 
-				  else 
-				{document.getElementById("label_rtsp1_running").innerHTML = "Not running";}
+				  else {document.getElementById("label_rtsp1_running").innerHTML = "Not running";}
 				if (obj.rtsp2_running == '1'){ document.getElementById("label_rtsp2_running").innerHTML = "Running";} 
-				  else 
-				{document.getElementById("label_rtsp2_running").innerHTML = "Not running";}
+				  else {document.getElementById("label_rtsp2_running").innerHTML = "Not running";}
 				if (obj.rtsp3_running == '1'){ document.getElementById("label_rtsp3_running").innerHTML = "Running";} 
-				  else 
-				{document.getElementById("label_rtsp3_running").innerHTML = "Not running";}
+				  else {document.getElementById("label_rtsp3_running").innerHTML = "Not running";}
+				if (obj.rtsp4_running == '1'){ document.getElementById("label_rtsp4_running").innerHTML = "Running";} 
+				  else {document.getElementById("label_rtsp4_running").innerHTML = "Not running";}
 
 		//		var x = [{x:0, y:0}];
 		//		x[0]["x"] = 101;
@@ -699,10 +706,12 @@ document.getElementById("af_mode_interval_value").innerHTML = parseInt(obj.CAM_A
 
 				var xx1 = [{x:0, y:0}];
 				var xx2 = [{x:0, y:0}];
+				var xx3 = [{x:0, y:0}];
 
 				xx1[0]["y"] = obj.temperature;
 				xx2[0]["y"] = Math.floor(cpu_perc_total*1000)/10;
-				update_graph_tempcpu(xx1, xx2, cur_time);
+				xx3[0]["y"] = obj.max_temp;
+				update_graph_tempcpu(xx1, xx2, xx3, cur_time);
 
 				var xy1 = [{x:0, y:0}];
 				var xy2 = [{x:0, y:0}];
@@ -764,7 +773,6 @@ document.getElementById("eth_send_kbps").innerHTML = obj.net_out*8*1024+" kbps";
 		}
 
 	</script>
-
 	  	<div class="header">
 		  <img class="videology-logo" src="videology-industrial-grade-cameras.svg" alt="Videology Industrial-Grade Cameras"/>
 
@@ -786,6 +794,7 @@ document.getElementById("eth_send_kbps").innerHTML = obj.net_out*8*1024+" kbps";
   <button class="tablinks" onclick="openTab(event, 'DOCUMENTATION')"        >DOCUMENTATION</button>
 </div><!-- Tab links -->
 
+<!--
 	<script>
 
 		//********************************************
@@ -827,6 +836,7 @@ document.getElementById("eth_send_kbps").innerHTML = obj.net_out*8*1024+" kbps";
 		}
 
 	</script>
+-->
 
 	<!--
 
@@ -868,7 +878,8 @@ document.getElementById("eth_send_kbps").innerHTML = obj.net_out*8*1024+" kbps";
 						<li>NXP i.MX 8M Plus 1.6 GHz Quad Cortex-M53</li>
 						<li>2GB LPDDR4, 8GB eMMC</li>
 						<li>NPU 2.3 TOPS</li>
-						<li>1080p30 Encoding</li>
+						<li>720p/1080p 25/30/50/60 fps</li>
+						<li>Max. 1080p60 Encoding</li>
 						<li>RTSP streaming</li>
 						<li>Ethernet 10/100/1000 Mbps</li>
 						<li>Zoom block camera</li>
@@ -878,7 +889,7 @@ document.getElementById("eth_send_kbps").innerHTML = obj.net_out*8*1024+" kbps";
 					</ul>
 				</td>
 				<td>
-					<img src=scalix-board-callouts.png>
+					<img src=scailx-board-callouts.png>
 				</td>
 			</tr>
 		</table>
@@ -985,6 +996,10 @@ document.getElementById("eth_send_kbps").innerHTML = obj.net_out*8*1024+" kbps";
 				  <td class="col1r1" rowspan="7" padding-left="30px" align="left" valign="top">
 					<label id="label_temp"          for="label_temp"></label>
 					<br>
+					<label id="label_min_temp"          for="label_min_temp"></label>
+					<br>
+					<label id="label_max_temp"          for="label_max_temp"></label>
+					<br>
 					<label id="label_cpu_freq"      for="label_cpu_freq"></label>
 					<br>
 					<label id="label_cpu_IP_address" for="label_cpu_IP_address"></label>
@@ -1047,15 +1062,24 @@ document.getElementById("eth_send_kbps").innerHTML = obj.net_out*8*1024+" kbps";
 		  type: "line",
 		  data: {
 		    datasets: [	{yAxisID: 'y-axis-0', pointRadius: 1, borderColor : "rgb(255,0,0)", borderWidth : 0.5, fill: false, pointBackgroundColor : "rgb(255,0,0)", label:"CPU temperature [\u00B0C]", },
-		    		{yAxisID: 'y-axis-1', pointRadius: 1, borderColor : "rgb(0,0,255)", borderWidth : 0.5, fill: false, pointBackgroundColor : "rgb(0,0,255)", label : "CPU load [%]", }
+						{yAxisID: 'y-axis-1', pointRadius: 1, borderColor : "rgb(0,0,255)", borderWidth : 0.5, fill: false, pointBackgroundColor : "rgb(0,0,255)", label : "CPU load [%]", },
+						{yAxisID: 'y-axis-2', pointRadius: 1, borderColor : "rgb(0,255,0)", borderWidth : 0.5, fill: false, pointBackgroundColor : "rgb(0,255,0)", label : "CPU max. temp. [\u00B0C]", }
 			      ],
 		  },
 		  options: {
 		    legend: {display: true, align:"right", labelString: "Temperature / CPU load"},
 		    scales: {
 		      xAxes: [{ticks: {min: 0, max:100}}],
-		      yAxes: [{id:'y-axis-0', ticks: {min: -20, max:100},   scaleLabel: { display: true, labelString: 'CPU temperature [\u00B0C]' }},
-			      {id:'y-axis-1', ticks: {min: 0, max:100},   scaleLabel: { display: true, labelString: 'CPU load [%]' }},
+		      yAxes: [ { 
+			             id:'y-axis-0', 
+						 ticks: {min: -20, max:100},   
+						 scaleLabel: { 
+										display: true, 
+										labelString: 'CPU temperature [\u00B0C]' 
+									}
+						},
+						{id:'y-axis-1', ticks: {min: 0, max:100},   scaleLabel: { display: true, labelString: 'CPU load [%]' }},
+						{id:'y-axis-2', ticks: {min: -20, max:100},   scaleLabel: { display: true, labelString: 'CPU max. temp. [\u00B0C]' }},
 			     ],
 		    }
 		  }
@@ -1266,9 +1290,10 @@ document.getElementById("eth_send_kbps").innerHTML = obj.net_out*8*1024+" kbps";
 		}
 	</script>
 					  <tr>
-						<td class="col1" align="center" valign="middle">
+<!--						<td class="col1" align="center" valign="middle">
 							<p id="btn1" onclick="VISCA('/imx8/81090447FF')" class="cta-button">Zoom pos</p>
 						</td>
+-->
 						<td class="col1" align="left" valign="middle">
 						  <label><input id="Show ID"             type='checkbox' onchange='dispSelClick(this);'>Camera ID</label><br>
 						  <label><input id="Show Title"          type='checkbox' onchange='dispSelClick(this);'>Title</label><br>
@@ -1411,7 +1436,8 @@ document.getElementById("eth_send_kbps").innerHTML = obj.net_out*8*1024+" kbps";
 							<p id="btn1" onclick="videotest()" class="cta-button">Test colorbar<br>START</p>
 						</td>
 						  <td class="col1" align="center" valign="middle">
-							<p id="btn2" onclick="killtest()" class="cta-button">Test colorbar<br>STOP</p>
+							<p id="btn2" onclick="killtest()" class="cta-button">Test 
+colorbar<br>STOP</p>
 						</td>
 						  <td class="col1" width="15%" align="left" valign="middle">
 
@@ -1430,20 +1456,27 @@ document.getElementById("eth_send_kbps").innerHTML = obj.net_out*8*1024+" kbps";
 				  <td class="col1" align="left" valign="middle">
 				</td>
 				  <td class="col_1" align="right" valign="middle">
-			<label>camera live video stream</label><br>
+			<label>camera live video stream 1920x1080@60 (H.264) </label><br>
+			<label>camera live video stream  1280x720@60 (H.265)</label><br>
 			<label>IMX8 processor test stream color bar (640x480)</label><br>
 			<label>IMX8 processor test stream color bar (1920x1080)</label>
 				</td>
 				  <td class="col_1" align="left" valign="middle">
 			<label>:&nbsp;&nbsp;rtsp://</label><label id="IP1"></label>:9001/stream</label> <br>
 			<label>:&nbsp;&nbsp;rtsp://</label><label id="IP2"></label>:9002/stream</label> <br>
-			<label>:&nbsp;&nbsp;rtsp://</label><label id="IP3"></label>:9003/stream</label>
+			<label>:&nbsp;&nbsp;rtsp://</label><label id="IP3"></label>:9003/stream</label> <br>
+			<label>:&nbsp;&nbsp;rtsp://</label><label id="IP4"></label>:9004/stream</label>
 				</td>
 				  <td class="col1" align="left" valign="middle">
 				<label id="label_rtsp1_running" for="label_rtsp1_running"></label> <br>
 				<label id="label_rtsp2_running" for="label_rtsp2_running"></label> <br>
-				<label id="label_rtsp3_running" for="label_rtsp3_running"></label>
+				<label id="label_rtsp3_running" for="label_rtsp3_running"></label> <br>
+				<label id="label_rtsp4_running" for="label_rtsp4_running"></label>
 				</td>
+</tr>
+<label>gst-launch-1.0 rtspsrc location=rtsp://.....:9001/stream ! queue ! rtph264depay ! avdec_h264 ! autovideosink</label> <br>
+<label>gst-launch-1.0 rtspsrc location=rtsp://.....:9002/stream ! queue ! rtph265depay ! avdec_h265 ! autovideosink</label>
+
 		</tr>
 					</tr>
 
