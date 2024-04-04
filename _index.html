@@ -1,8 +1,9 @@
+
 <!doctype html>
 <html>
 <head>
 <meta charset="utf-8">
-<title>SCAiLX-ZB AI/IP Platform</title>
+<title>SCAiLX AI/IP Modular platform</title>
 
 <script src="/scripts/Chart.js"> </script>
 
@@ -13,9 +14,9 @@
 -->
 
 <style>
-  img {
-    width: 100%;
-  }
+img {
+  width: 100%;
+}
 
 /* montserrat-regular - latin */
 @font-face {
@@ -300,23 +301,7 @@ hr.footerline {border-top: 1px rgba(115, 190, 68, 1.0) solid;}
 }
 </style>
 
-<style>
-.aside {
-    border-top: 20px solid #2378a9;
-}
-.container {
-  column-count: 3;
-}
-</style>
-
-
-</head>
-
-<!-- <body onload="init_api()"> -->
-
-  <body>
-
-	<script>
+<script>
 	function openTab(evt, tabName) {
 	  var i, tabcontent, tablinks;
 	  tabcontent = document.getElementsByClassName("tabcontent");
@@ -330,9 +315,14 @@ hr.footerline {border-top: 1px rgba(115, 190, 68, 1.0) solid;}
 	  document.getElementById(tabName).style.display = "block";
 	  evt.currentTarget.className += " active";
 	}
-	</script>
-	
-	<script>
+</script>
+
+</head>
+
+<!-- <body onload="init_api()"> -->
+
+	<body>
+		<script>
 
 			//**************************************************
 			//
@@ -412,8 +402,8 @@ hr.footerline {border-top: 1px rgba(115, 190, 68, 1.0) solid;}
 			//	x[0]["x"] = graph.data.datasets[0].data.length + 1;
 				x[0]["x"] = 101;
 
-				console.log('data  : '+graph.data.datasets[0].data.length)
-				console.log('labels: '+graph.data.labels.length)
+//console.log('data  : '+graph.data.datasets[0].data.length)
+//console.log('labels: '+graph.data.labels.length)
 
 	  			if (graph.data.datasets[0].data.length == 100){
 					graph.data.datasets.forEach((dataset) => { dataset.data.shift(x[0]); });
@@ -427,7 +417,7 @@ hr.footerline {border-top: 1px rgba(115, 190, 68, 1.0) solid;}
 				    graph.data.labels.pop();	
 				}			
 				graph.update();
-				//console.log(graph.data);
+//console.log(graph.data);
 			};
 
 			//**************************************************
@@ -437,30 +427,32 @@ hr.footerline {border-top: 1px rgba(115, 190, 68, 1.0) solid;}
 			//**************************************************
 
 			function update_graph_tempcpu(cpu, temp, max_temp, tijd){    
-				console.log('GRAPH TEMP/CPU')
+//console.log('GRAPH TEMP/CPU')
 				x1 = cpu;
 				x2 = temp;
 				x3 = max_temp;
-				console.log(cpu);
-				console.log(temp);
+//console.log(cpu);
+//console.log(temp);
 				x1[0]["x"] = 101;
 				x2[0]["x"] = 101;
 				x3[0]["x"] = 101;
+
+
 
 //				m = [];
 //				m[0] = max_eth_sent; 
 //				m[1] = x2[0]["y"];
 
-//				  if (m[0]<m[1]) {max_eth_sent = m[1]; max_history = 0} else {max_history += 1;};
-//			 	  if (max_history >= 100) {max_eth_sent=1; max_history = 0};
+//				if (m[0]<m[1]) {max_eth_sent = m[1]; max_history = 0} else {max_history += 1;};
+//				if (max_history >= 100) {max_eth_sent=1; max_history = 0};
 
-//				  console.log(max_eth_sent)
-//				  console.log(graph_tcpip.data.datasets[0].data.length);
-//				  console.log(graph_tcpip.data.labels.length);
+//console.log(max_eth_sent)
+//console.log(graph_tcpip.data.datasets[0].data.length);
+//console.log(graph_tcpip.data.labels.length);
 
-//				  console.log(graph_tcpip.scales['y-axis-0'].options.ticks);
+//console.log(graph_tcpip.scales['y-axis-0'].options.ticks);
 
-//				  graph.scales['y-axis-0'].options.ticks.max = max_eth_sent;
+//				graph.scales['y-axis-0'].options.ticks.max = max_eth_sent;
 
 	  			if (graph.data.datasets[0].data.length == 100){
 					graph.data.datasets[0].data.shift(x1[0]);
@@ -479,11 +471,11 @@ hr.footerline {border-top: 1px rgba(115, 190, 68, 1.0) solid;}
 				    graph.data.labels.pop();	
 				}
 
-//				  console.log(graph.data.datasets[0].data)
-//				  console.log(graph.data.datasets[1].data[0]["x"])
+//console.log(graph.data.datasets[0].data)
+//console.log(graph.data.datasets[1].data[0]["x"])
 	
 				graph.update();
-				console.log(graph);
+//console.log(graph);
 			};
 
 			//**************************************************
@@ -493,11 +485,11 @@ hr.footerline {border-top: 1px rgba(115, 190, 68, 1.0) solid;}
 			//**************************************************
 
 			function update_graph_tcpip(dat1, dat2, tijd){    
-				console.log('GRAPH TCP/IP');
+//console.log('GRAPH TCP/IP');
 				x1 = dat1;
 				x2 = dat2;
-				console.log(x1);
-				console.log(x2);
+//console.log(x1);
+//console.log(x2);
 				x1[0]["x"] = 101;
 				x2[0]["x"] = 101;
 
@@ -507,11 +499,11 @@ hr.footerline {border-top: 1px rgba(115, 190, 68, 1.0) solid;}
 
 				if (m[0]<m[1]) {max_eth_sent = m[1]; max_history = 0} else {max_history += 1;};
 				if (max_history >= 100) {max_eth_sent=1; max_history = 0};
-//				  console.log(max_eth_sent)
-//				  console.log(graph_tcpip.data.datasets[0].data.length);
-//				  console.log(graph_tcpip.data.labels.length);
+//console.log(max_eth_sent)
+//console.log(graph_tcpip.data.datasets[0].data.length);
+//console.log(graph_tcpip.data.labels.length);
 
-//				  console.log(graph_tcpip.scales['y-axis-0'].options.ticks);
+//console.log(graph_tcpip.scales['y-axis-0'].options.ticks);
 
 				graph_tcpip.scales['y-axis-0'].options.ticks.max = max_eth_sent;
 
@@ -530,11 +522,11 @@ hr.footerline {border-top: 1px rgba(115, 190, 68, 1.0) solid;}
 				    graph_tcpip.data.labels.pop();	
 				}
 
-//				console.log(graph_tcpip.data.datasets[0].data)
-//				console.log(graph_tcpip.data.datasets[1].data[0]["x"])
+//console.log(graph_tcpip.data.datasets[0].data)
+//console.log(graph_tcpip.data.datasets[1].data[0]["x"])
 	
 				graph_tcpip.update();
-				console.log(graph_tcpip);
+//console.log(graph_tcpip);
 			};
 	</script>
 
@@ -560,16 +552,16 @@ hr.footerline {border-top: 1px rgba(115, 190, 68, 1.0) solid;}
 				document.getElementById("CAM_AF_Mode_Active").value   = parseInt(obj.CAM_AF_Mode_Active, 16);
 				document.getElementById("CAM_AF_Mode_Interval").value = parseInt(obj.CAM_AF_Mode_Interval, 16);
 
-				document.getElementById("rgain_value").innerHTML    = parseInt(obj.CAM_RGain, 16);
-				document.getElementById("bgain_value").innerHTML    = parseInt(obj.CAM_BGain, 16);
-				document.getElementById("chroma_value").innerHTML   = parseInt(obj.CAM_Chroma, 16);
-				document.getElementById("bright_value").innerHTML   = parseInt(obj.CAM_Bright, 16);
-				document.getElementById("aperture_value").innerHTML = parseInt(obj.CAM_Aperture, 16);
-				document.getElementById("shutter_value").innerHTML  = parseInt(obj.CAM_Shutter, 16);
-				document.getElementById("iris_value").innerHTML     = parseInt(obj.CAM_Iris, 16);
-				document.getElementById("gain_value").innerHTML     = parseInt(obj.CAM_Gain, 16);
-				document.getElementById("af_mode_active_value").innerHTML   = parseInt(obj.CAM_AF_Mode_Active, 16);
-				document.getElementById("af_mode_interval_value").innerHTML = parseInt(obj.CAM_AF_Mode_Interval, 16);
+document.getElementById("rgain_value").innerHTML    = parseInt(obj.CAM_RGain, 16);
+document.getElementById("bgain_value").innerHTML    = parseInt(obj.CAM_BGain, 16);
+document.getElementById("chroma_value").innerHTML   = parseInt(obj.CAM_Chroma, 16);
+document.getElementById("bright_value").innerHTML   = parseInt(obj.CAM_Bright, 16);
+document.getElementById("aperture_value").innerHTML = parseInt(obj.CAM_Aperture, 16);
+document.getElementById("shutter_value").innerHTML  = parseInt(obj.CAM_Shutter, 16);
+document.getElementById("iris_value").innerHTML     = parseInt(obj.CAM_Iris, 16);
+document.getElementById("gain_value").innerHTML     = parseInt(obj.CAM_Gain, 16);
+document.getElementById("af_mode_active_value").innerHTML   = parseInt(obj.CAM_AF_Mode_Active, 16);
+document.getElementById("af_mode_interval_value").innerHTML = parseInt(obj.CAM_AF_Mode_Interval, 16);
 
 				document.getElementById("CAM_AF").value = parseInt(obj.CAM_AFMode);
 
@@ -583,8 +575,8 @@ hr.footerline {border-top: 1px rgba(115, 190, 68, 1.0) solid;}
 //				const obj = JSON.parse(event.data)
 //			
 //				document.getElementById("visca_resp").value=obj.visca_response.toUpperCase(); 
-//				console.log('visca resp:'+obj.visca_response);
-//				console.log(document.getElementById("visca_resp").value)
+//console.log('visca resp:'+obj.visca_response);
+//console.log(document.getElementById("visca_resp").value)
 //			}
 //		}
 //		else {
@@ -605,9 +597,8 @@ hr.footerline {border-top: 1px rgba(115, 190, 68, 1.0) solid;}
 				document.getElementById("IP2").innerHTML = obj.IP;
 				document.getElementById("IP3").innerHTML = obj.IP;
 				document.getElementById("IP4").innerHTML = obj.IP;
-
-//				console.log(obj.HOST_NAME)
-//				console.log(obj.IP)
+//console.log(obj.HOST_NAME)
+//console.log(obj.IP)
 
 				document.getElementById("CAM_AF").value  = obj.CAM_AF;
 				document.getElementById("CAM_AE").value  = obj.CAM_AE;
@@ -703,8 +694,8 @@ hr.footerline {border-top: 1px rgba(115, 190, 68, 1.0) solid;}
 		//		}
 
 
-//				console.log('net_out: '+ obj.net_out);
-//				console.log('net_in: ' + obj.net_in);
+//console.log('net_out: '+ obj.net_out);
+//console.log('net_in: ' + obj.net_in);
 
 		//		if (eth_sent_samples.length == 100){
 		//			eth_sent_samples.shift(x1[0]);	
@@ -734,9 +725,11 @@ hr.footerline {border-top: 1px rgba(115, 190, 68, 1.0) solid;}
 				document.getElementById("label_eth_pkt_sent1").innerHTML = "ETH pkt RX = " + obj.eth_pkt_sent;
 				document.getElementById("label_eth_pkt_recv1").innerHTML = "ETH pkt TX = " + obj.eth_pkt_recv;
 
-				document.getElementById("eth_send_Gbps").innerHTML = obj.net_out*8/1024+" Gbps";
-				document.getElementById("eth_send_Mbps").innerHTML = obj.net_out*8+" Mbps";
-				document.getElementById("eth_send_kbps").innerHTML = obj.net_out*8*1024+" kbps";
+
+document.getElementById("eth_send_Gbps").innerHTML = obj.net_out*8/1024+" Gbps";
+document.getElementById("eth_send_Mbps").innerHTML = obj.net_out*8+" Mbps";
+document.getElementById("eth_send_kbps").innerHTML = obj.net_out*8*1024+" kbps";
+	
 
 				document.getElementById("label_eth_sent2").innerHTML     = "ETH RX = " + value2human(obj.eth_sent/1024/1024);
 				document.getElementById("label_eth_recv2").innerHTML     = "ETH TX = " + value2human(obj.eth_recv/1024/1024);
@@ -780,19 +773,17 @@ hr.footerline {border-top: 1px rgba(115, 190, 68, 1.0) solid;}
 		}
 
 	</script>
+	  	<div class="header">
+		  <img class="videology-logo" src="videology-industrial-grade-cameras.svg" alt="Videology Industrial-Grade Cameras"/>
 
-  	<div class="header">
-	  <img class="videology-logo" src="videology-industrial-grade-cameras.svg" alt="Videology Industrial-Grade Cameras"/>
-	  <h1><b>SCAiLX-ZB</b> AI/IP i.MX8M Plus</h1>
-	  <h2 align="center"> <label id="cpu_uptime" for="cpu_uptime"></label> </h2>
-	</div>
-
+		  <h1>SCAiLX - SoM iMX8M Plus</h1>
+		  <h2 id="cpu_uptime"></h2>
+		</div>
 
   <div class="main">
 
 
 <!-- Tab links -->
-
 <div class="tab">
   <button class="tablinks btn active" onclick="openTab(event, 'SCAILX-ZB')" >SCAILX-ZB</button>
   <button class="tablinks" onclick="openTab(event, 'AIAPP')"                >AI APPLICATIONS</button>
@@ -801,7 +792,7 @@ hr.footerline {border-top: 1px rgba(115, 190, 68, 1.0) solid;}
   <button class="tablinks" onclick="openTab(event, 'VISCA')"                >VISCA</button>
   <button class="tablinks" onclick="openTab(event, 'CAMCTRL')"              >CAMERA CONTROL</button>
   <button class="tablinks" onclick="openTab(event, 'DOCUMENTATION')"        >DOCUMENTATION</button>
-</div>  <!-- Tab links -->
+</div><!-- Tab links -->
 
 <!--
 	<script>
@@ -856,6 +847,15 @@ hr.footerline {border-top: 1px rgba(115, 190, 68, 1.0) solid;}
 
 	-->
 
+<style>
+.aside {
+    border-top: 20px solid #2378a9;
+}
+.container {
+  column-count: 3;
+}
+</style>
+
 
 <!-- 
 ******************************************************************************************************
@@ -869,7 +869,7 @@ hr.footerline {border-top: 1px rgba(115, 190, 68, 1.0) solid;}
 
 <!-- <div >  -->
 	<article>
-		<h1 align="left">SCAiLX-ZB AI/IP Platform</h1>
+		<h1 align="left">SCAiLX-ZB i.MX8M Plus</h1>
 		<h2 align="left">Features</h2>
 		<table>
 			<tr>
@@ -919,14 +919,14 @@ hr.footerline {border-top: 1px rgba(115, 190, 68, 1.0) solid;}
 		<tr>
 			<td width="50%" rowspan="6" align="center" valign="middle" padding-right="10px">
 			<img id="AIpose" src="example-pose.png" >
-		  </td>
-		  <td width="1%">
-		  </td>
+		</td>
+		<td width="1%">
+		</td>
 			<td width="50%" rowspan="6" align="center" valign="middle" padding-left="10px">
 			<img id="AIdetect" src="example-detection.png" >
-		  </td>
+		</td>
 		</tr>
-		</tbody>
+	</tbody>
 	</table>
 
 </div>  <!-- AIAPP tabcontent -->
@@ -944,10 +944,10 @@ hr.footerline {border-top: 1px rgba(115, 190, 68, 1.0) solid;}
 	  <table border="0" align="center" cellpadding="0" cellspacing="0">
 	     
 		<tbody>
-		  <tr>
-		    <td width="70%" rowspan="6" align="center" valign="middle">
+		<tr>
+		<td width="70%" rowspan="6" align="center" valign="middle">
 			<canvas id="myChart_canvas_TCPIP" style="width:100%; min-height:300px; "></canvas>
-		<script>
+	<script>
 
 		//***********************************************
 		//
@@ -960,56 +960,40 @@ hr.footerline {border-top: 1px rgba(115, 190, 68, 1.0) solid;}
 	//	  type: "bar",
 		  type: "line",
 		  data: {
-		    datasets: [	{pointRadius: 1, 
-				 borderColor : "rgb(255,0,0)", 
-				 borderWidth : 0.5, 
-				 fill: false, 
-				 pointBackgroundColor:"rgb(255,0,0)", 
-				 label:"RX MB/s", },
-		    		{pointRadius: 1, 
-				 borderColor : "rgb(0,0,255)", 
-				 borderWidth : 0.5, 
-				 fill: false, 
-				 pointBackgroundColor : "rgb(0,0,255)", 
-				 label : "TX MB/s", }
+		    datasets: [	{pointRadius: 1, borderColor : "rgb(255,0,0)", borderWidth : 0.5, fill: false, pointBackgroundColor:"rgb(255,0,0)", label:"RX MB/s", },
+		    		{pointRadius: 1, borderColor : "rgb(0,0,255)", borderWidth : 0.5, fill: false, pointBackgroundColor : "rgb(0,0,255)", label : "TX MB/s", }
 			      ],
 		  },
 		  options: {
 		    legend: {display: true, align:"right", labelString: "TCP/IP"},
 		    scales: {
 		      xAxes: [{ticks: {min: 0, max:100}}],
-		      yAxes: [{ticks: {min: 0, max:100},   
-			       scaleLabel: { display: true, 
-					     labelString: 'TX MB/s' }},
-			      {ticks: {min: 0, max:0.1},
-			       scaleLabel: { display: true, 
-					     labelString: 'RX MB/s' }},
+		      yAxes: [{ticks: {min: 0, max:100},   scaleLabel: { display: true, labelString: 'TX MB/s' }},
+			      {ticks: {min: 0, max:0.1},   scaleLabel: { display: true, labelString: 'RX MB/s' }},
 			     ],
 		    }
 		  }
 		});
-		</script>
+	</script>
 
-		    </td>
-		
-		    <td width="30%"  rowspan="6" align="center" valign="middle">
+		</td>
+		<td width="30%"  rowspan="6" align="center" valign="middle">
 			<p align="left" id="eth_send_Gbps">x</p>
 			<p align="left" id="eth_send_Mbps">x</p>
 			<p align="left" id="eth_send_kbps">x</p>
-		    </td>
-		  </tr>
+		</tr>
 		</tbody>
 	</table>
 
-	<table border="0" align="center" cellpadding="0" cellspacing="0">
-		<tbody>
+	  <table border="0" align="center" cellpadding="0" cellspacing="0">
+		  <tbody>
 <!--
 			  <tr>
 				<td align="center" valign="middle" bgcolor="#999999" class="col1"><h2>Menu</h2></td>
 				<td align="center" valign="middle" bgcolor="#999999" class="col2_h"><h2>Main Window</h2></td>
 			</tr>
 -->
-			<tr>	
+			  <tr>
 				  <td class="col1r1" rowspan="7" padding-left="30px" align="left" valign="top">
 					<label id="label_temp"          for="label_temp"></label>
 					<br>
@@ -1087,18 +1071,16 @@ hr.footerline {border-top: 1px rgba(115, 190, 68, 1.0) solid;}
 		    legend: {display: true, align:"right", labelString: "Temperature / CPU load"},
 		    scales: {
 		      xAxes: [{ticks: {min: 0, max:100}}],
-		      yAxes: [ { id:'y-axis-0', 
-				 ticks: {min: -20, max:100},   
-				 scaleLabel: {display: true,
-					      labelString: 'CPU temperature [\u00B0C]' 
-					}
-				},
-				{id:'y-axis-1', ticks: {min: 0, max:100},   
-						scaleLabel: { display: true, 
-						      labelString: 'CPU load [%]' }},
-				{id:'y-axis-2', ticks: {min: -20, max:100},   
-						scaleLabel: { display: true, 
-					 	      labelString: 'CPU max. temp. [\u00B0C]' }},
+		      yAxes: [ { 
+			             id:'y-axis-0', 
+						 ticks: {min: -20, max:100},   
+						 scaleLabel: { 
+										display: true, 
+										labelString: 'CPU temperature [\u00B0C]' 
+									}
+						},
+						{id:'y-axis-1', ticks: {min: 0, max:100},   scaleLabel: { display: true, labelString: 'CPU load [%]' }},
+						{id:'y-axis-2', ticks: {min: -20, max:100},   scaleLabel: { display: true, labelString: 'CPU max. temp. [\u00B0C]' }},
 			     ],
 		    }
 		  }
@@ -1109,7 +1091,6 @@ hr.footerline {border-top: 1px rgba(115, 190, 68, 1.0) solid;}
 	<p aling="center"> <label id="tijd" for="tijd"></label> </p>
 
 	</td>
-
 <!--
 		  <td class="col2" rowspan="6" align="center" valign="middle">
 			<ul style="list-style-type:none">
@@ -1124,73 +1105,72 @@ hr.footerline {border-top: 1px rgba(115, 190, 68, 1.0) solid;}
 		  </td>
 -->
 		</tr>
+
 	   </tbody>
+
 	</table>
 
-	<table border="0" align="center" cellpadding="0" cellspacing="0">
-	  <tbody>
-	  <tr>
-		<td class="col1r1" rowspan="7" padding-left="30px" align="left" valign="top">
-			<label id="label_CPU_temp"          for="label_CPU_temp"></label>
-			<br>
-			<label id="label_CPU_cpu_freq"      for="label_CPU_cpu_freq"></label>
-			<br>
-			<label id="label_CPU_IP_address"    for="label_CPU_IP_address"></label>
-		</td>
-		<td class="col1r1" rowspan="7" align="left" valign="top">
-			<label id="label_eth_sent2"     for="label_eth_sent2">A</label>
-			<br>
-			<label id="label_eth_recv2"     for="label_eth_recv2">B</label>
-			<br>
-			<label id="label_eth_pkt_sent2" for="label_eth_pkt_sent2">C</label>
-			<br>
-			<label id="label_eth_pkt_recv2" for="label_eth_pkt_recv2">D</label>
-		</td>
-		<td class="col1r1" rowspan="7" align="left" valign="top">
-			<label id="label_CPU_ram_total"     for="label_ram_total">RAM total</label>
-			<br>
-			<label id="label_CPU_ram_available" for="label_ram_available">RAM available</label>
-			<br>
-			<label id="label_CPU_ram_free"      for="label_ram_free">RAM free</label>
-			<br>
-			<label id="label_CPU_ram_used"      for="label_ram_used">RAM used</label>
-		</td>
-	</tr>
-	</tbody>
-	</table>
+		  <table border="0" align="center" cellpadding="0" cellspacing="0">
+				  <tbody>
+				  	  <tr>
+						  <td class="col1r1" rowspan="7" padding-left="30px" align="left" valign="top">
+							<label id="label_CPU_temp"          for="label_CPU_temp"></label>
+							<br>
+							<label id="label_CPU_cpu_freq"      for="label_CPU_cpu_freq"></label>
+							<br>
+							<label id="label_CPU_IP_address"    for="label_CPU_IP_address"></label>
+						</td>
+						  <td class="col1r1" rowspan="7" align="left" valign="top">
+							<label id="label_eth_sent2"     for="label_eth_sent2">A</label>
+							<br>
+							<label id="label_eth_recv2"     for="label_eth_recv2">B</label>
+							<br>
+							<label id="label_eth_pkt_sent2" for="label_eth_pkt_sent2">C</label>
+							<br>
+							<label id="label_eth_pkt_recv2" for="label_eth_pkt_recv2">D</label>
+						</td>
+						<td class="col1r1" rowspan="7" align="left" valign="top">
+							<label id="label_CPU_ram_total"     for="label_ram_total">RAM total</label>
+							<br>
+							<label id="label_CPU_ram_available" for="label_ram_available">RAM available</label>
+							<br>
+							<label id="label_CPU_ram_free"      for="label_ram_free">RAM free</label>
+							<br>
+							<label id="label_CPU_ram_used"      for="label_ram_used">RAM used</label>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		  <table border="0" align="center" cellpadding="0" cellspacing="0">
+				  <tbody>
+					  <tr>
+						  <td class="col1r2_CPU" width="15%" rowspan="7" align="left" valign="top">
+							<label    id="label_cpu_perc1" for="label_cpu_perc1">CPU0 [%]</label>
+							<br><progress id="cpu_perc1"       max="100"> 32% </progress>
+						</td>
+						  <td class="col1r2_CPU" width="15%" rowspan="7" align="left" valign="top">
+							
+							<label    id="label_cpu_perc2" for="label_cpu_perc2"></label>
+							<br><progress id="cpu_perc2"       max="100"> 32% </progress>
+						</td>
+						  <td class="col1r2_CPU" width="15%" rowspan="7" align="left" valign="top">
+							<label    id="label_cpu_perc3" for="label_cpu_perc3"></label>
+							<br><progress id="cpu_perc3"       value="32" max="100"> 32% </progress>
+						</td>
+						  <td class="col1r2_CPU" width="15%" rowspan="7" align="left" valign="top">
+							<label    id="label_cpu_perc4" for="label_cpu_perc4"></label>
+							<br><progress id="cpu_perc4"       value="32" max="100"> 32% </progress>
+							<br>
+						</td>
+						  <td class="col1r2_CPU" width="40%" rowspan="7" align="left" valign="top">
+							<label    id="label_cpu_perc_total" for="label_cpu_perc_total"></label>
+							<br><progress id="cpu_perc_total"   value="32" max="100"> 32% </progress>
+						</td>
+					
+					</tr>
 
-	<table border="0" align="center" cellpadding="0" cellspacing="0">
-	  <tbody>
-	  <tr>
-		<td class="col1r2_CPU" width="15%" rowspan="7" align="left" valign="top">
-			<label    id="label_cpu_perc1" for="label_cpu_perc1">CPU0 [%]</label>
-			<br>
-			<progress id="cpu_perc1"       max="100"> 32% </progress>
-		</td>
-		<td class="col1r2_CPU" width="15%" rowspan="7" align="left" valign="top">
-			<label    id="label_cpu_perc2" for="label_cpu_perc2"> </label>
-			<br>
-			<progress id="cpu_perc2"       max="100"> 32% </progress>
-		</td>
-		<td class="col1r2_CPU" width="15%" rowspan="7" align="left" valign="top">
-			<label    id="label_cpu_perc3" for="label_cpu_perc3"> </label>
-			<br>
-			<progress id="cpu_perc3"       value="32" max="100"> 32% </progress>
-		</td>
-		<td class="col1r2_CPU" width="15%" rowspan="7" align="left" valign="top">
-			<label    id="label_cpu_perc4" for="label_cpu_perc4"> </label>
-			<br>
-			<progress id="cpu_perc4"       value="32" max="100"> 32% </progress>
-			<br>
-		</td>
-		<td class="col1r2_CPU" width="40%" rowspan="7" align="left" valign="top">
-			<label    id="label_cpu_perc_total" for="label_cpu_perc_total"> </label>
-			<br>
-			<progress id="cpu_perc_total"   value="32" max="100"> 32% </progress>
-		</td>
-	</tr>
-	</tbody>
-	</table>
+				</tbody>
+			</table>
 
 </div>  <!-- tabcontent CPU -->
 
@@ -1201,7 +1181,97 @@ hr.footerline {border-top: 1px rgba(115, 190, 68, 1.0) solid;}
 *
 ******************************************************************************************************
 -->
+		
+<div id="VISCA" class="tabcontent">
 
+			<div class="slidecontainer">
+			  <p>Zoom slider</p>
+			  <input id="zoomslider" onwheel="slider_click(this.range)" onchange="slider_change(this.value)" type="range" min="0" max="16383" value="0" class="slider" id="myRange">
+			</div>
+
+			  <table border="0" align="center" cellpadding="0" cellspacing="0">
+				  <tbody>
+
+<!-- <tr> <td align="center" valign="middle" bgcolor="#999999" class="col1"><h2>Menu</h2></td> <td align="center" valign="middle" 
+					  bgcolor="#999999" class="col2_h"><h2>Main Window</h2></td> </tr> -->
+
+
+					  <tr>
+						  <td class="col1" align="center" valign="middle">
+							<p id="cam_reset" onclick="VISCA('/imx8/CAM_POWER')" class="cta-button">Camera RESET</p>
+						</td>
+						  <td class="col1" align="center" valign="middle">
+						</td>
+						  <td class="col1" align="center" valign="middle">
+						</td>
+						  <td class="col1" align="center" valign="middle">
+						</td>
+						  <td class="col1" align="center" valign="middle">
+						</td>
+					</tr>
+					  <tr>
+						  <td class="col1" align="center" valign="middle">
+							<p id="cam_day_mode" onclick="VISCA('/imx8/CAM_ICR/DAY')" class="cta-button">DAY<br>mode</p>
+						</td>
+						  <td class="col1" align="center" valign="middle">
+							<p id="cam_night_mode" onclick="VISCA('/imx8/CAM_ICR/NIGHT')" class="cta-button">NIGHT<br> mode</p>
+						</td>
+						  <td class="col1" align="center" valign="middle">
+						</td>
+						  <td class="col1" align="center" valign="middle">
+						</td>
+						  <td class="col1" align="center" valign="middle">
+						</td>
+					</tr>
+					  <tr>
+						<td class="col1" align="center" valign="middle">
+							<p id="cam_menu_enter" onclick="VISCA('/imx8/CAM_MENU/ENTER')" class="cta-button">MENU ENTER</p>
+						</td>
+
+						<td class="col1" align="center" valign="middle">
+							<p id="cam_menu_enter" onclick="VISCA('/imx8/CAM_MENU/LEFT')" class="cta-button">LEFT</p>
+						</td>
+						<td class="col1" align="center" valign="middle">
+							<p id="cam_menu_enter" onclick="VISCA('/imx8/CAM_MENU/RIGHT')" class="cta-button">RIGHT</p>
+						</td>
+						<td class="col1" align="center" valign="middle">
+							<p id="cam_menu_enter" onclick="VISCA('/imx8/CAM_MENU/UP')" class="cta-button">UP</p>
+						</td>
+						  <td class="col1" align="center" valign="middle">
+							<p id="cam_menu_enter" onclick="VISCA('/imx8/CAM_MENU/DOWN')" class="cta-button">DOWN</p>
+						</td>
+					</tr>
+	<script>
+		//***********************************************
+		//
+		//  select CPU TOTAL LOAD graph and set legends
+		//
+		//***********************************************
+
+		  function visca_request(box){
+		    VISCA('/imx8/'+this.value)
+		  } 
+	</script>
+					  <tr>
+						<td class="col1" align="center" valign="middle">
+							<p id="cam_menu_esc" onclick="VISCA('/imx8/CAM_MENU/ESC')" class="cta-button">MENU <br> ESC</p>
+						</td>
+						<td class="col1" align="center" valign="middle">
+							<p id="cam_menu_esc" onclick="VISCA('/imx8/CAM_MEMORY')" class="cta-button">SAVE MEM</p>
+						</td>
+						<td class="col1" align="left" valign="middle" >
+							<br>
+							<label for="visca_string">VISCA command:</label>
+							<br>
+							<label for="visca_string">VISCA response:</label>
+						</td>
+						<td class="col4" align="left" valign="middle" padding-left="20px">
+							<br>
+							<input type="text" id="visca_string" oninput="VISCA('/imx8/'+this.value)" name="visca_string">
+							<br>
+							<input type="text" id="visca_resp" name="visca_resp">
+						</td>
+					</tr>
 	<script>
 		//***********************************************
 		//
@@ -1220,7 +1290,24 @@ hr.footerline {border-top: 1px rgba(115, 190, 68, 1.0) solid;}
 		    VISCA('imx8/CAM_DispSel/'+s[0]+s[1]+s[2]+s[3]); 
 		}
 	</script>
-
+					  <tr>
+<!--						<td class="col1" align="center" valign="middle">
+							<p id="btn1" onclick="VISCA('/imx8/81090447FF')" class="cta-button">Zoom pos</p>
+						</td>
+-->
+						<td class="col1" align="left" valign="middle">
+						  <label><input id="Show ID"             type='checkbox' onchange='dispSelClick(this);'>Camera ID</label><br>
+						  <label><input id="Show Title"          type='checkbox' onchange='dispSelClick(this);'>Title</label><br>
+						  <label><input id="Show Zoom factor"    type='checkbox' onchange='dispSelClick(this);'>Zoom factor</label><br>
+<!--						  <label><input id="Show System message" type='checkbox' onchange='dispSelClick(this);'>System message</label>    -->
+						</td>
+						<td class="col1" align="center" valign="middle">
+						</td>
+						<td class="col1" align="center" valign="middle">
+						</td>
+						<td class="col1" align="center" valign="middle">
+						</td>
+					</tr>
 	<script>
 		//***********************************************
 		//
@@ -1248,17 +1335,39 @@ hr.footerline {border-top: 1px rgba(115, 190, 68, 1.0) solid;}
 	*/
 		}
 	</script>
-	<script>
-		//***********************************************
-		//
-		//  select CPU TOTAL LOAD graph and set legends
-		//
-		//***********************************************
 
-		  function visca_request(box){
-		    VISCA('/imx8/'+this.value)
-		  } 
-	</script>
+					  <tr>
+						<td class="col1" align="center" valign="middle">
+							<p id="btn_zoom_tele" onmousedown="VISCA('/imx8/CAM_Zoom/Tele')" onmouseup="VISCA('/imx8/CAM_Zoom/Stop')" class="cta-button">ZOOM<br>Tele</p>
+						</td>
+						<td class="col1" align="center" valign="middle">
+							<p id="btn_focus_far" onmousedown="VISCA('/imx8/CAM_Focus/Far')" onmouseup="VISCA('/imx8/CAM_Focus/Stop')" class="cta-button">FOCUS<br>Far</p>
+						</td>
+						<td class="col1" align="center" valign="middle">
+							<p id="btn_focus_far" onmousedown="VISCA('/imx8/CAM_Focus/AUTO')" class="cta-button">AF<br>AUTO</p>
+						</td>
+						<td class="col1" align="center" valign="middle">
+						</td>
+						<td class="col1" align="center" valign="middle">
+						</td>
+					</tr>
+					  <tr>
+						<td class="col1" align="center" valign="middle">
+							<p id="btn_zoom_wide" onmousedown="VISCA('/imx8/CAM_Zoom/Wide')" 
+								onmouseup="VISCA('/imx8/CAM_Zoom/Stop')" class="cta-button">ZOOM<br>Wide</p>
+						</td>
+						<td class="col1" align="center" valign="middle">
+							<p id="btn_focus_far" onmousedown="VISCA('/imx8/CAM_Focus/Near')" 
+								onmouseup="VISCA('/imx8/CAM_Focus/Stop')" class="cta-button">FOCUS<br>Near</p>
+						</td>
+						<td class="col1" align="center" valign="middle">
+							<p id="btn_focus_far" onmousedown="VISCA('/imx8/CAM_Focus/MANUAL')" class="cta-button">AF<br>MANUAL</p>
+						</td>
+						<td class="col1" align="center" valign="middle">
+							<p>Zoom factor:	&nbsp;<label id="zoompos" for="zoompos"></label></p>
+							<p>Focus factor:&nbsp;<label id="focuspos" for="focuspos"></label>
+						</td>
+					</tr>
 	<script>
 		//***********************************************
 		//
@@ -1272,291 +1381,113 @@ hr.footerline {border-top: 1px rgba(115, 190, 68, 1.0) solid;}
 	  	   VISCA('/imx8/CAM_Zoom/DIRECT/'+zoom_pos);
 		}
 	</script>
+					  <tr>
+						<td class="col1" align="center" valign="middle">
+							<p id="btn_zoom_1x" onmousedown="VISCA('/imx8/CAM_Zoom/1X');
+									document.getElementById('zoom_factor').selectedIndex =0;
+											 document.getElementById('zoomslider').value = 0;"
+									class="cta-button">ZOOM 1x</p>
+						</td>
+						  <td class="col1" align="center" valign="middle">
+							<br>
+							<label>Zoom factor:</label>
+							<br>
+							<form >
+							  <select name="zoom_factor" id="zoom_factor" onchange="zoom_select()">
+							    <option value="0000">1x</option>
+							    <option value="1816">2x</option>
+							    <option value="240B">3x</option>
+							    <option value="2BC7">4x</option>
+							    <option value="31AB">5x</option>
+							    <option value="363D">6x</option>
+							    <option value="39B6">7x</option>
+							    <option value="3C65">8x</option>
+							    <option value="3E81">9x</option>
+							    <option value="4000">10x</option>
+							  </select>
+							</form>
+						</td>
+						  <td class="col1" align="center" valign="middle">
+						</td>
+						  <td class="col1" align="center" valign="middle">
+						</td>
+						  <td class="col1" align="center" valign="middle">
+						</td>
 
-	<script>
-		function videotest(){
-			x=document.querySelector('input[name="colorbar"]:checked').value;
-			if(x==1) {VISCA('/imx8/CAM_videotestsrc/0')} else {VISCA('/imx8/CAM_videotestsrc/1')}
-		}
-		function killtest(){
-			x=document.querySelector('input[name="colorbar"]:checked').value;
-			if(x==1) {VISCA('/imx8/CAM_videotestsrc_kill/0')} else {VISCA('/imx8/CAM_videotestsrc_kill/1')}
-		}
-	</script>
-		
-<div id="VISCA" class="tabcontent">
+					</tr>
 
-  <table border="0" align="center" cellpadding="0" cellspacing="0">
-	<tbody>
+				</tbody>
+			</table>
 
-<!-- 
-<tr> <td align="center" valign="middle" bgcolor="#999999" class="col1"><h2>Menu</h2></td> <td align="center" valign="middle" 
-					  bgcolor="#999999" class="col2_h"><h2>Main Window</h2></td> </tr> 
--->
+<script>
+	function videotest(){
+		x=document.querySelector('input[name="colorbar"]:checked').value;
+		if(x==1) {VISCA('/imx8/CAM_videotestsrc/0')} else {VISCA('/imx8/CAM_videotestsrc/1')}
+	}
+	function killtest(){
+		x=document.querySelector('input[name="colorbar"]:checked').value;
+		if(x==1) {VISCA('/imx8/CAM_videotestsrc_kill/0')} else {VISCA('/imx8/CAM_videotestsrc_kill/1')}
+	}
+</script>
 
-	<div class="slidecontainer">
-	  <p>Zoom slider</p>
-	  <input id="zoomslider" 
-		onwheel="slider_click(this.range)" 
-		onchange="slider_change(this.value)" 
-		type="range" min="0" max="16383" value="0" 
-		class="slider" 
-		id="myRange">
-	</div>
+			  <table border="0" align="center" cellpadding="0" cellspacing="0">
+				  <tbody>
+					  <tr>
+						<td class="col1" align="center" valign="middle">
+							<p id="btn1" onclick="videotest()" class="cta-button">Test colorbar<br>START</p>
+						</td>
+						  <td class="col1" align="center" valign="middle">
+							<p id="btn2" onclick="killtest()" class="cta-button">Test 
+colorbar<br>STOP</p>
+						</td>
+						  <td class="col1" width="15%" align="left" valign="middle">
 
-		<tr>
-		  <td class="col1" align="center" valign="middle">
-			<p id="cam_reset" onclick="VISCA('/imx8/CAM_POWER')" class="cta-button">Camera RESET</p>
-		  </td>
-		  <td class="col1" align="center" valign="middle"></td>
-		  <td class="col1" align="center" valign="middle"></td>
-		  <td class="col1" align="center" valign="middle"></td>
-		  <td class="col1" align="center" valign="middle"></td>
-		</tr>
-
-		<tr>
-		  <td class="col1" align="center" valign="middle">
-			<p id="cam_day_mode" onclick="VISCA('/imx8/CAM_ICR/DAY')" 
-				class="cta-button">DAY<br>mode</p>
-		  </td>
-		  <td class="col1" align="center" valign="middle">
-			<p id="cam_night_mode" onclick="VISCA('/imx8/CAM_ICR/NIGHT')" 
-				class="cta-button">NIGHT<br> mode</p>
-		  </td>
-		  <td class="col1" align="center" valign="middle"></td>
-		  <td class="col1" align="center" valign="middle"></td>
-		  <td class="col1" align="center" valign="middle"></td>
-		</tr>
-
-		<tr>
-		  <td class="col1" align="center" valign="middle">
-			<p id="cam_menu_enter" onclick="VISCA('/imx8/CAM_MENU/ENTER')" class="cta-button">MENU ENTER</p>
-		  </td>
-		  <td class="col1" align="center" valign="middle">
-			<p id="cam_menu_enter" onclick="VISCA('/imx8/CAM_MENU/LEFT')" class="cta-button">LEFT</p>
-		  </td>
-		  <td class="col1" align="center" valign="middle">
-			<p id="cam_menu_enter" onclick="VISCA('/imx8/CAM_MENU/RIGHT')" class="cta-button">RIGHT</p>
-		  </td>
-		  <td class="col1" align="center" valign="middle">
-			<p id="cam_menu_enter" onclick="VISCA('/imx8/CAM_MENU/UP')" class="cta-button">UP</p>
-		  </td>
-		  <td class="col1" align="center" valign="middle">
-			<p id="cam_menu_enter" onclick="VISCA('/imx8/CAM_MENU/DOWN')" class="cta-button">DOWN</p>
-		  </td>
-		</tr>
-
-		<tr>
-		  <td class="col1" align="center" valign="middle">
-			<p id="cam_menu_esc" onclick="VISCA('/imx8/CAM_MENU/ESC')" 
-				class="cta-button">MENU <br> ESC</p>
-		  </td>
-		  <td class="col1" align="center" valign="middle">
-			<p id="cam_menu_esc" onclick="VISCA('/imx8/CAM_MEMORY')" class="cta-button">SAVE MEM</p>
-		  </td>
-		  <td class="col1" align="left" valign="middle" >
-			<br>
-			<label for="visca_string">VISCA command:</label>
-			<br>
-			<label for="visca_string">VISCA response:</label>
-		  </td>
-		  <td class="col4" align="left" valign="middle" padding-left="20px">
-			<br>
-			<input type="text" id="visca_string" oninput="VISCA('/imx8/'+this.value)" name="visca_string">
-			<br>
-			<input type="text" id="visca_resp" name="visca_resp">
-		  </td>
-		</tr>
-
-		<tr>
-<!--
-		  <td class="col1" align="center" valign="middle">
-			<p id="btn1" onclick="VISCA('/imx8/81090447FF')" class="cta-button">Zoom pos</p>
-		  </td>
--->
-		  <td class="col1" align="left" valign="middle">
-			<label><input id="Show ID"    
-				type='checkbox' 
-				onchange='dispSelClick(this);'>Camera ID</label>
-			<br>
-			<label><input id="Show Title" 
-				type='checkbox' 
-				onchange='dispSelClick(this);'>Title</label>
-			<br>
-			<label><input id="Show Zoom factor" 
-				type='checkbox' 
-				onchange='dispSelClick(this);'>Zoom factor</label>
-			<br>
-
-<!--
-			<label><input id="Show System message" 
-				type='checkbox' 
-				onchange='dispSelClick(this);'>System message</label>    
--->
-		  </td>
-		  <td class="col1" align="center" valign="middle"> </td>
-		  <td class="col1" align="center" valign="middle"> </td>
-		  <td class="col1" align="center" valign="middle"> </td>
-		</tr>
-
-		<tr>
-		  <td class="col1" align="center" valign="middle">
-			<p id="btn_zoom_tele" 
-				onmousedown="VISCA('/imx8/CAM_Zoom/Tele')" 
-				onmouseup="VISCA('/imx8/CAM_Zoom/Stop')" 
-				class="cta-button">ZOOM<br>Tele</p>
-		  </td>
-		  <td class="col1" align="center" valign="middle">
-			<p id="btn_focus_far" 
-				onmousedown="VISCA('/imx8/CAM_Focus/Far')" 
-				onmouseup="VISCA('/imx8/CAM_Focus/Stop')" 
-				class="cta-button">FOCUS<br>Far</p>
-		  </td>
-		  <td class="col1" align="center" valign="middle">
-			<p id="btn_focus_far" 
-				onmousedown="VISCA('/imx8/CAM_Focus/AUTO')" 
-				class="cta-button">AF<br>AUTO</p>
-		  </td>
-		  <td class="col1" align="center" valign="middle"> </td>
-		  <td class="col1" align="center" valign="middle"> </td>
-		</tr>
-		
-		<tr>
-		  <td class="col1" align="center" valign="middle">
-			<p id="btn_zoom_wide" 
-				onmousedown="VISCA('/imx8/CAM_Zoom/Wide')" 
-				onmouseup="VISCA('/imx8/CAM_Zoom/Stop')" 
-				class="cta-button">ZOOM<br>Wide</p>
-		  </td>
-		  <td class="col1" align="center" valign="middle">
-			<p id="btn_focus_far" 
-				onmousedown="VISCA('/imx8/CAM_Focus/Near')" 
-				onmouseup="VISCA('/imx8/CAM_Focus/Stop')" 
-				class="cta-button">FOCUS<br>Near</p>
-		  </td>
-		  <td class="col1" align="center" valign="middle">
-			<p id="btn_focus_far" 
-				onmousedown="VISCA('/imx8/CAM_Focus/MANUAL')" 
-				class="cta-button">AF<br>MANUAL</p>
-		  </td>
-		  <td class="col1" align="center" valign="middle">
-			<p>Zoom factor:	&nbsp;<label id="zoompos"  for="zoompos"></label> </p>
-			<p>Focus factor:&nbsp;<label id="focuspos" for="focuspos"></label> </p>
-		  </td>
-		</tr>
-
-		<tr>
-		  <td class="col1" align="center" valign="middle">
-			<p id="btn_zoom_1x" onmousedown="VISCA('/imx8/CAM_Zoom/1X');
-				document.getElementById('zoom_factor').selectedIndex =0;
-				document.getElementById('zoomslider').value = 0;"
-				class="cta-button">ZOOM 1x</p>
-		  </td>
-		  <td class="col1" align="center" valign="middle">
-			<br>
-			<label>Zoom factor:</label>
-			<br>
-			<form >
-			  <select name="zoom_factor" id="zoom_factor" onchange="zoom_select()">
-			    <option value="0000">1x</option>
-			    <option value="1816">2x</option>
-			    <option value="240B">3x</option>
-			    <option value="2BC7">4x</option>
-			    <option value="31AB">5x</option>
-			    <option value="363D">6x</option>
-			    <option value="39B6">7x</option>
-			    <option value="3C65">8x</option>
-			    <option value="3E81">9x</option>
-			    <option value="4000">10x</option>
-			  </select>
-			</form>
-		  </td>
-		  <td class="col1" align="center" valign="middle"> </td>
-		  <td class="col1" align="center" valign="middle"> </td>
-		  <td class="col1" align="center" valign="middle"> </td>
-		</tr>
-
-	  </tbody>
-	</table>
-
-	<table border="0" align="center" cellpadding="0" cellspacing="0">
-	  <tbody>
-	  	<tr>
-	  	  <td class="col1" align="center" valign="middle">
-			<p id="btn1" 
-				onclick="videotest()" 
-				class="cta-button">Test colorbar<br>START</p>
-	  	  </td>
-	  	  <td class="col1" align="center" valign="middle">
-			<p id="btn2" 
-				onclick="killtest()" 
-				class="cta-button">Test colorbar<br>STOP</p>
-		  </td>
-		  <td class="col1" width="15%" align="left" valign="middle">
 			<form>
 			  <br>
-			  <div id="rates">
-			    <input type="radio" id="test640x480" name="colorbar" value="1" checked="checked">
-			    <label for="test640x480">640x480</label>
-			    <br>
-			    <input type="radio" id="test1920x1080" name="colorbar" value="0">
-			    <label for="test1920x1080">1920x1080</label>
-			    <br>
-			  </div>
+			<div id="rates">
+			  <input type="radio" id="test640x480" name="colorbar" value="1" checked="checked">
+			  <label for="test640x480">640x480</label><br>
+			  <input type="radio" id="test1920x1080" name="colorbar" value="0">
+			  <label for="test1920x1080">1920x1080</label><br>
+			</div>
 			</form>
-		    </td>
-		</tr>
-
+				</td>
 		<tr>
 
-		  <td class="col1" align="left" valign="middle"></td>
-
-		  <td class="col_1" align="right" valign="middle">
-			<label>camera live video stream 1920x1080@60 (H.264) </label>
-			<br>
-			<label>camera live video stream  1280x720@60 (H.265)</label>
-			<br>
-			<label>IMX8 processor test stream color bar (640x480)</label>
-			<br>
+				  <td class="col1" align="left" valign="middle">
+				</td>
+				  <td class="col_1" align="right" valign="middle">
+			<label>camera live video stream 1920x1080@60 (H.264) </label><br>
+			<label>camera live video stream  1280x720@60 (H.265)</label><br>
+			<label>IMX8 processor test stream color bar (640x480)</label><br>
 			<label>IMX8 processor test stream color bar (1920x1080)</label>
-		  </td>
-
-		  <td class="col_1" align="left" valign="middle">
-			<label>:&nbsp;&nbsp;rtsp://</label><label id="IP1"></label><label>:9001/stream</label>
-			<br>
-			<label>:&nbsp;&nbsp;rtsp://</label><label id="IP2"></label><label>:9002/stream</label>
-			<br>
-			<label>:&nbsp;&nbsp;rtsp://</label><label id="IP3"></label><label>:9003/stream</label>
-			<br>
+				</td>
+				  <td class="col_1" align="left" valign="middle">
+			<label>:&nbsp;&nbsp;rtsp://</label><label id="IP1"></label><label>:9001/stream</label> <br>
+			<label>:&nbsp;&nbsp;rtsp://</label><label id="IP2"></label><label>:9002/stream</label> <br>
+			<label>:&nbsp;&nbsp;rtsp://</label><label id="IP3"></label><label>:9003/stream</label> <br>
 			<label>:&nbsp;&nbsp;rtsp://</label><label id="IP4"></label><label>:9004/stream</label>
-		  </td>
-
-		  <td class="col1" align="left" valign="middle">
-			<label id="label_rtsp1_running" for="label_rtsp1_running"> </label>
-			<br>
-			<label id="label_rtsp2_running" for="label_rtsp2_running"> </label>
-			<br>
-			<label id="label_rtsp3_running" for="label_rtsp3_running"> </label>
-			<br>
-			<label id="label_rtsp4_running" for="label_rtsp4_running"> </label>
-		  </td>
-
+				</td>
+				  <td class="col1" align="left" valign="middle">
+				<label id="label_rtsp1_running" for="label_rtsp1_running"></label> <br>
+				<label id="label_rtsp2_running" for="label_rtsp2_running"></label> <br>
+				<label id="label_rtsp3_running" for="label_rtsp3_running"></label> <br>
+				<label id="label_rtsp4_running" for="label_rtsp4_running"></label>
+				</td>
 		</tr>
-
 		<tr>
-			<label>gst-launch-1.0 rtspsrc location=rtsp://.....:9001/stream ! queue ! rtph264depay ! avdec_h264 ! autovideosink</label>
-			<br>
-			<label>gst-launch-1.0 rtspsrc location=rtsp://.....:9002/stream ! queue ! rtph265depay ! avdec_h265 ! autovideosink</label>
+			  <td class="col2_1h" align="left" valign="middle">
+				<br>
+				<label>gst-launch-1.0 rtspsrc location=rtsp://.....:9001/stream ! queue ! rtph264depay ! avdec_h264 ! autovideosink</label> <br>
+				<label>gst-launch-1.0 rtspsrc location=rtsp://.....:9002/stream ! queue ! rtph265depay ! avdec_h265 ! autovideosink</label>
+			</td>
 		</tr>
 	  </tbody>
 	</table>
 
+<!-- 		</div>  -->
 
-  </div>
-
-<!--
- tab content VISCA   
--->
+</div>  <!-- tab content VISCA   -->
 
 
 <!-- 
@@ -1627,152 +1558,85 @@ hr.footerline {border-top: 1px rgba(115, 190, 68, 1.0) solid;}
 			  <input onchange="CAM_AGCchange(this)" type="checkbox" id="CAM_AGC" name="CAM_AGC" value="CAM_AGC_Manual">
 			  <label for="CAM_AGC"> AGC Manual</label><br>
 			</form>
-		</td>
+		<td>
 	</tr>
 
-	<div class="slidecontainer">
 
-   	<tr>
-	  <td class="col2" align="right" valign="middle">
-		<label align="left" >RED gain:</label>	
-	  </td>
-	  <td class="col2" align="center" valign="middle">
-		<input valign="center" 
-			onchange="camctrl_change(this.id)" 
-			type="range" min="1" max="20" value="10" 
-			class="slider" id="CAM_RGain">
-	  </td> 
-	  <td class="col2" align="center" valign="middle">
-		<label id="rgain_value"> </label>
-	  </td>
-	</tr>
+   <tr>
+		<td class="col2" align="right" valign="middle">	<label align="left" >RED gain:</label>	</td>
+	<td class="col2" align="center" valign="middle">
+			  <input valign="center" onchange="camctrl_change(this.id)" type="range" min="1" max="20" value="10" class="slider" id="CAM_RGain">
+	</td> 
+	<td class="col2" align="center" valign="middle">	<label id="rgain_value"></label>	</td>
+</tr>
+   <tr>
+		 <td class="col2" align="right" valign="middle">	<label align="left" >BLUE gain:</label>	</td>
+	<td class="col2" align="center" valign="middle">
+			  <input valign="center" onchange="camctrl_change(this.id)" type="range" min="1" max="20" value="10" class="slider" id="CAM_BGain">
+	</td> 
+	<td class="col2" align="center" valign="middle">	<label id="bgain_value"></label>	</td>
+</tr>
+   <tr>
+		<td class="col2" align="right" valign="middle">	<label align="left" >Chroma:</label>	</td>
+	<td class="col2" align="center" valign="middle">
+			  <input valign="center" onchange="camctrl_change(this.id)" type="range" min="1" max="20" value="10" class="slider" id="CAM_Chroma">
+	</td>
+	<td class="col2" align="center" valign="middle">	<label id="chroma_value"></label>	</td>
+ </tr>
+   <tr>
+		<td class="col2" align="right" valign="middle">	<label align="left" >Aperture:</label>	</td>
+	<td class="col2" align="center" valign="middle">
+			  <input valign="center" onchange="camctrl_change(this.id)" type="range" min="1" max="20" value="10" class="slider" id="CAM_Aperture">
+	</td>
+	<td class="col2" align="center" valign="middle">	<label id="aperture_value"></label>	</td>
+ </tr>
+   <tr>
+		<td class="col2" align="right" valign="middle">	<label align="left" >Shutter:</label>	</td>
+	<td class="col2" align="center" valign="middle">
+			  <input valign="center" onchange="camctrl_change(this.id)" type="range" min="0" max="13" value="10" class="slider" id="CAM_Shutter">
+	</td>
+	<td class="col2" align="center" valign="middle">	<label id="shutter_value"></label>	</td>
+ </tr>
+   <tr>
+		<td class="col2" align="right" valign="middle">	<label align="left" >Iris:</label>	</td>
+	<td class="col2" align="center" valign="middle">
+			  <input valign="center" onchange="camctrl_change(this.id)" type="range" min="0" max="17" value="10" class="slider" id="CAM_Iris">
+	</td>
+	<td class="col2" align="center" valign="middle">	<label id="iris_value"></label>	</td>
+ </tr>
+   <tr>
+		<td class="col2" align="right" valign="middle">	<label align="left" >Gain:</label>	</td>
+	<td class="col2" align="center" valign="middle">
+			  <input valign="center" onchange="camctrl_change(this.id)" type="range" min="0" max="10" value="10" class="slider" id="CAM_Gain">
+	</td>
+	<td class="col2" align="center" valign="middle">	<label id="gain_value"></label>	</td>
+ </tr>
+   <tr>
+		<td class="col2" align="right" valign="middle">	<label align="left" >Bright:</label>	</td>
+	<td class="col2" align="center" valign="middle">
+			  <input valign="center" onchange="camctrl_change(this.id)" type="range" min="0" max="27" value="10" class="slider" id="CAM_Bright">
+	</td>
+	<td class="col2" align="center" valign="middle">	<label id="bright_value"></label>	</td>
+ </tr>
+   <tr>
+		<td class="col2" align="right" valign="middle">	<label align="left" >AF Mode Active:</label>	</td>
+	<td class="col2" align="center" valign="middle">
+			  <input valign="center" onchange="camctrl_change(this.id)" type="range" min="1" max="255" value="10" class="slider" id="CAM_AF_Mode_Active">
+	</td>
+	<td class="col2" align="center" valign="middle">	<label id="af_mode_active_value"></label>	</td>
+ </tr>
+   <tr>
+		<td class="col2" align="right" valign="middle">	<label align="left" >AF Mode Interval:</label>	</td>
+	<td class="col2" align="center" valign="middle">
+			  <input valign="center" onchange="camctrl_change(this.id)" type="range" min="1" max="255" value="10" class="slider" id="CAM_AF_Mode_Interval">
+	</td>
+	<td class="col2" align="center" valign="middle">	<label id="af_mode_interval_value"></label>	</td>
+ </tr>
 
-	<tr>
-	  <td class="col2" align="right" valign="middle">	
-		<label align="left" >BLUE gain:</label>	
-	  </td>
-	  <td class="col2" align="center" valign="middle">
-		<input valign="center" 
-			onchange="camctrl_change(this.id)" 
-			type="range" min="1" max="20" value="10" 
-			class="slider" id="CAM_BGain">
-	  </td> 
-	  <td class="col2" align="center" valign="middle">
-		<label id="bgain_value"></label>
-	  </td>
-	</tr>
+	</tbody>
+</table>
 
-	<tr>
-	  <td class="col2" align="right" valign="middle">
-		<label align="left" >Chroma:</label>
-	  </td>
-	  <td class="col2" align="center" valign="middle">
-		<input valign="center" 
-			onchange="camctrl_change(this.id)" 
-			type="range" min="1" max="20" value="10" 
-			class="slider" id="CAM_Chroma">
-	  </td>
-	  <td class="col2" align="center" valign="middle">
-		<label id="chroma_value"> </label>
-	  </td>
-	</tr>
-
-	<tr>
-	  <td class="col2" align="right" valign="middle">
-		<label align="left" >Aperture:</label>	</td>
-	  <td class="col2" align="center" valign="middle">
-		<input valign="center" 
-			onchange="camctrl_change(this.id)" 
-			type="range" min="1" max="20" value="10" 
-			class="slider" id="CAM_Aperture">
-	  </td>
-	  <td class="col2" align="center" valign="middle">
-		<label id="aperture_value"> </label>
-	  </td>
-	</tr>
-
-	<tr>
-	  <td class="col2" align="right" valign="middle">	
-		<label align="left" >Shutter:</label>
-	  </td>
-	  <td class="col2" align="center" valign="middle">
-		<input valign="center" onchange="camctrl_change(this.id)" type="range" min="0" max="13" value="10" class="slider" id="CAM_Shutter">
-	  </td>
-	  <td class="col2" align="center" valign="middle">
-		<label id="shutter_value"></label>	
-	  </td>
-	</tr>
-
-	<tr>
-	  <td class="col2" align="right" valign="middle">	<label align="left" >Iris:</label>	</td>
-	  <td class="col2" align="center" valign="middle">
-		<input valign="center" onchange="camctrl_change(this.id)" type="range" min="0" max="17" value="10" class="slider" id="CAM_Iris">
-	  </td>
-	  <td class="col2" align="center" valign="middle">	<label id="iris_value"></label>	</td>
-	</tr>
-
-	<tr>
-	  <td class="col2" align="right" valign="middle">	<label align="left" >Gain:</label>	</td>
-	  <td class="col2" align="center" valign="middle">
-		<input valign="center" onchange="camctrl_change(this.id)" type="range" min="0" max="10" value="10" class="slider" id="CAM_Gain">
-	  </td>
-	  <td class="col2" align="center" valign="middle">	<label id="gain_value"></label>	</td>
-	</tr>
-
-	<tr>
-	  <td class="col2" align="right" valign="middle">
-		<label align="left" >Bright:</label>
-	  </td>
-	  <td class="col2" align="center" valign="middle">
-		<input valign="center" 
-			onchange="camctrl_change(this.id)" 
-			type="range" min="0" max="27" value="10" 
-			class="slider" id="CAM_Bright">
-	  </td>
-	  <td class="col2" align="center" valign="middle">
-		<label id="bright_value"> </label>
-	  </td>
-	</tr>
- 
-	<tr>
-	  <td class="col2" align="right" valign="middle">
-	 	<label align="left" >AF Mode Active:</label>
-	  </td>
-	  <td class="col2" align="center" valign="middle">
-		<input valign="center" 
-			onchange="camctrl_change(this.id)" 
-			type="range" min="1" max="255" value="10" 
-			class="slider" id="CAM_AF_Mode_Active">
-	  </td>
-	  <td class="col2" align="center" valign="middle">
-		<label id="af_mode_active_value"></label>
-	  </td>
-	</tr>
-
-	<tr>
-	  <td class="col2" align="right" valign="middle">
-		<label align="left" >AF Mode Interval:</label>	</td>
-	  <td class="col2" align="center" valign="middle">
-		<input valign="center" 
-			onchange="camctrl_change(this.id)" 
-			type="range" min="1" max="255" value="10" 
-			class="slider" id="CAM_AF_Mode_Interval">
-	  </td>
-	  <td class="col2" align="center" valign="middle">
-		<label id="af_mode_interval_value"></label>
-	  </td>
-	</tr>
-
-	</div>
-	<!-- tab content CAMCTRLslide container -->
-
-     </tbody>
-   </table>
-
-</div>
-<!--
-	tab content CAMCTRL
--->
+</div>  <!-- tab content CAMCTRL   -->
 
 <!-- 
 ******************************************************************************************************
@@ -1782,10 +1646,12 @@ hr.footerline {border-top: 1px rgba(115, 190, 68, 1.0) solid;}
 ******************************************************************************************************
 -->
 
-  <div id="DOCUMENTATION" class="tabcontent">
-  </div>  <!-- tab content DOCUMENTATION   -->
+<div id="DOCUMENTATION" class="tabcontent">
 
-</div>  <!-- main -->
+</div>  <!-- tab content DOCUMENTATION   -->
+
+  <!-- main -->
+</div>
 
 
 <div class="footer-top">
@@ -1797,32 +1663,28 @@ hr.footerline {border-top: 1px rgba(115, 190, 68, 1.0) solid;}
 *
 ******************************************************************************************************
 -->
-
-  </div>
-
-  <div class="footer purple">
-	<table border="0" align="center" cellpadding="5" cellspacing="5" class="footer-table">
-	  <tbody>
-		<tr>
-		  <td><p style="font-size: 20px;"><strong>HEADQUARTERS LOCATION</strong></p>
-			<p>Videology Industrial-Grade Cameras<br>35 Hampden Road<br>Mansfield, MA 02048<br>United States<br><br><a href="tel:+14019495332" rel="noopener">+1 401 949 5332</a></p>
-			<p><a href="mailto:sales@videologyinc.com">sales@videologyinc.com</a></p>
-		  </td>
-		  <td><p style="font-size: 20px;"><strong>EUROPE LOCATION</strong></p>
-			<p>Videology Industrial-Grade Cameras<br>High Tech Campus 5<br>5656 AE Eindhoven<br>The Netherlands</p>
-			<p><a href="tel:+31407200159" rel="noopener">+31 40 7200159</a></p>
-			<p><a href="mailto:sales-eu@videologyinc.com" rel="noopener">sales-eu@videologyinc.com</a></p>
-		  </td>
-		</tr>
-	  </tbody>
-	</table>
-	
-	<ul class="footer-menu"><hr class="footerline" noshade="noshade">
-	  <li class=""><a href="https://www.videologyinc.com/privacy-policy" target="_self">Privacy Policy</a></li><li class=""><p class="hhs-foot-copyright">© 2023 Videology Industrial-Grade Cameras</p>
-	  </li>
-	</ul>
-  </div>
-
-  </body>
+	</div>
+	  <div class="footer purple">
+		  <table border="0" align="center" cellpadding="5" cellspacing="5" class="footer-table">
+			  <tbody>
+				  <tr>
+					  <td><p style="font-size: 20px;"><strong>HEADQUARTERS LOCATION</strong></p>
+							<p>Videology Industrial-Grade Cameras<br>35 Hampden Road<br>Mansfield, MA 02048<br>United States<br><br><a href="tel:+14019495332" rel="noopener">+1 401 949 5332</a></p>
+							<p><a href="mailto:sales@videologyinc.com">sales@videologyinc.com</a></p>
+					</td>
+					  <td><p style="font-size: 20px;"><strong>EUROPE LOCATION</strong></p>
+							<p>Videology Industrial-Grade Cameras<br>High Tech Campus 5<br>5656 AE Eindhoven<br>The Netherlands</p>
+							<p><a href="tel:+31407200159" rel="noopener">+31 40 7200159</a></p>
+							<p><a href="mailto:sales-eu@videologyinc.com" rel="noopener">sales-eu@videologyinc.com</a></p>
+					</td>
+				</tr>
+		  </tbody>
+		</table>
+		  <ul class="footer-menu"><hr class="footerline" noshade="noshade">
+			  <li class=""><a href="https://www.videologyinc.com/privacy-policy" target="_self">Privacy Policy</a></li><li class=""><p class="hhs-foot-copyright">© 2023 Videology Industrial-Grade Cameras</p>
+			</li>
+		</ul>
+	</div>
+	</body>
 </html>
 
