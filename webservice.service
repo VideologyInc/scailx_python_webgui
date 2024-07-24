@@ -1,0 +1,8 @@
+[Unit]
+Description=web server service
+
+[Service]
+ExecStart=python3 /home/root/scailx-web-server/server.py
+
+[Install]
+WantedBy=multi-user.target

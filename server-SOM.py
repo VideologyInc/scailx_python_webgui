@@ -1,11 +1,11 @@
-# server app
+
 import http.server
 import socketserver
 import socket 
 import time
 import os
 import base64
-#import serial
+import serial
 import logging
 import json
 import psutil
@@ -16,92 +16,9 @@ import datetime
  
 import pickle
 
-#-----------------------------------------------------------------------------------
-
-from periphery import Serial
-from time import sleep, time_ns
-import argparse
-import fcntl
-import ctypes
-
-# Define the struct
-class CrosslinkIoctlSerial(ctypes.Structure):
-    _fields_ = [
-        ("len", ctypes.c_uint32),
-        ("data", ctypes.c_uint8 * 64),
-    ]
-
-# # define UART status bits
-# CROSSLINK_UART_STAT_BUSY_TX       = 0b0010_0000
-# CROSSLINK_UART_STAT_BUSY_RX       = 0b0001_0000
-# CROSSLINK_UART_STAT_DATA_FULLTX   = 0b0000_1000
-# CROSSLINK_UART_STAT_DATA_EMPTYTX  = 0b0000_0100
-# CROSSLINK_UART_STAT_DATA_FULLRX   = 0b0000_0010
-# CROSSLINK_UART_STAT_DATA_EMPTYRX  = 0b0000_0001
-
-# Define the IOCTL commands
-CROSSLINK_CMD_SERIAL_SEND_TX    = 0x7601
-CROSSLINK_CMD_SERIAL_RECV_RX    = 0x7602
-CROSSLINK_CMD_SERIAL_RX_CNT     = 0x7603
-CROSSLINK_CMD_SERIAL_BAUD       = 0x7604
-
-#-----------------------------------------------------------------------------------
-# Open the device file
-def send(dev_path, data: bytes):
-    ioctl_serial = CrosslinkIoctlSerial()
-    ioctl_serial.len = len(data)
-    ioctl_serial.data = (ctypes.c_uint8 * 64)(*data)
-    # Call an IOCTL
-    with open(dev_path) as f:
-        fcntl.ioctl(f, CROSSLINK_CMD_SERIAL_SEND_TX, ioctl_serial)
-
-def recv(dev_path, count:int=0):
-    ioctl_serial = CrosslinkIoctlSerial()
-    ioctl_serial.len = count
-    with open(dev_path) as f:
-        fcntl.ioctl(f, CROSSLINK_CMD_SERIAL_RECV_RX, ioctl_serial)
-    return bytes(ioctl_serial.data[:ioctl_serial.len])
-
-def get_rx_count(dev_path):
-    ioctl_serial = CrosslinkIoctlSerial()
-    with open(dev_path) as f:
-        fcntl.ioctl(f, CROSSLINK_CMD_SERIAL_RX_CNT, ioctl_serial)
-    return ioctl_serial.len
-
-def get_baud(dev_path):
-    ioctl_serial = CrosslinkIoctlSerial()
-    with open(dev_path) as f:
-        fcntl.ioctl(f, CROSSLINK_CMD_SERIAL_BAUD, ioctl_serial)
-    return ioctl_serial.len
-
-def set_baud(dev_path, baud:int):
-    ioctl_serial = CrosslinkIoctlSerial()
-    ioctl_serial.len = baud
-    with open(dev_path) as f:
-        fcntl.ioctl(f, CROSSLINK_CMD_SERIAL_BAUD, ioctl_serial)
-
-def wait_for_rx_stable(dev_path, start_wait_ms, stop_wait_ms):
-    start = time_ns()
-    while get_rx_count(dev_path) == 0:
-        sleep(0.002)
-        if time_ns() - start > start_wait_ms*1e6:
-            return False
-    byte_count = get_rx_count(dev_path)
-    start = time_ns()
-    while time_ns() - start < stop_wait_ms*1e6:
-        sleep(0.002)
-        cnt = get_rx_count(dev_path)
-        if cnt != byte_count:
-            byte_count = cnt
-            start = time_ns()
-    return True
-
-#-----------------------------------------------------------------------------------
-
-#print("serial.__version__ = {}".format(serial.__version__))
+print("serial.__version__ = {}".format(serial.__version__))
 
 PORT = 8089
-DEV  = "/dev/v4l-subdev1"
 
 max_temp = -40
 min_temp = 120
@@ -160,8 +77,8 @@ class HttpRequestHandler(http.server.SimpleHTTPRequestHandler):
         global visca_resp
         global min_temp, max_temp
 
-#        ser = serial.Serial('/dev/ttyVISCA1', baudrate=9600, timeout=0)
-        
+        ser = serial.Serial('/dev/ttymxc3', baudrate=9600, timeout=0)
+
         do_reply = False
         cur_path = os.path.dirname(__file__)
         if self.path == '/':
@@ -284,77 +201,77 @@ class HttpRequestHandler(http.server.SimpleHTTPRequestHandler):
                     self.wfile.write(bytes('data: ' + s + '\n\n', 'utf-8'))
 
 
-                if self.path.startswith('/imx8/_cameracontrol'):
+                if self.path.startswith('/imx8/cameracontrol'):
 
-                    send(DEV, b'\x81\x09\x04\x43\xFF')        #
+                    ser.write(b'\x81\x09\x04\x43\xFF')
                     while (ser.in_waiting == 0):
                        i=0
-                    print(ser.in_waiting)
+#                    print(ser.in_waiting)
                     x = ser.read(ser.in_waiting)
                     CAM_RGain = "{0:0{1}x}".format(16*x[4]+x[5], 2)
 
-                    send(DEV, b'\x81\x09\x04\x44\xFF')
+                    ser.write(b'\x81\x09\x04\x44\xFF')
                     while (ser.in_waiting == 0):
                        i=0
                     x = ser.read(ser.in_waiting)
                     CAM_BGain = "{0:0{1}x}".format(16*x[4]+x[5], 2)
 
-                    send(DEV, b'\x81\x09\x04\x13\xFF')
+                    ser.write(b'\x81\x09\x04\x13\xFF')
                     while (ser.in_waiting == 0):
                        i=0
                     x = ser.read(ser.in_waiting)
                     CAM_Chroma = "{0:0{1}x}".format(16*x[4]+x[5], 2)
 
-                    send(DEV, b'\x81\x09\x04\x4D\xFF')
+                    ser.write(b'\x81\x09\x04\x4D\xFF')
                     while (ser.in_waiting == 0):
                        i=0
                     x = ser.read(ser.in_waiting)
                     CAM_Bright  = "{0:0{1}x}".format(16*x[4]+x[5], 2)
 
-                    send(DEV, b'\x81\x09\x04\x42\xFF')
+                    ser.write(b'\x81\x09\x04\x42\xFF')
                     while (ser.in_waiting == 0):
                        i=0
                     x = ser.read(ser.in_waiting)
                     CAM_Aperture    = "{0:0{1}x}".format(16*x[4]+x[5], 2)
 
-                    send(DEV, b'\x81\x09\x04\x4A\xFF')
+                    ser.write(b'\x81\x09\x04\x4A\xFF')
                     while (ser.in_waiting == 0):
                        i=0
                     x = ser.read(ser.in_waiting)
                     CAM_Shutter     = "{0:0{1}x}".format(16*x[4]+x[5], 2)
 
-                    send(DEV, b'\x81\x09\x04\x4B\xFF')
+                    ser.write(b'\x81\x09\x04\x4B\xFF')
                     while (ser.in_waiting == 0):
                        i=0
                     x = ser.read(ser.in_waiting)
                     CAM_Iris    = "{0:0{1}x}".format(16*x[4]+x[5], 2)
 
-                    send(DEV, b'\x81\x09\x04\x4C\xFF')
+                    ser.write(b'\x81\x09\x04\x4C\xFF')
                     while (ser.in_waiting == 0):
                        i=0
                     x = ser.read(ser.in_waiting)
                     CAM_Gain    = "{0:0{1}x}".format(16*x[4]+x[5], 2)
 
-                    send(DEV, b'\x81\x09\x04\x27\xFF')
+                    ser.write(b'\x81\x09\x04\x27\xFF')
                     while (ser.in_waiting == 0):
                        i=0
                     x = ser.read(ser.in_waiting)
                     CAM_AF_Mode_Active   = "{0:0{1}x}".format(16*x[2]+x[3], 2)
                     CAM_AF_Mode_Interval = "{0:0{1}x}".format(16*x[4]+x[5], 2)
 
-                    send(DEV, b'\x81\x09\x04\x47\xFF')
+                    ser.write(b'\x81\x09\x04\x47\xFF')
                     while (ser.in_waiting == 0):
                        i=0
                     x = ser.read(ser.in_waiting)
                     zoompos  = "{0:0{1}x}".format(16*(16*(16*x[2]+x[3])+x[4])+x[5], 4)
 
-                    send(DEV, b'\x81\x09\x04\x48\xFF')
+                    ser.write(b'\x81\x09\x04\x48\xFF')
                     while (ser.in_waiting == 0):
                        i=0
                     x = ser.read(ser.in_waiting)
                     focuspos  = "{0:0{1}x}".format(16*(16*(16*x[2]+x[3])+x[4])+x[5], 4)
 
-                    send(DEV, b'\x81\x09\x04\x39\xFF')
+                    ser.write(b'\x81\x09\x04\x39\xFF')
                     while (ser.in_waiting == 0):
                        i=0
                     x = ser.read(ser.in_waiting)
@@ -363,7 +280,7 @@ class HttpRequestHandler(http.server.SimpleHTTPRequestHandler):
                     if (x[2] == 0x03):
                         CAM_AEMode = '0'
 
-                    send(DEV, b'\x81\x09\x04\x5C\xFF')
+                    ser.write(b'\x81\x09\x04\x5C\xFF')
                     while (ser.in_waiting == 0):
                        i=0
                     x = ser.read(ser.in_waiting)
@@ -372,7 +289,7 @@ class HttpRequestHandler(http.server.SimpleHTTPRequestHandler):
                     if (x[2] == 0x03):
                         CAM_AGCMode = '0'
 
-                    send(DEV, b'\x81\x09\x04\x35\xFF')
+                    ser.write(b'\x81\x09\x04\x35\xFF')
                     while (ser.in_waiting == 0):
                        i=0
                     x = ser.read(ser.in_waiting)
@@ -387,7 +304,7 @@ class HttpRequestHandler(http.server.SimpleHTTPRequestHandler):
                     if (x[2] == 0x05):
                         CAM_WBMode = 'Manual'
        
-                    send(DEV, b'\x81\x09\x04\x38\xFF')
+                    ser.write(b'\x81\x09\x04\x38\xFF')
                     while (ser.in_waiting == 0):
                        i=0
                     x = ser.read(ser.in_waiting)
@@ -541,7 +458,7 @@ class HttpRequestHandler(http.server.SimpleHTTPRequestHandler):
         global ser
         global visca_resp
 
-#HH        ser = serial.Serial('/dev/ttyVISCA1', baudrate=9600, timeout=0)
+        ser = serial.Serial('/dev/ttymxc3', baudrate=9600, timeout=0)
 
 #        print("POST: " + self.path)
         self.send_response(301)
@@ -552,12 +469,12 @@ class HttpRequestHandler(http.server.SimpleHTTPRequestHandler):
         z = self.path.rsplit('/')
         if self.path.startswith('/imx8'):
             if z[2] == 'CAM_POWER':
-               send(DEV, b'\x81\x01\x04\x00\x03\xFF') 
-#               send(DEV, b'\x81\x01\x04\x00\x03\xFF')
+               ser.write(b'\x81\x01\x04\x00\x03\xFF')
 
             #***************************************************
             # INQUIRY
             #***************************************************
+
             if (z[2].startswith('8109') and z[2].endswith('FF')):
                s = []
                for x in range(0, len(z[2])-1, 2):
@@ -565,14 +482,14 @@ class HttpRequestHandler(http.server.SimpleHTTPRequestHandler):
 #                  print(int("0x"+z[2][x]+z[2][x+1],16))
 #               print(s)
 
-               send(DEV, bytearray(s))
+               ser.write(bytearray(s))
+               ser.terminator = '\xFF'
                time.sleep(1)
-               recv(DEV, data)
-#HH               data = ser.readline()
-               print(len(data))
-               print(data)
+
+               data = ser.readline()
+#               print(len(data))
+#               print(data)
                visca_resp = binascii.hexlify(data).decode('ascii')
-               print(visca_resp)
 
 #               print('VISCA resp. INQUIRY:'+visca_resp)
                if z[2][3]=='\x39':  # AE mode inq
@@ -610,16 +527,18 @@ class HttpRequestHandler(http.server.SimpleHTTPRequestHandler):
                   print('AGCMode Inq:' + str(data[2]))
 
             if (z[2].startswith('8101') and z[2].endswith('FF')):
+#               ser = serial.Serial('/dev/ttymxc3', baudrate=9600, timeout=0)
                s = []
                for x in range(0, len(z[2])-1, 2):
                   s.append(int("0x"+z[2][x]+z[2][x+1],16))
                   print(int("0x"+z[2][x]+z[2][x+1],16))
                print(s)
 
-               send(DEV, bytearray(s))
+               ser.write(bytearray(s))
+               ser.terminator = '\xFF'
                time.sleep(1)
 
-#HH               data = ser.readline()
+               data = ser.readline()
 #               print(len(data))
 #               print(data)
                visca_resp = binascii.hexlify(data).decode('ascii')
@@ -654,32 +573,38 @@ class HttpRequestHandler(http.server.SimpleHTTPRequestHandler):
             else:
                visca_resp=''
 
+
             if z[2] == 'CAM_ICR':
                if z[3] == 'NIGHT':
-                  send(DEV, b'\x81\x01\x04\x01\x02\xFF')
+                  ser.write(b'\x81\x01\x04\x01\x02\xFF')
                if z[3] == 'DAY':
-                  send(DEV, b'\x81\x01\x04\x01\x03\xFF')
+                  ser.write(b'\x81\x01\x04\x01\x03\xFF')
 
             if z[2] == 'CAM_MENU':
+#               ser = serial.Serial('/dev/ttymxc3', baudrate=9600, timeout=0)
                if z[3] == 'ENTER':
-                  send(DEV, b'\x81\x01\x04\x16\x10\xFF')
+                  ser.write(b'\x81\x01\x04\x16\x10\xFF')
                if z[3] == 'ESC':
-                  send(DEV, b'\x81\x01\x04\x16\x20\xFF')
+                  ser.write(b'\x81\x01\x04\x16\x20\xFF')
                if z[3] == 'UP':
-                  send(DEV, b'\x81\x01\x04\x16\x01\xFF')
+                  ser.write(b'\x81\x01\x04\x16\x01\xFF')
                if z[3] == 'DOWN':
-                  send(DEV, b'\x81\x01\x04\x16\x02\xFF')
+                  ser.write(b'\x81\x01\x04\x16\x02\xFF')
                if z[3] == 'RIGHT':
-                  send(DEV, b'\x81\x01\x04\x16\x08\xFF')
+                  ser.write(b'\x81\x01\x04\x16\x08\xFF')
                if z[3] == 'LEFT':
-                  send(DEV, b'\x81\x01\x04\x16\x04\xFF') 
+                  ser.write(b'\x81\x01\x04\x16\x04\xFF') 
 
             if z[2] == 'CAM_MEMORY':
-#HH               send(DEV, b'\x81\x01\x04\x3F\x01\x00\xFF')
+               ser = serial.Serial('/dev/ttymxc3', baudrate=9600, timeout=0)
+               ser.write(b'\x81\x01\x04\x3F\x01\x00\xFF')
+#               ser.flush()
                time.sleep(2)
-               send(DEV, b'\x81\x01\x04\x3F\x01\x7F\xFF')
+               ser.write(b'\x81\x01\x04\x3F\x01\x7F\xFF')
+#               ser.flush()
                time.sleep(2)
-               send(DEV, b'\x81\x01\x04\x00\x03\xFF')
+               ser.write(b'\x81\x01\x04\x00\x03\xFF')
+#               ser.flush()
 
 
             if z[2] == 'CAM_videotestsrc':
@@ -707,20 +632,20 @@ class HttpRequestHandler(http.server.SimpleHTTPRequestHandler):
 
             if z[2] == 'CAM_Zoom':
                if z[3] == 'Stop':
-                  send(DEV, b'\x81\x01\x04\x07\x00\xFF')
+                  ser.write(b'\x81\x01\x04\x07\x00\xFF')
                if z[3] == 'Tele':
-                  send(DEV, b'\x81\x01\x04\x07\x02\xFF')
+                  ser.write(b'\x81\x01\x04\x07\x02\xFF')
                if z[3] == 'Wide':
-                  send(DEV, b'\x81\x01\x04\x07\x03\xFF')
+                  ser.write(b'\x81\x01\x04\x07\x03\xFF')
                if z[3] == '1X':
                   x = bytearray()
                   x = [0x81,0x01,0x04,0x47,0x00,0x00,0x00,0x00,0xFF]
                   print(x)
-#                  send(DEV, b'\x81\x01\x04\x47\x00\x00\x00\x00\xFF')
-                  send(DEV, bytearray(x))
+#                  ser.write(b'\x81\x01\x04\x47\x00\x00\x00\x00\xFF')
+                  ser.write(bytearray(x))
                if z[3] == 'DIRECT':
                   s = [0x81, 0x01, 0x04, 0x47, int("0x0"+z[4][0],16), int("0x0"+z[4][1],16), int("0x0"+z[4][2],16), int("0x0"+z[4][3],16), 0xFF]
-                  send(DEV, bytearray(s))
+                  ser.write(bytearray(s))
                if z[3][0] == 'X':
                   if len(z[3]) == 2:
                        s = [0x81, 0x01, 0x04, 0x47, 0x00, 0x00, 0x00, int("0x0"+z[3][1],16), 0xFF]
@@ -731,25 +656,25 @@ class HttpRequestHandler(http.server.SimpleHTTPRequestHandler):
                   if len(z[3]) == 5:
                        s = [0x81, 0x01, 0x04, 0x47, int("0x0"+z[3][1],16), int("0x0"+z[3][2],16), int("0x0"+z[3][3],16), int("0x0"+z[3][4],16), 0xFF]
                   print(s)
-                  send(DEV, bytearray(s))
+                  ser.write(bytearray(s))
 
             if z[2] == 'CAM_Focus':
                if z[3] == 'AUTO':
-                  send(DEV, b'\x81\x01\x04\x38\x02\xFF')	# auto focus
+                  ser.write(b'\x81\x01\x04\x38\x02\xFF')	# auto focus
                if z[3] == 'MANUAL':
-                  send(DEV, b'\x81\x01\x04\x38\x03\xFF')	# manual focus
+                  ser.write(b'\x81\x01\x04\x38\x03\xFF')	# manual focus
                if z[3] == 'Far':
-                  send(DEV, b'\x81\x01\x04\x08\x27\xFF')
+                  ser.write(b'\x81\x01\x04\x08\x27\xFF')
                if z[3] == 'Near':
-                  send(DEV, b'\x81\x01\x04\x08\x37\xFF')
+                  ser.write(b'\x81\x01\x04\x08\x37\xFF')
                if z[3] == 'Near_near_limit':
-                  send(DEV, b'\x81\x01\x04\x28\x0F\x00\x00\x00\xFF')
+                  ser.write(b'\x81\x01\x04\x28\x0F\x00\x00\x00\xFF')
 
             if z[2] == 'CAM_DispSel':
                   x = int(z[3][3])*8 + int(z[3][2])*4 + int(z[3][1])*2 + int(z[3][0])
                   s = [0x81, 0x01, 0x04, 0x14, 0x00, x, 0xFF]
                   print(s)
-                  send(DEV, bytearray(s))
+                  ser.write(bytearray(s))
                   
     extensions_map = {
         '': 'application/octet-stream',
@@ -853,9 +778,9 @@ def checkServiceStatus():
    
     pass
 
-#checkServiceStatus()
+checkServiceStatus()
 
-#os.popen("systemctl stop serial-getty@ttymxc3.service")
+os.popen("systemctl stop serial-getty@ttymxc3.service")
 
 
 #*********************************************************************************************
@@ -867,9 +792,7 @@ httpd.daemon_threads = True
 
 try:
 
-#    ser = serial.Serial('/dev/ttyVISCA1', baudrate=9600, timeout=0)
-
-    set_baud(DEV, 9600)
+#    ser = serial.Serial('/dev/ttymxc3', baudrate=9600, timeout=0)
 
     visca_resp = ''
 
@@ -880,8 +803,8 @@ try:
     print('IP:'+IP)
     print(f"serving at <{IP}>:{PORT}")
 
-#    ser = serial.Serial('/dev/ttyVISCA1', baudrate=9600, timeout=0)
-#    send(DEV, b'\x81\x01\x04\x00\x03\xFF')
+#    ser = serial.Serial('/dev/ttymxc3', baudrate=9600, timeout=0)
+#    ser.write(b'\x81\x01\x04\x00\x03\xFF')
 
 
 #    print(socket.getaddrinfo(HOST_NAME, PORT))
