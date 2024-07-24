@@ -601,7 +601,6 @@ hr.footerline {border-top: 1px rgba(115, 190, 68, 1.0) solid;}
 				console.log('> CPU freq. : '+obj.cpu_freq+'MHz' )
 
 //				document.getElementById("HOST_NAME").innerHTML = obj.HOST_NAME " '.local';
-				document.getElementById("IP0").innerHTML = obj.IP;
 				document.getElementById("IP1").innerHTML = obj.IP;
 				document.getElementById("IP2").innerHTML = obj.IP;
 				document.getElementById("IP3").innerHTML = obj.IP;
@@ -635,8 +634,6 @@ hr.footerline {border-top: 1px rgba(115, 190, 68, 1.0) solid;}
 				document.getElementById("label_CPU_IP_address").innerHTML = "IP address = "+obj.IP;
 				document.getElementById("label_cpu_IP_address").innerHTML = "IP address = "+obj.IP;
 
-				if (obj.rtsp0_running == '1'){ document.getElementById("label_rtsp0_running").innerHTML = "Running";} 
-				  else {document.getElementById("label_rtsp0_running").innerHTML = "Not running";}
 				if (obj.rtsp1_running == '1'){ document.getElementById("label_rtsp1_running").innerHTML = "Running";} 
 				  else {document.getElementById("label_rtsp1_running").innerHTML = "Not running";}
 				if (obj.rtsp2_running == '1'){ document.getElementById("label_rtsp2_running").innerHTML = "Running";} 
@@ -1515,8 +1512,6 @@ hr.footerline {border-top: 1px rgba(115, 190, 68, 1.0) solid;}
 		  <td class="col1" align="left" valign="middle"></td>
 
 		  <td class="col_1" align="right" valign="middle">
-			<label>Object Detection application </label>
-			<br>
 			<label>camera live video stream 1920x1080@60 (H.264) </label>
 			<br>
 			<label>camera live video stream  1280x720@60 (H.265)</label>
@@ -1527,8 +1522,6 @@ hr.footerline {border-top: 1px rgba(115, 190, 68, 1.0) solid;}
 		  </td>
 
 		  <td class="col_1" align="left" valign="middle">
-			<label>:&nbsp;&nbsp;rtsp://</label><label id="IP0"></label><label>:8554/stream</label>
-			<br>
 			<label>:&nbsp;&nbsp;rtsp://</label><label id="IP1"></label><label>:9001/stream</label>
 			<br>
 			<label>:&nbsp;&nbsp;rtsp://</label><label id="IP2"></label><label>:9002/stream</label>
@@ -1539,8 +1532,6 @@ hr.footerline {border-top: 1px rgba(115, 190, 68, 1.0) solid;}
 		  </td>
 
 		  <td class="col1" align="left" valign="middle">
-			<label id="label_rtsp0_running" for="label_rtsp0_running"> </label>
-			<br>
 			<label id="label_rtsp1_running" for="label_rtsp1_running"> </label>
 			<br>
 			<label id="label_rtsp2_running" for="label_rtsp2_running"> </label>
