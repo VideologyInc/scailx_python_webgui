@@ -160,8 +160,6 @@ class HttpRequestHandler(http.server.SimpleHTTPRequestHandler):
         global visca_resp
         global min_temp, max_temp
 
-#        ser = serial.Serial('/dev/ttyVISCA1', baudrate=9600, timeout=0)
-        
         do_reply = False
         cur_path = os.path.dirname(__file__)
         if self.path == '/':
@@ -169,8 +167,6 @@ class HttpRequestHandler(http.server.SimpleHTTPRequestHandler):
         if self.path.endswith('favicon.ico'):
             self.path = '/videologyinc_favicon.png'
         ctype = self.guess_type(self.path)
-#        try:
-#        print(self.path)
 
         if self.path.startswith('/imx8') == False:
  
@@ -193,11 +189,9 @@ class HttpRequestHandler(http.server.SimpleHTTPRequestHandler):
                     self.send_response(200)
                     self.send_header('Content-type',ctype)
                     self.end_headers()
-#                    self.wfile.write(bytes(f, 'utf-8'))
                     self.wfile.write(open(cur_path + self.path[0:],'rb').read())
                     do_reply = True
                 if self.path.endswith(".jpg"):
-#                    print('> '+cur_path+self.path[0:])
                     self.send_response(200)
                     self.send_header('Content-type',ctype)
                     self.end_headers()
@@ -209,7 +203,6 @@ class HttpRequestHandler(http.server.SimpleHTTPRequestHandler):
                     self.send_header('Content-type',ctype)
                     self.end_headers()
                     self.wfile.write(bytes(f, 'utf-8'))
-#                    self.wfile.write(open(cur_path + self.path[0:], 'rb').read())
                     do_reply = True
                 if self.path.endswith(".woff"):
                     f = open(cur_path + self.path[0:], 'rb').read()
@@ -217,14 +210,12 @@ class HttpRequestHandler(http.server.SimpleHTTPRequestHandler):
                     self.send_header('Content-type',ctype)
                     self.end_headers()
                     self.wfile.write(bytes(f, 'utf-8'))
-#                    self.wfile.write(open(cur_path + self.path[0:], 'rb').read())
                     do_reply = True
                 if self.path.endswith(".woff2"):
                     f = open(cur_path + self.path[0:], 'rb').read()
                     self.send_response(200)
                     self.send_header('Content-type',ctype)
                     self.end_headers()
-#                    self.wfile.write(bytes(f, 'utf-8'))
                     self.wfile.write(open(cur_path + self.path[0:], 'rb').read())
                     do_reply = True
                 if self.path.endswith(".eot"):
@@ -251,7 +242,6 @@ class HttpRequestHandler(http.server.SimpleHTTPRequestHandler):
 
         else:
                 if self.path.startswith('/imx8/frame.jpg'):
-#                    print('> '+cur_path + '/imx8/frame.jpg')
                     self.send_response(200)
                     self.send_header('Content-type',ctype)
                     self.end_headers()
@@ -273,9 +263,6 @@ class HttpRequestHandler(http.server.SimpleHTTPRequestHandler):
                     self.wfile.write(bytes(upt, 'utf-8'))
 
                 if self.path.startswith('/imx8/visca_response'):
-#                    with open("capture.py") as f:
-#                        exec(f.read())
-
                     s = '{' + '"visca_response": "' + visca_resp + '"}'
                     print(s)
                     self.send_response(200)
@@ -283,120 +270,164 @@ class HttpRequestHandler(http.server.SimpleHTTPRequestHandler):
                     self.end_headers()
                     self.wfile.write(bytes('data: ' + s + '\n\n', 'utf-8'))
 
+                #----------------------------------------------------------
+                # CAMERACONTROL
+                #----------------------------------------------------------
+                if self.path.startswith('/imx8/cameracontrol'):
+                    recv(DEV)
+                    send(DEV, bytearray.fromhex('8109042472FF'))
+                    wait_for_rx_stable(DEV, 100, 25)
+                    y = recv(DEV)
+                    x = list(y)
+#                    print("resolution=", y.hex())
+                    if (x[2]==0 and x[3]==6): CAM_res = '1080p/30fps'
+                    if (x[2]==0 and x[3]==8): CAM_res = '1080p/25fps'
+                    if (x[2]==0 and x[3]==9): CAM_res = '720p/60fps'
+                    if (x[2]==0 and x[3]==12): CAM_res = '720p/50fps'     # 00 0C
+                    if (x[2]==0 and x[3]==13): CAM_res = '720p/30fps'     # 00 0E
+                    if (x[2]==1 and x[3]==1): CAM_res = '720p/25fps'
+                    if (x[2]==1 and x[3]==3): CAM_res = '1080p/60fps'
+                    if (x[2]==1 and x[3]==4): CAM_res = '1080p/50fps'
+#                    print(CAM_res)
 
-                if self.path.startswith('/imx8/_cameracontrol'):
+                    send(DEV, bytearray.fromhex('81090002FF'))
+                    wait_for_rx_stable(DEV, 100, 25)
+                    y = recv(DEV)
+                    x = list(y)
+                    CAM_brand = 'no zoom block'
+                    if (x[4]==4 ):             CAM_brand = 'Videology'
+                    if (x[4]>=6 and x[4]<=7):  CAM_brand = 'Sony'
+                    if (x[4]==240):            CAM_brand = 'Tamron'
 
-                    send(DEV, b'\x81\x09\x04\x43\xFF')        #
-                    while (ser.in_waiting == 0):
-                       i=0
-                    print(ser.in_waiting)
-                    x = ser.read(ser.in_waiting)
-                    CAM_RGain = "{0:0{1}x}".format(16*x[4]+x[5], 2)
+                    # RGAIN
+                    send(DEV, bytearray.fromhex('81090443FF'))
+                    wait_for_rx_stable(DEV, 100, 25)
+                    x = list(recv(DEV))
+                    CAM_RGain = "00"
+                    if (len(x) == 7 and x[0]==144):
+                      CAM_RGain = "{0:0{1}x}".format(16*x[4]+x[5], 2)
 
                     send(DEV, b'\x81\x09\x04\x44\xFF')
-                    while (ser.in_waiting == 0):
-                       i=0
-                    x = ser.read(ser.in_waiting)
-                    CAM_BGain = "{0:0{1}x}".format(16*x[4]+x[5], 2)
-
+                    wait_for_rx_stable(DEV, 100, 25)
+                    x = list(recv(DEV))
+                    CAM_BGain = "00"
+                    if (len(x) == 7 and x[0]==144):
+                      CAM_BGain = "{0:0{1}x}".format(16*x[4]+x[5], 2)
+                    
                     send(DEV, b'\x81\x09\x04\x13\xFF')
-                    while (ser.in_waiting == 0):
-                       i=0
-                    x = ser.read(ser.in_waiting)
-                    CAM_Chroma = "{0:0{1}x}".format(16*x[4]+x[5], 2)
+                    wait_for_rx_stable(DEV, 100, 25)
+                    x = list(recv(DEV))
+                    CAM_Chroma = "00"
+                    if (len(x) == 7 and x[0]==144):
+                      CAM_Chroma = "{0:0{1}x}".format(16*x[4]+x[5], 2)
 
                     send(DEV, b'\x81\x09\x04\x4D\xFF')
-                    while (ser.in_waiting == 0):
-                       i=0
-                    x = ser.read(ser.in_waiting)
-                    CAM_Bright  = "{0:0{1}x}".format(16*x[4]+x[5], 2)
+                    wait_for_rx_stable(DEV, 100, 25)
+                    x = list(recv(DEV))
+                    CAM_Bright = "00"
+                    if (len(x) == 7 and x[0]==144):
+                      CAM_Bright = "{0:0{1}x}".format(16*x[4]+x[5], 2)
 
                     send(DEV, b'\x81\x09\x04\x42\xFF')
-                    while (ser.in_waiting == 0):
-                       i=0
-                    x = ser.read(ser.in_waiting)
-                    CAM_Aperture    = "{0:0{1}x}".format(16*x[4]+x[5], 2)
+                    wait_for_rx_stable(DEV, 100, 25)
+                    x = list(recv(DEV))
+                    CAM_Aperture = "00"
+                    if (len(x) == 7 and x[0]==144):
+                      CAM_Aperture = "{0:0{1}x}".format(16*x[4]+x[5], 2)
 
                     send(DEV, b'\x81\x09\x04\x4A\xFF')
-                    while (ser.in_waiting == 0):
-                       i=0
-                    x = ser.read(ser.in_waiting)
-                    CAM_Shutter     = "{0:0{1}x}".format(16*x[4]+x[5], 2)
+                    wait_for_rx_stable(DEV, 100, 25)
+                    x = list(recv(DEV))
+                    CAM_Shutter = "00"
+                    if (len(x) == 7 and x[0]==144):
+                      CAM_Shutter = "{0:0{1}x}".format(16*x[4]+x[5], 2)
 
                     send(DEV, b'\x81\x09\x04\x4B\xFF')
-                    while (ser.in_waiting == 0):
-                       i=0
-                    x = ser.read(ser.in_waiting)
-                    CAM_Iris    = "{0:0{1}x}".format(16*x[4]+x[5], 2)
+                    wait_for_rx_stable(DEV, 100, 25)
+                    x = list(recv(DEV))
+                    CAM_Iris = "00"
+                    if (len(x) == 7 and x[0]==144):
+                      CAM_Iris = "{0:0{1}x}".format(16*x[4]+x[5], 2)
 
                     send(DEV, b'\x81\x09\x04\x4C\xFF')
-                    while (ser.in_waiting == 0):
-                       i=0
-                    x = ser.read(ser.in_waiting)
-                    CAM_Gain    = "{0:0{1}x}".format(16*x[4]+x[5], 2)
+                    wait_for_rx_stable(DEV, 100, 25)
+                    x = list(recv(DEV))
+                    CAM_Gain = "00"
+                    if (len(x) == 7 and x[0]==144):
+                      CAM_Gain = "{0:0{1}x}".format(16*x[4]+x[5], 2)
 
                     send(DEV, b'\x81\x09\x04\x27\xFF')
-                    while (ser.in_waiting == 0):
-                       i=0
-                    x = ser.read(ser.in_waiting)
-                    CAM_AF_Mode_Active   = "{0:0{1}x}".format(16*x[2]+x[3], 2)
-                    CAM_AF_Mode_Interval = "{0:0{1}x}".format(16*x[4]+x[5], 2)
+                    wait_for_rx_stable(DEV, 100, 25)
+                    x = list(recv(DEV))
+                    CAM_AF_Mode_Active = "00"
+                    CAM_AF_Mode_Interval = "00"
+                    if (len(x) == 7 and x[0]==144):
+                      CAM_AF_Mode_Active   = "{0:0{1}x}".format(16*x[2]+x[3], 2)
+                      CAM_AF_Mode_Interval = "{0:0{1}x}".format(16*x[4]+x[5], 2)
 
                     send(DEV, b'\x81\x09\x04\x47\xFF')
-                    while (ser.in_waiting == 0):
-                       i=0
-                    x = ser.read(ser.in_waiting)
-                    zoompos  = "{0:0{1}x}".format(16*(16*(16*x[2]+x[3])+x[4])+x[5], 4)
+                    wait_for_rx_stable(DEV, 100, 25)
+                    x = list(recv(DEV))
+                    zoompos = "0000"
+                    if (len(x) == 7 and x[0]==144):
+                      zoompos  = "{0:0{1}x}".format(16*(16*(16*x[2]+x[3])+x[4])+x[5], 4)
 
                     send(DEV, b'\x81\x09\x04\x48\xFF')
-                    while (ser.in_waiting == 0):
-                       i=0
-                    x = ser.read(ser.in_waiting)
-                    focuspos  = "{0:0{1}x}".format(16*(16*(16*x[2]+x[3])+x[4])+x[5], 4)
+                    wait_for_rx_stable(DEV, 100, 25)
+                    x = list(recv(DEV))
+                    focuspos = "0000"
+                    if (len(x) == 7 and x[0]==144):
+                      focuspos  = "{0:0{1}x}".format(16*(16*(16*x[2]+x[3])+x[4])+x[5], 4)
 
                     send(DEV, b'\x81\x09\x04\x39\xFF')
-                    while (ser.in_waiting == 0):
-                       i=0
-                    x = ser.read(ser.in_waiting)
-                    if (x[2] == 0x00):
-                        CAM_AEMode = '1'
-                    if (x[2] == 0x03):
-                        CAM_AEMode = '0'
+                    wait_for_rx_stable(DEV, 100, 25)
+                    CAM_AEMode = '1'
+                    x = list(recv(DEV))
+                    if (len(x) == 4 and x[0]==144):
+                      if (x[2] == 0x00):
+                          CAM_AEMode = '1'
+                      if (x[2] == 0x03):
+                          CAM_AEMode = '0'
 
                     send(DEV, b'\x81\x09\x04\x5C\xFF')
-                    while (ser.in_waiting == 0):
-                       i=0
-                    x = ser.read(ser.in_waiting)
-                    if (x[2] == 0x02):
-                        CAM_AGCMode = '1'
-                    if (x[2] == 0x03):
-                        CAM_AGCMode = '0'
+                    wait_for_rx_stable(DEV, 100, 25)
+                    x = list(recv(DEV))
+                    CAM_AGCMode = '1'
+                    if (len(x) == 4 and x[0]==144):
+                      if (x[2] == 0x02):
+                          CAM_AGCMode = '1'
+                      if (x[2] == 0x03):
+                          CAM_AGCMode = '0'
 
                     send(DEV, b'\x81\x09\x04\x35\xFF')
-                    while (ser.in_waiting == 0):
-                       i=0
-                    x = ser.read(ser.in_waiting)
-                    if (x[2] == 0x00):
-                        CAM_WBMode = 'Auto'
-                    if (x[2] == 0x01):
-                        CAM_WBMode = 'Indoor'
-                    if (x[2] == 0x02):
-                        CAM_WBMode = 'Outdoor'
-                    if (x[2] == 0x03):
-                        CAM_WBMode = 'One Push AWB'
-                    if (x[2] == 0x05):
-                        CAM_WBMode = 'Manual'
+                    wait_for_rx_stable(DEV, 100, 25)
+                    x = list(recv(DEV))
+                    CAM_WBMode = 'Auto'
+                    if (len(x) == 4 and x[0]==144):
+                      if (x[2] == 0x00):
+                          CAM_WBMode = 'Auto'
+                      if (x[2] == 0x01):
+                          CAM_WBMode = 'Indoor'
+                      if (x[2] == 0x02):
+                          CAM_WBMode = 'Outdoor'
+                      if (x[2] == 0x03):
+                          CAM_WBMode = 'One Push AWB'
+                      if (x[2] == 0x05):
+                          CAM_WBMode = 'Manual'
        
                     send(DEV, b'\x81\x09\x04\x38\xFF')
-                    while (ser.in_waiting == 0):
-                       i=0
-                    x = ser.read(ser.in_waiting)
-                    if (x[2] == 0x02):
-                        CAM_AFMode = '1'
-                    if (x[2] == 0x03):
-                        CAM_AFMode = '0'
+                    wait_for_rx_stable(DEV, 100, 25)
+                    x = list(recv(DEV))
+                    CAM_AEMode = '1'
+                    if (len(x) == 4 and x[0]==144):
+                      if (x[2] == 0x02):
+                          CAM_AFMode = '1'
+                      if (x[2] == 0x03):
+                          CAM_AFMode = '0'
 
                     s = '{'
+                    s += '"CAM_brand": "'            + CAM_brand  + '",'
+                    s += '"CAM_res": "'              + CAM_res  + '",'
                     s += '"CAM_RGain": "'            + CAM_RGain  + '",'
                     s += '"CAM_BGain": "'            + CAM_BGain  + '",'
                     s += '"CAM_Chroma": "'           + CAM_Chroma  + '",'
@@ -420,11 +451,8 @@ class HttpRequestHandler(http.server.SimpleHTTPRequestHandler):
                     self.send_response(200)
                     self.send_header('Content-type', 'text/event-stream')
                     self.end_headers()
-#                    self.wfile.write(bytes('retry: 1000\n', 'utf-8'))
                     self.wfile.write(bytes('data: ' + s + '\n\n', 'utf-8'))
-
-#                print('OK')
-
+                    
                 if self.path.startswith('/imx8/status'):
                     fd = open('/sys/class/thermal/thermal_zone0/temp')
                     temp      = int(fd.read())/1000
@@ -457,15 +485,14 @@ class HttpRequestHandler(http.server.SimpleHTTPRequestHandler):
 
 #                    print(f"Current net-usage: IN: {net_in} MB/s, OUT: {net_out} MB/s")
 
-                    """
                     print('> ' + visca_resp)
                     if visca_resp == '<NO INFO>':
                         visca_response = '"' + str(0) + '"'
                     else:               
                         visca_response = '"' + visca_resp + '"'
-                    """
-
+                    
 #                    print("RTSP running")
+                    """
                     p = subprocess.Popen(['ps', '-ax'], stdout=subprocess.PIPE)
                     out, err = p.communicate()
                     rtsp1 = kill_gst_pid(b'gst-variable-rtsp-server -p 9001', out, False)
@@ -488,6 +515,12 @@ class HttpRequestHandler(http.server.SimpleHTTPRequestHandler):
                          rtsp4_running = "0"
                     else:
                          rtsp4_running = "1"
+                    """
+
+                    rtsp1_running = "0" 
+                    rtsp2_running = "0" 
+                    rtsp3_running = "0" 
+                    rtsp4_running = "0" 
 
                     global IP
                     IP = socket.gethostbyname(socket.getfqdn())
@@ -521,16 +554,15 @@ class HttpRequestHandler(http.server.SimpleHTTPRequestHandler):
                                    + '"rtsp4_running":' + rtsp4_running   + ',' \
                                    + '"HOST_NAME":'     + '"'+HOST_NAME+'"'  + ',' \
                                    + '"IP":'            + '"'+IP+'"'         + ',' \
+                                   + '"visca_response":'    + visca_response + ',' \
                                    + '"cpu_freq":'      + cpu_freq        + '}'
-
-#                                   + '"visca_response":'    + visca_response + ',' \
 
                     now = datetime.datetime.now()
 
 #                    print("now =", now)
 #                    pickle.dump([now, temp], open(cur_path + "/time_temp.p", "ab+"))
 
-#                    print(json_txt)
+                    print(json_txt)
                     self.send_response(200)
                     self.send_header('Content-type', 'text/event-stream')
                     self.end_headers()
@@ -540,8 +572,6 @@ class HttpRequestHandler(http.server.SimpleHTTPRequestHandler):
 
         global ser
         global visca_resp
-
-#HH        ser = serial.Serial('/dev/ttyVISCA1', baudrate=9600, timeout=0)
 
 #        print("POST: " + self.path)
         self.send_response(301)
@@ -553,50 +583,55 @@ class HttpRequestHandler(http.server.SimpleHTTPRequestHandler):
         if self.path.startswith('/imx8'):
             if z[2] == 'CAM_POWER':
                send(DEV, b'\x81\x01\x04\x00\x03\xFF') 
-#               send(DEV, b'\x81\x01\x04\x00\x03\xFF')
 
             #***************************************************
             # INQUIRY
             #***************************************************
             if (z[2].startswith('8109') and z[2].endswith('FF')):
                s = []
+               print(z[2])
+               visca_resp = ""
+               data = bytearray
                for x in range(0, len(z[2])-1, 2):
                   s.append(int("0x"+z[2][x]+z[2][x+1],16))
 #                  print(int("0x"+z[2][x]+z[2][x+1],16))
-#               print(s)
+#               s = ['129', '09', '04', '36', '114', '255']  # 81 09 04 24 72 FF
+#               print(type(s))
+#               print(bytearray(s))
+               
+               send(DEV, bytearray.fromhex(z[2]))
+               wait_for_rx_stable(DEV, 100, 25)
+               count = get_rx_count(DEV)
+               print("count=", count)
 
-               send(DEV, bytearray(s))
-               time.sleep(1)
-               recv(DEV, data)
-#HH               data = ser.readline()
-               print(len(data))
-               print(data)
-               visca_resp = binascii.hexlify(data).decode('ascii')
-               print(visca_resp)
+               y = recv(DEV)
+               print("visca_resp=", y.hex())
+               visca_resp = y.hex()
+#               print(s[3])
 
 #               print('VISCA resp. INQUIRY:'+visca_resp)
-               if z[2][3]=='\x39':  # AE mode inq
+               if s[3]=='\x39':  # AE mode inq
                   if data[2] == '\x00':
                      CAM_AEMode='Full Auto'
                   if data[2] == '\x03':
                      CAM_AEMode='Manual'
                   print('AEMode Inq:' + str(data[2]))
 
-               if z[2][3]=='\x38':  # FocusMode inq
+               if s[3]=='\x38':  # FocusMode inq
                   if data[2] == '\x02':
                      CAM_AFMode='Auto'
                   if data[2] == '\x03':
                      CAM_AFMode='Manual'
                   print('FocusMode Inq:' + str(data[2]))
 
-               if z[2][3]=='\x5C':  # AGC mode inq
+               if s[3]=='\x5C':  # AGC mode inq
                   if data[2] == '\x02':
                      CAM_AGCMode='On'
                   if data[2] == '\x03':
                      CAM_AGCMode='Off'
                   print('AGCMode Inq:' + str(data[2]))
 
-               if z[2][3]=='\x35':  # WB mode inq
+               if s[3]=='\x35':  # WB mode inq
                   if data[2] == '\x00':
                      CAM_WBMode='Auto'
                   if data[2] == '\x01':
@@ -616,43 +651,9 @@ class HttpRequestHandler(http.server.SimpleHTTPRequestHandler):
                   print(int("0x"+z[2][x]+z[2][x+1],16))
                print(s)
 
-               send(DEV, bytearray(s))
+               send(DEV, bytearray.fromhex(z[2]))
                time.sleep(1)
-
-#HH               data = ser.readline()
-#               print(len(data))
-#               print(data)
-               visca_resp = binascii.hexlify(data).decode('ascii')
-               print('VISCA resp. CMD:'+visca_resp)
-
-
-               """
-               i=0
-               while (ser.out_waiting > 0):
-                   i = i+1
-               print('i=' + str(i) + ' out_waiting=' + str(ser.out_waiting))
-
-               i=0
-               while (i < 300):
-                   print('i=' + str(i) + '  in_waiting=' + str(ser.in_waiting))
-                   i = i+1
-
-               print('i=' + str(i) + '  in_waiting=' + str(ser.in_waiting))
-               print('in_waiting:' + str(ser.in_waiting))
-               if (ser.in_waiting > 0):
-                       print('in_waiting=' + str(ser.in_waiting))
-                       while (ser.in_waiting > 0):
-                           x = ser.read(1)
-                           print(str(x) +' > '+ str(ser.in_waiting))
-               else:
-                       print('NOT > 0 ->'+ str(ser.in_waiting))
-#                  data.append(x)
-#               print(data)
-               visca_resp = binascii.hexlify(data).decode('ascii')
-               print('VISCA resp.:'+visca_resp)
-               """
-            else:
-               visca_resp=''
+               data = recv(DEV, 5)
 
             if z[2] == 'CAM_ICR':
                if z[3] == 'NIGHT':
@@ -681,7 +682,6 @@ class HttpRequestHandler(http.server.SimpleHTTPRequestHandler):
                time.sleep(2)
                send(DEV, b'\x81\x01\x04\x00\x03\xFF')
 
-
             if z[2] == 'CAM_videotestsrc':
                if z[3] =='0':
                    p = subprocess.Popen(os.path.dirname(__file__) + "/videotestsrc_640.sh", shell=True)
@@ -703,7 +703,6 @@ class HttpRequestHandler(http.server.SimpleHTTPRequestHandler):
                    kill_gst_pid(b'gst-variable-rtsp-server -p 9003', out, True)
                if z[3]=='1':
                    kill_gst_pid(b'gst-variable-rtsp-server -p 9004', out, True)
-
 
             if z[2] == 'CAM_Zoom':
                if z[3] == 'Stop':
@@ -854,12 +853,9 @@ def checkServiceStatus():
     pass
 
 #checkServiceStatus()
-
 #os.popen("systemctl stop serial-getty@ttymxc3.service")
 
-
 #*********************************************************************************************
-
 
 httpd = socketserver.TCPServer(("0.0.0.0", PORT), HttpRequestHandler, bind_and_activate=False)
 httpd.allow_reuse_address = True
@@ -867,22 +863,15 @@ httpd.daemon_threads = True
 
 try:
 
-#    ser = serial.Serial('/dev/ttyVISCA1', baudrate=9600, timeout=0)
-
     set_baud(DEV, 9600)
 
     visca_resp = ''
-
 
     HOST_NAME = socket.gethostname()
     IP        = socket.gethostbyname(socket.getfqdn())
     print(HOST_NAME)
     print('IP:'+IP)
     print(f"serving at <{IP}>:{PORT}")
-
-#    ser = serial.Serial('/dev/ttyVISCA1', baudrate=9600, timeout=0)
-#    send(DEV, b'\x81\x01\x04\x00\x03\xFF')
-
 
 #    print(socket.getaddrinfo(HOST_NAME, PORT))
 #    print(socket.gethostbyname_ex(socket.gethostname())[-1])

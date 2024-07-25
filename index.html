@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="utf-8">
-<title>SCAiLX-ZB AI/IP Platform</title>
+<title>SCAiLX AI Platform</title>
 
 <script src="/scripts/Chart.js"> </script>
 
@@ -447,21 +447,6 @@ hr.footerline {border-top: 1px rgba(115, 190, 68, 1.0) solid;}
 				x2[0]["x"] = 101;
 				x3[0]["x"] = 101;
 
-//				m = [];
-//				m[0] = max_eth_sent; 
-//				m[1] = x2[0]["y"];
-
-//				  if (m[0]<m[1]) {max_eth_sent = m[1]; max_history = 0} else {max_history += 1;};
-//			 	  if (max_history >= 100) {max_eth_sent=1; max_history = 0};
-
-//				  console.log(max_eth_sent)
-//				  console.log(graph_tcpip.data.datasets[0].data.length);
-//				  console.log(graph_tcpip.data.labels.length);
-
-//				  console.log(graph_tcpip.scales['y-axis-0'].options.ticks);
-
-//				  graph.scales['y-axis-0'].options.ticks.max = max_eth_sent;
-
 	  			if (graph.data.datasets[0].data.length == 100){
 					graph.data.datasets[0].data.shift(x1[0]);
 					graph.data.datasets[1].data.shift(x2[0]);
@@ -507,11 +492,6 @@ hr.footerline {border-top: 1px rgba(115, 190, 68, 1.0) solid;}
 
 				if (m[0]<m[1]) {max_eth_sent = m[1]; max_history = 0} else {max_history += 1;};
 				if (max_history >= 100) {max_eth_sent=1; max_history = 0};
-//				  console.log(max_eth_sent)
-//				  console.log(graph_tcpip.data.datasets[0].data.length);
-//				  console.log(graph_tcpip.data.labels.length);
-
-//				  console.log(graph_tcpip.scales['y-axis-0'].options.ticks);
 
 				graph_tcpip.scales['y-axis-0'].options.ticks.max = max_eth_sent;
 
@@ -549,6 +529,9 @@ hr.footerline {border-top: 1px rgba(115, 190, 68, 1.0) solid;}
 		var cameracontrol = new EventSource("/imx8/cameracontrol");
 			cameracontrol.onmessage = function(event) {
 				const obj =JSON.parse(event.data)
+				document.getElementById("CAM_res").innerHTML         = obj.CAM_res;
+				document.getElementById("CAM_brand").innerHTML         = obj.CAM_brand;
+				
 				document.getElementById("CAM_RGain").value            = parseInt(obj.CAM_RGain, 16);
 				document.getElementById("CAM_BGain").value            = parseInt(obj.CAM_BGain, 16);
 				document.getElementById("CAM_Chroma").value           = parseInt(obj.CAM_Chroma, 16);
@@ -577,20 +560,6 @@ hr.footerline {border-top: 1px rgba(115, 190, 68, 1.0) solid;}
 				document.getElementById("focuspos").innerHTML       = obj.focuspos + ' ('+ parseInt(obj.focuspos, 16)+')';
 			}
 
-//		if(typeof(EventSource)!=="undefined") {
-//			var eSource1 = new EventSource("/imx8/visca_response");
-//			eSource1.onmessage = function(event) {
-//				const obj = JSON.parse(event.data)
-//			
-//				document.getElementById("visca_resp").value=obj.visca_response.toUpperCase(); 
-//				console.log('visca resp:'+obj.visca_response);
-//				console.log(document.getElementById("visca_resp").value)
-//			}
-//		}
-//		else {
-//			document.getElementById("serverData").innerHTML="Whoops! Your browser doesn't receive server-sent events.";
-//		}
-
 		if(typeof(EventSource)!=="undefined") {
 			var eSource3 = new EventSource("/imx8/status");
 			eSource3.onmessage = function(event) {
@@ -601,11 +570,13 @@ hr.footerline {border-top: 1px rgba(115, 190, 68, 1.0) solid;}
 				console.log('> CPU freq. : '+obj.cpu_freq+'MHz' )
 
 //				document.getElementById("HOST_NAME").innerHTML = obj.HOST_NAME " '.local';
+/*
 				document.getElementById("IP0").innerHTML = obj.IP;
 				document.getElementById("IP1").innerHTML = obj.IP;
 				document.getElementById("IP2").innerHTML = obj.IP;
 				document.getElementById("IP3").innerHTML = obj.IP;
 				document.getElementById("IP4").innerHTML = obj.IP;
+*/
 
 //				console.log(obj.HOST_NAME)
 //				console.log(obj.IP)
@@ -614,8 +585,8 @@ hr.footerline {border-top: 1px rgba(115, 190, 68, 1.0) solid;}
 				document.getElementById("CAM_AE").value  = obj.CAM_AE;
 				document.getElementById("CAM_AGC").value = obj.CAM_AGC;
 			
-		//		document.getElementById("visca_resp").value = (obj.visca_response);
-		//		console.log(obj.visca_response);
+				document.getElementById("visca_resp").value = (obj.visca_response);
+				console.log(obj.visca_response);
 			
 				var seconds = parseInt(obj.uptime, 10);
 				var days  = Math.floor(seconds / (3600*24));
@@ -634,7 +605,7 @@ hr.footerline {border-top: 1px rgba(115, 190, 68, 1.0) solid;}
 
 				document.getElementById("label_CPU_IP_address").innerHTML = "IP address = "+obj.IP;
 				document.getElementById("label_cpu_IP_address").innerHTML = "IP address = "+obj.IP;
-
+/*
 				if (obj.rtsp0_running == '1'){ document.getElementById("label_rtsp0_running").innerHTML = "Running";} 
 				  else {document.getElementById("label_rtsp0_running").innerHTML = "Not running";}
 				if (obj.rtsp1_running == '1'){ document.getElementById("label_rtsp1_running").innerHTML = "Running";} 
@@ -645,6 +616,7 @@ hr.footerline {border-top: 1px rgba(115, 190, 68, 1.0) solid;}
 				  else {document.getElementById("label_rtsp3_running").innerHTML = "Not running";}
 				if (obj.rtsp4_running == '1'){ document.getElementById("label_rtsp4_running").innerHTML = "Running";} 
 				  else {document.getElementById("label_rtsp4_running").innerHTML = "Not running";}
+*/
 
 		//		var x = [{x:0, y:0}];
 		//		x[0]["x"] = 101;
@@ -786,7 +758,7 @@ hr.footerline {border-top: 1px rgba(115, 190, 68, 1.0) solid;}
 
   	<div class="header">
 	  <img class="videology-logo" src="videology-industrial-grade-cameras.svg" alt="Videology Industrial-Grade Cameras"/>
-	  <h1><b>SCAiLX-ZB</b> AI/IP i.MX8M Plus</h1>
+	  <h1><b>SCAiLX</b> AI i.MX8M Plus</h1>
 	  <h2 align="center"> <label id="cpu_uptime" for="cpu_uptime"></label> </h2>
 	</div>
 
@@ -797,7 +769,7 @@ hr.footerline {border-top: 1px rgba(115, 190, 68, 1.0) solid;}
 <!-- Tab links -->
 
 <div class="tab">
-  <button class="tablinks btn active" onclick="openTab(event, 'SCAILX-ZB')" >SCAILX-ZB</button>
+  <button class="tablinks btn active" onclick="openTab(event, 'SCAILX-ZB')" >SCAILX AI</button>
   <button class="tablinks" onclick="openTab(event, 'AIAPP')"                >AI APPLICATIONS</button>
   <button class="tablinks" onclick="openTab(event, 'TCPIP')"                >TCP/IP</button>
   <button class="tablinks" onclick="openTab(event, 'CPU')"                  >CPU</button>
@@ -872,7 +844,7 @@ hr.footerline {border-top: 1px rgba(115, 190, 68, 1.0) solid;}
 
 <!-- <div >  -->
 	<article>
-		<h1 align="left">SCAiLX-ZB AI/IP Platform</h1>
+		<h1 align="left">SCAiLX AI Platform</h1>
 		<h2 align="left">Features</h2>
 		<table>
 			<tr>
@@ -1298,6 +1270,10 @@ hr.footerline {border-top: 1px rgba(115, 190, 68, 1.0) solid;}
 -->
 
 	<div class="slidecontainer">
+	  <p><b>VISCA</b> control for <b>[SCAILX-ZB]</b> or <b>[SCAILX-AI + SCAILX-LVDS-2-MIPI]</b> only</p>
+	  <label id="CAM_res" for="CAM_res"></label><label>&nbsp;&nbsp;&nbsp;&nbsp;</label>
+	  <label id="CAM_brand" for="CAM_brand"></label><br>
+<br>
 	  <p>Zoom slider</p>
 	  <input id="zoomslider" 
 		onwheel="slider_click(this.range)" 
@@ -1311,7 +1287,9 @@ hr.footerline {border-top: 1px rgba(115, 190, 68, 1.0) solid;}
 		  <td class="col1" align="center" valign="middle">
 			<p id="cam_reset" onclick="VISCA('/imx8/CAM_POWER')" class="cta-button">Camera RESET</p>
 		  </td>
-		  <td class="col1" align="center" valign="middle"></td>
+		  <td class="col1" align="center" valign="middle">
+			
+		  </td>
 		  <td class="col1" align="center" valign="middle"></td>
 		  <td class="col1" align="center" valign="middle"></td>
 		  <td class="col1" align="center" valign="middle"></td>
@@ -1482,6 +1460,7 @@ hr.footerline {border-top: 1px rgba(115, 190, 68, 1.0) solid;}
 	  </tbody>
 	</table>
 
+  <!--
 	<table border="0" align="center" cellpadding="0" cellspacing="0">
 	  <tbody>
 	  	<tr>
@@ -1511,9 +1490,8 @@ hr.footerline {border-top: 1px rgba(115, 190, 68, 1.0) solid;}
 		</tr>
 
 		<tr>
-
-		  <td class="col1" align="left" valign="middle"></td>
-
+		  <td class="col1" align="left" valign="middle">
+		  </td>
 		  <td class="col_1" align="right" valign="middle">
 			<label>Object Detection application </label>
 			<br>
@@ -1549,19 +1527,17 @@ hr.footerline {border-top: 1px rgba(115, 190, 68, 1.0) solid;}
 			<br>
 			<label id="label_rtsp4_running" for="label_rtsp4_running"> </label>
 		  </td>
-
 		</tr>
-
 		<tr>
 			<label>gst-launch-1.0 rtspsrc location=rtsp://.....:9001/stream ! queue ! rtph264depay ! avdec_h264 ! autovideosink</label>
 			<br>
 			<label>gst-launch-1.0 rtspsrc location=rtsp://.....:9002/stream ! queue ! rtph265depay ! avdec_h265 ! autovideosink</label>
 		</tr>
-	  </tbody>
+	 </tbody>
 	</table>
+  -->
 
-
-  </div>
+</div>
 
 <!--
  tab content VISCA   
@@ -1796,7 +1772,6 @@ hr.footerline {border-top: 1px rgba(115, 190, 68, 1.0) solid;}
 
 </div>  <!-- main -->
 
-
 <div class="footer-top">
 
 <!-- 
@@ -1827,7 +1802,7 @@ hr.footerline {border-top: 1px rgba(115, 190, 68, 1.0) solid;}
 	</table>
 	
 	<ul class="footer-menu"><hr class="footerline" noshade="noshade">
-	  <li class=""><a href="https://www.videologyinc.com/privacy-policy" target="_self">Privacy Policy</a></li><li class=""><p class="hhs-foot-copyright">© 2023 Videology Industrial-Grade Cameras</p>
+	  <li class=""><a href="https://www.videologyinc.com/privacy-policy" target="_self">Privacy Policy</a></li><li class=""><p class="hhs-foot-copyright">© 2024 Videology Industrial-Grade Cameras</p>
 	  </li>
 	</ul>
   </div>
