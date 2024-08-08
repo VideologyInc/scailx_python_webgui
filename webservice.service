@@ -1,9 +1,9 @@
 [Unit]
 Description=Scailx simple python webgui
-After=network.target
+After=go2rtc.service
 
 [Service]
-ExecStart=python3 /usr/binscailx-python-webgui/server.py
+ExecStart=python3 /home/root/scailx_python_webgui/server.py
 
 [Install]
 WantedBy=multi-user.target

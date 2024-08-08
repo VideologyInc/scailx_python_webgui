@@ -314,8 +314,8 @@ hr.footerline {border-top: 1px rgba(115, 190, 68, 1.0) solid;}
 
 <!-- <body onload="init_api()"> -->
 
-  <body>
-
+  <body onload="setsrc()">
+    
 	<script>
 	function openTab(evt, tabName) {
 	  var i, tabcontent, tablinks;
@@ -441,8 +441,8 @@ hr.footerline {border-top: 1px rgba(115, 190, 68, 1.0) solid;}
 				x1 = cpu;
 				x2 = temp;
 				x3 = max_temp;
-				console.log(cpu);
-				console.log(temp);
+			//	console.log(cpu);
+			//	console.log(temp);
 				x1[0]["x"] = 101;
 				x2[0]["x"] = 101;
 				x3[0]["x"] = 101;
@@ -464,11 +464,8 @@ hr.footerline {border-top: 1px rgba(115, 190, 68, 1.0) solid;}
 				    graph.data.labels.pop();	
 				}
 
-//				  console.log(graph.data.datasets[0].data)
-//				  console.log(graph.data.datasets[1].data[0]["x"])
-	
 				graph.update();
-				console.log(graph);
+			//	console.log(graph);
 			};
 
 			//**************************************************
@@ -481,8 +478,8 @@ hr.footerline {border-top: 1px rgba(115, 190, 68, 1.0) solid;}
 				console.log('GRAPH TCP/IP');
 				x1 = dat1;
 				x2 = dat2;
-				console.log(x1);
-				console.log(x2);
+			//	console.log(x1);
+			//	console.log(x2);
 				x1[0]["x"] = 101;
 				x2[0]["x"] = 101;
 
@@ -504,17 +501,12 @@ hr.footerline {border-top: 1px rgba(115, 190, 68, 1.0) solid;}
 					graph_tcpip.data.datasets[1].data.push(x2[0]);
 					graph_tcpip.data.labels.push(graph_tcpip.data.datasets[0].data.length);
 
-	 		//		graph_tcpip.data.labels.push(tijd);
 				}
 				if (graph_tcpip.data.labels.length > 100){
 				    graph_tcpip.data.labels.pop();	
 				}
 
-//				console.log(graph_tcpip.data.datasets[0].data)
-//				console.log(graph_tcpip.data.datasets[1].data[0]["x"])
-	
 				graph_tcpip.update();
-				console.log(graph_tcpip);
 			};
 	</script>
 
@@ -569,18 +561,6 @@ hr.footerline {border-top: 1px rgba(115, 190, 68, 1.0) solid;}
 				console.log('> Uptime    : '+obj.uptime+'s')
 				console.log('> CPU freq. : '+obj.cpu_freq+'MHz' )
 
-//				document.getElementById("HOST_NAME").innerHTML = obj.HOST_NAME " '.local';
-/*
-				document.getElementById("IP0").innerHTML = obj.IP;
-				document.getElementById("IP1").innerHTML = obj.IP;
-				document.getElementById("IP2").innerHTML = obj.IP;
-				document.getElementById("IP3").innerHTML = obj.IP;
-				document.getElementById("IP4").innerHTML = obj.IP;
-*/
-
-//				console.log(obj.HOST_NAME)
-//				console.log(obj.IP)
-
 				document.getElementById("CAM_AF").value  = obj.CAM_AF;
 				document.getElementById("CAM_AE").value  = obj.CAM_AE;
 				document.getElementById("CAM_AGC").value = obj.CAM_AGC;
@@ -605,45 +585,22 @@ hr.footerline {border-top: 1px rgba(115, 190, 68, 1.0) solid;}
 
 				document.getElementById("label_CPU_IP_address").innerHTML = "IP address = "+obj.IP;
 				document.getElementById("label_cpu_IP_address").innerHTML = "IP address = "+obj.IP;
-/*
-				if (obj.rtsp0_running == '1'){ document.getElementById("label_rtsp0_running").innerHTML = "Running";} 
-				  else {document.getElementById("label_rtsp0_running").innerHTML = "Not running";}
-				if (obj.rtsp1_running == '1'){ document.getElementById("label_rtsp1_running").innerHTML = "Running";} 
-				  else {document.getElementById("label_rtsp1_running").innerHTML = "Not running";}
-				if (obj.rtsp2_running == '1'){ document.getElementById("label_rtsp2_running").innerHTML = "Running";} 
-				  else {document.getElementById("label_rtsp2_running").innerHTML = "Not running";}
-				if (obj.rtsp3_running == '1'){ document.getElementById("label_rtsp3_running").innerHTML = "Running";} 
-				  else {document.getElementById("label_rtsp3_running").innerHTML = "Not running";}
-				if (obj.rtsp4_running == '1'){ document.getElementById("label_rtsp4_running").innerHTML = "Running";} 
-				  else {document.getElementById("label_rtsp4_running").innerHTML = "Not running";}
-*/
 
-		//		var x = [{x:0, y:0}];
-		//		x[0]["x"] = 101;
-		//		x[0]["y"] = obj.temperature;
+				document.getElementById("label_cam0").innerHTML = obj.stream1;
+				
+				if (document.getElementById('myIframe1').src == "http://")
+				{
+					document.getElementById('myIframe1').src = window.location.protocol + "//" + window.location.hostname + ":1984/stream.html?"+ "src="+ obj.stream1 +"&mode=webrtc";
+					console.log(">>>"+document.getElementById('myIframe1').src);
+				}
 
 				var currentdate = new Date();
 				var cur_time = currentdate.getHours() + ":" + currentdate.getMinutes() + ":" + currentdate.getSeconds();
-			//	console.log(cur_time);
 				document.getElementById("tijd").innerHTML = currentdate;
 			
-		//		if (temp_samples.length == 100){
-		//			temp_samples.shift(x[0]);	
-		//		} 
-		//		temp_samples.push(x[0]);					
-					
-		//		if (select_temp == true){				
-		//			update_graph(x, cur_time);
-		//		}
-
 				document.getElementById("label_cpu_freq").innerHTML     = "CPU frequency   = " + obj.cpu_freq    + " MHz";
 				document.getElementById("label_CPU_cpu_freq").innerHTML = "CPU frequency   = " + obj.cpu_freq    + " MHz";
 				document.getElementById("cpu_uptime").innerHTML  = "Uptime = " + uptime;
-			
-			//	console.log('> CPU1 perc.: '+obj.cpu_perc1 + ' %' )
-			//	console.log('> CPU2 perc.: '+obj.cpu_perc2 + ' %' )
-			//	console.log('> CPU3 perc.: '+obj.cpu_perc3 + ' %' )
-			//	console.log('> CPU4 perc.: '+obj.cpu_perc4 + ' %' )
 			
 				document.getElementById("cpu_perc1").value = obj.cpu_perc1;
 				document.getElementById("cpu_perc2").value = obj.cpu_perc2;
@@ -658,35 +615,6 @@ hr.footerline {border-top: 1px rgba(115, 190, 68, 1.0) solid;}
 				const cpu_perc_total = (obj.cpu_perc1 + obj.cpu_perc2 + obj.cpu_perc3 + obj.cpu_perc4)/400;
 				document.getElementById("cpu_perc_total").value = Math.floor(cpu_perc_total*100); 
 				document.getElementById("label_cpu_perc_total").innerHTML = "CPU[total]= "+Math.floor(cpu_perc_total*1000)/10+" %"; 
-
-
-		//		var x = [{x:0, y:0}];
-		//		x[0]["x"] = 101;
-		//		x[0]["y"] = Math.floor(cpu_perc_total*1000)/10;
-		//	console.log("CPU graph:"+x[0]["y"]);
-
-		//		if (cpu_load_samples.length == 100){
-		//			cpu_load_samples.shift(x[0]);	
-		//		} 
-		//		cpu_load_samples.push(x[0]);
-					
-			//	console.log(cpu_load_samples.length)
-			//	console.log(cpu_load_samples)
-
-		//		if (select_cpu == true){				
-		//			update_graph(x, cur_time);
-		//		}
-
-
-//				console.log('net_out: '+ obj.net_out);
-//				console.log('net_in: ' + obj.net_in);
-
-		//		if (eth_sent_samples.length == 100){
-		//			eth_sent_samples.shift(x1[0]);	
-		//			eth_sent_samples.shift(x2[0]);	
-		//		} 
-		//		eth_sent_samples.push(x1[0]);					
-		//		eth_sent_samples.push(x2[0]);					
 
 				var xx1 = [{x:0, y:0}];
 				var xx2 = [{x:0, y:0}];
@@ -728,25 +656,7 @@ hr.footerline {border-top: 1px rgba(115, 190, 68, 1.0) solid;}
 				document.getElementById("label_CPU_ram_free").innerHTML      = "RAM free = "      + value2human(obj.ram_free);
 				document.getElementById("label_CPU_ram_used").innerHTML      = "RAM used = "      + value2human(obj.ram_used);
 
-			/*	document.getElementById("pb_ram_percent").value = obj.ram_percent; */
-
-			//	console.log('>>> '+value2human(obj.ram_free));
-
-			/*	console.log('>'+obj.cpu_avg1  + ' %' )
-				console.log('>'+obj.cpu_avg10 + ' %' )
-				console.log('>'+obj.cpu_avg15 + ' %' ) 
-			*/
-
-			/*
-				document.getElementById("cpu_avg1").value  = obj.cpu_avg1;
-				document.getElementById("cpu_avg10").value = obj.cpu_avg10;
-				document.getElementById("cpu_avg15").value = obj.cpu_avg15;
-
-				document.getElementById("label_cpu_avg1").innerHTML  = obj.cpu_avg1;
-				document.getElementById("label_cpu_avg10").innerHTML = obj.cpu_avg10;
-				document.getElementById("label_cpu_avg15").innerHTML = obj.cpu_avg15;
-			*/
-				console.log('>'+obj.ram_usage+' MB') 
+				console.log('RAM usage: '+obj.ram_usage+' MB') 
 
 			};
 		}
@@ -762,7 +672,6 @@ hr.footerline {border-top: 1px rgba(115, 190, 68, 1.0) solid;}
 	  <h2 align="center"> <label id="cpu_uptime" for="cpu_uptime"></label> </h2>
 	</div>
 
-
   <div class="main">
 
 
@@ -770,67 +679,13 @@ hr.footerline {border-top: 1px rgba(115, 190, 68, 1.0) solid;}
 
 <div class="tab">
   <button class="tablinks btn active" onclick="openTab(event, 'SCAILX-ZB')" >SCAILX AI</button>
-  <button class="tablinks" onclick="openTab(event, 'AIAPP')"                >AI APPLICATIONS</button>
+  <button class="tablinks" onclick="openTab(event, 'AIAPP')"                >LIVE VIEWING</button>
   <button class="tablinks" onclick="openTab(event, 'TCPIP')"                >TCP/IP</button>
   <button class="tablinks" onclick="openTab(event, 'CPU')"                  >CPU</button>
   <button class="tablinks" onclick="openTab(event, 'VISCA')"                >VISCA</button>
   <button class="tablinks" onclick="openTab(event, 'CAMCTRL')"              >CAMERA CONTROL</button>
   <button class="tablinks" onclick="openTab(event, 'DOCUMENTATION')"        >DOCUMENTATION</button>
 </div>  <!-- Tab links -->
-
-<!--
-	<script>
-
-		//********************************************
-		//
-		//  select TEMPERATURE graph and set legends
-		//
-		//********************************************
-
-		function select_temp_for_graph(){
-			select_temp = true;
-			select_cpu  = false;
-			graph.scales["y-axis-0"].end=100;
-			graph.scales["y-axis-0"].options.scaleLabel.display="true";
-			graph.data.datasets[0].data = temp_samples;
-			graph.data.datasets[0].label = "CPU temperature [\u00B0C]";
-	                graph.data.datasets[0].pointRadius = 1;
-	                graph.data.datasets[0].borderColor = "rgb(255,0,0)";
-			graph.data.datasets[0].pointBackgroundColor = "rgb(255,0,0)";
-			graph.scales["y-axis-0"].options.scaleLabel.labelString = "CPU temperature [\u00B0C]";
-			graph.update();
- 		}
-
-		//***********************************************
-		//
-		//  select CPU TOTAL LOAD graph and set legends
-		//
-		//***********************************************
-
-		function select_cpu_load_for_graph(){
-			select_temp = false;
-			select_cpu  = true;
-			graph.data.datasets[0].data = cpu_load_samples;
-			graph.data.datasets[0].label = "CPU total load [%]";
-	                graph.data.datasets[0].pointRadius = 1;
-	                graph.data.datasets[0].borderColor = "rgb(0,0,255)";
-			graph.data.datasets[0].pointBackgroundColor = "rgb(0,0,255)";
-			graph.scales["y-axis-0"].options.scaleLabel.labelString = "CPU total load [%]";
-			graph.update();
-		}
-
-	</script>
--->
-
-	<!--
-
-	<div class="fp-Video">
-	   <div id="myVideo" class="display"></div>
-	</div>
-	<button id="playBtn">PLAY</button>
-
-	-->
-
 
 <!-- 
 ******************************************************************************************************
@@ -842,6 +697,14 @@ hr.footerline {border-top: 1px rgba(115, 190, 68, 1.0) solid;}
 
 <div id="SCAILX-ZB" class="tabcontent" style="display: block;">
 
+	<script>
+		function setsrc() {
+			console.log(">>>"+document.getElementById('myIframe1').src);
+			document.getElementById('myIframe1').src="http://";
+			console.log(">>>"+document.getElementById('myIframe1').src);
+		}
+	  </script>
+  
 <!-- <div >  -->
 	<article>
 		<h1 align="left">SCAiLX AI Platform</h1>
@@ -887,22 +750,58 @@ hr.footerline {border-top: 1px rgba(115, 190, 68, 1.0) solid;}
 -->
 
 <div id="AIAPP" class="tabcontent">
+	<style>
+		   body { font-family: Arial, sans-serif; }
+		   .container { width: 80%; margin: 0 auto; }
+		   .stream { margin: 20px 0; }
+	   </style> 
 
-	  <table border="0" align="center" cellpadding="0" cellspacing="0">
-	     
-		<tbody>
-		<tr>
-			<td width="50%" rowspan="6" align="center" valign="middle" padding-right="10px">
-			<img id="AIpose" src="example-pose.png" >
-		  </td>
-		  <td width="1%">
-		  </td>
-			<td width="50%" rowspan="6" align="center" valign="middle" padding-left="10px">
-			<img id="AIdetect" src="example-detection.png" >
-		  </td>
-		</tr>
-		</tbody>
-	</table>
+	 <table border="0" align="center" cellpadding="0" cellspacing="0">
+
+	   <tbody>
+				<h2>SCAiLX Web Streaming</h1>
+	   <tr>
+		   <td width="50%" rowspan="6" align="center" valign="middle" padding-right="10px">
+		   <div class="container">
+					   <div class="stream" id="stream1"></div>
+					   <iframe id="myIframe1" width="320" height="320" src="" frameborder="1" allowfullscreen></iframe>
+				   </div>
+		   </td>
+		   <!--
+		   <td width="50%" rowspan="6" align="center" valign="middle" padding-right="100px">
+		   <div class="container">
+					   <div class="stream" id="stream1"></div>
+					   <iframe id="myIframe2" width="320" height="320" src="" frameborder="1" allowfullscreen></iframe>
+				   </div>
+			 </td>
+			-->
+	   </tr>
+<tr>
+		   <td width="50%" rowspan="6" align="center" valign="middle" padding-right="10px">
+<label id="label_cam0"></label>
+		   </td>
+		   <!--
+		   <td width="50%" rowspan="6" align="center" valign="middle" padding-right="10px">
+<a>cam1-gs-AR0234_1080p</a>
+		   </td>
+		-->
+</tr>
+	   </tbody>
+<!--	     
+	   <tbody>
+	   <tr>
+		   <td width="50%" rowspan="6" align="center" valign="middle" padding-right="10px">
+		   <img id="AIpose" src="example-pose.png" >
+		 </td>
+		 <td width="1%">
+		 </td>
+		   <td width="50%" rowspan="6" align="center" valign="middle" padding-left="10px">
+		   <img id="AIdetect" src="example-detection.png" >
+		 </td>
+	   </tr>
+	   </tbody>
+-->
+   </table>
 
 </div>  <!-- AIAPP tabcontent -->
 

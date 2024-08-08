@@ -15,6 +15,8 @@ from datetime import timezone
 import datetime
  
 import pickle
+import glob
+import yaml
 
 #-----------------------------------------------------------------------------------
 
@@ -48,12 +50,13 @@ CROSSLINK_CMD_SERIAL_BAUD       = 0x7604
 #-----------------------------------------------------------------------------------
 # Open the device file
 def send(dev_path, data: bytes):
-    ioctl_serial = CrosslinkIoctlSerial()
-    ioctl_serial.len = len(data)
-    ioctl_serial.data = (ctypes.c_uint8 * 64)(*data)
-    # Call an IOCTL
-    with open(dev_path) as f:
-        fcntl.ioctl(f, CROSSLINK_CMD_SERIAL_SEND_TX, ioctl_serial)
+    if dev_path != '':
+        ioctl_serial = CrosslinkIoctlSerial()
+        ioctl_serial.len = len(data)
+        ioctl_serial.data = (ctypes.c_uint8 * 64)(*data)
+        # Call an IOCTL
+        with open(dev_path) as f:
+            fcntl.ioctl(f, CROSSLINK_CMD_SERIAL_SEND_TX, ioctl_serial)
 
 def recv(dev_path, count:int=0):
     ioctl_serial = CrosslinkIoctlSerial()
@@ -75,10 +78,11 @@ def get_baud(dev_path):
     return ioctl_serial.len
 
 def set_baud(dev_path, baud:int):
-    ioctl_serial = CrosslinkIoctlSerial()
-    ioctl_serial.len = baud
-    with open(dev_path) as f:
-        fcntl.ioctl(f, CROSSLINK_CMD_SERIAL_BAUD, ioctl_serial)
+    if dev_path != '':
+        ioctl_serial = CrosslinkIoctlSerial()
+        ioctl_serial.len = baud
+        with open(dev_path) as f:
+            fcntl.ioctl(f, CROSSLINK_CMD_SERIAL_BAUD, ioctl_serial)
 
 def wait_for_rx_stable(dev_path, start_wait_ms, stop_wait_ms):
     start = time_ns()
@@ -101,7 +105,7 @@ def wait_for_rx_stable(dev_path, start_wait_ms, stop_wait_ms):
 #print("serial.__version__ = {}".format(serial.__version__))
 
 PORT = 8089
-DEV  = "/dev/v4l-subdev1"
+DEV  = ''
 
 max_temp = -40
 min_temp = 120
@@ -156,7 +160,6 @@ class HttpRequestHandler(http.server.SimpleHTTPRequestHandler):
 
     def do_GET(self):
 
-        global ser
         global visca_resp
         global min_temp, max_temp
 
@@ -273,31 +276,36 @@ class HttpRequestHandler(http.server.SimpleHTTPRequestHandler):
                 #----------------------------------------------------------
                 # CAMERACONTROL
                 #----------------------------------------------------------
-                if self.path.startswith('/imx8/cameracontrol'):
+
+                if self.path.startswith('/imx8/cameracontrol') and (DEV != ''):
+                    print(DEV)
                     recv(DEV)
                     send(DEV, bytearray.fromhex('8109042472FF'))
                     wait_for_rx_stable(DEV, 100, 25)
                     y = recv(DEV)
                     x = list(y)
+                    CAM_res = 'None'
+                    if (len(x)>0):
 #                    print("resolution=", y.hex())
-                    if (x[2]==0 and x[3]==6): CAM_res = '1080p/30fps'
-                    if (x[2]==0 and x[3]==8): CAM_res = '1080p/25fps'
-                    if (x[2]==0 and x[3]==9): CAM_res = '720p/60fps'
-                    if (x[2]==0 and x[3]==12): CAM_res = '720p/50fps'     # 00 0C
-                    if (x[2]==0 and x[3]==13): CAM_res = '720p/30fps'     # 00 0E
-                    if (x[2]==1 and x[3]==1): CAM_res = '720p/25fps'
-                    if (x[2]==1 and x[3]==3): CAM_res = '1080p/60fps'
-                    if (x[2]==1 and x[3]==4): CAM_res = '1080p/50fps'
-#                    print(CAM_res)
+                      if (x[2]==0 and x[3]==6): CAM_res = '1080p/30fps'
+                      if (x[2]==0 and x[3]==8): CAM_res = '1080p/25fps'
+                      if (x[2]==0 and x[3]==9): CAM_res = '720p/60fps'
+                      if (x[2]==0 and x[3]==12): CAM_res = '720p/50fps'     # 00 0C
+                      if (x[2]==0 and x[3]==13): CAM_res = '720p/30fps'     # 00 0E
+                      if (x[2]==1 and x[3]==1): CAM_res = '720p/25fps'
+                      if (x[2]==1 and x[3]==3): CAM_res = '1080p/60fps'
+                      if (x[2]==1 and x[3]==4): CAM_res = '1080p/50fps'
+#                       print(CAM_res)
 
                     send(DEV, bytearray.fromhex('81090002FF'))
                     wait_for_rx_stable(DEV, 100, 25)
                     y = recv(DEV)
                     x = list(y)
                     CAM_brand = 'no zoom block'
-                    if (x[4]==4 ):             CAM_brand = 'Videology'
-                    if (x[4]>=6 and x[4]<=7):  CAM_brand = 'Sony'
-                    if (x[4]==240):            CAM_brand = 'Tamron'
+                    if (len(x)>0):
+                      if (x[4]==4 ):             CAM_brand = 'Videology'
+                      if (x[4]>=6 and x[4]<=7):  CAM_brand = 'Sony'
+                      if (x[4]==240):            CAM_brand = 'Tamron'
 
                     # RGAIN
                     send(DEV, bytearray.fromhex('81090443FF'))
@@ -553,8 +561,9 @@ class HttpRequestHandler(http.server.SimpleHTTPRequestHandler):
                                    + '"rtsp3_running":' + rtsp3_running   + ',' \
                                    + '"rtsp4_running":' + rtsp4_running   + ',' \
                                    + '"HOST_NAME":'     + '"'+HOST_NAME+'"'  + ',' \
-                                   + '"IP":'            + '"'+IP+'"'         + ',' \
+                                   + '"IP":'            + '"'+IP+'"'      + ',' \
                                    + '"visca_response":'    + visca_response + ',' \
+                                   + '"stream1":'       + '"'+stream1+'"'    + ',' \
                                    + '"cpu_freq":'      + cpu_freq        + '}'
 
                     now = datetime.datetime.now()
@@ -861,8 +870,21 @@ httpd = socketserver.TCPServer(("0.0.0.0", PORT), HttpRequestHandler, bind_and_a
 httpd.allow_reuse_address = True
 httpd.daemon_threads = True
 
-try:
+DEV=''
+cnt_cam0 = len(glob.glob("/sys/firmware/devicetree/base/chosen/overlays/cam0-crosslink"))
+cnt_cam1 = len(glob.glob("/sys/firmware/devicetree/base/chosen/overlays/cam1-crosslink"))
+#cnt = len(glob.glob("/sys/firmware/devicetree/base/chosen/overlays/cam*"))
 
+if cnt_cam0 == 1 or cnt_cam1 == 1:
+    DEV = os.path.realpath(glob.glob("/dev/links/crosslink_mipi_*")[0])
+
+with open('/tmp/cam_config.yaml', 'r') as f:
+    data = yaml.load(f, Loader=yaml.SafeLoader)
+stream1 = list(data['streams'])[0]
+print(stream1)
+
+try:
+    print(DEV)
     set_baud(DEV, 9600)
 
     visca_resp = ''
