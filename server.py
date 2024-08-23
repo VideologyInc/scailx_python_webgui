@@ -280,6 +280,17 @@ class HttpRequestHandler(http.server.SimpleHTTPRequestHandler):
                 if self.path.startswith('/imx8/cameracontrol') and (DEV != ''):
                     print(DEV)
                     recv(DEV)
+
+                    send(DEV, bytearray.fromhex('81090002FF'))
+                    wait_for_rx_stable(DEV, 100, 25)
+                    y = recv(DEV)
+                    x = list(y)
+                    CAM_brand = 'no zoom block'
+                    if (len(x)>0):
+                      if (x[4]==4 ):             CAM_brand = 'Videology'
+                      if (x[4]>=6 and x[4]<=7):  CAM_brand = 'Sony'
+                      if (x[4]==240):            CAM_brand = 'Tamron'
+
                     send(DEV, bytearray.fromhex('8109042472FF'))
                     wait_for_rx_stable(DEV, 100, 25)
                     y = recv(DEV)
@@ -292,20 +303,12 @@ class HttpRequestHandler(http.server.SimpleHTTPRequestHandler):
                       if (x[2]==0 and x[3]==9): CAM_res = '720p/60fps'
                       if (x[2]==0 and x[3]==12): CAM_res = '720p/50fps'     # 00 0C
                       if (x[2]==0 and x[3]==13): CAM_res = '720p/30fps'     # 00 0E
+                      if (x[2]==0 and x[3]==13) and CAM_brand=='Sony': CAM_res = '720p/29.97fps'     # 00 0E
                       if (x[2]==1 and x[3]==1): CAM_res = '720p/25fps'
                       if (x[2]==1 and x[3]==3): CAM_res = '1080p/60fps'
+                      if (x[2]==1 and x[3]==3) and (CAM_brand=='Sony'): CAM_res = '1080p/59.94fps'
                       if (x[2]==1 and x[3]==4): CAM_res = '1080p/50fps'
 #                       print(CAM_res)
-
-                    send(DEV, bytearray.fromhex('81090002FF'))
-                    wait_for_rx_stable(DEV, 100, 25)
-                    y = recv(DEV)
-                    x = list(y)
-                    CAM_brand = 'no zoom block'
-                    if (len(x)>0):
-                      if (x[4]==4 ):             CAM_brand = 'Videology'
-                      if (x[4]>=6 and x[4]<=7):  CAM_brand = 'Sony'
-                      if (x[4]==240):            CAM_brand = 'Tamron'
 
                     # RGAIN
                     send(DEV, bytearray.fromhex('81090443FF'))

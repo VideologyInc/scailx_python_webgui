@@ -329,6 +329,13 @@ hr.footerline {border-top: 1px rgba(115, 190, 68, 1.0) solid;}
 	  }
 	  document.getElementById(tabName).style.display = "block";
 	  evt.currentTarget.className += " active";
+	  if (tabName!='AIAPP'){			
+	  	document.getElementById('myIframe1').src = "http://";
+		console.log("!>", document.getElementById('myIframe1').src)
+	  }else{
+		document.getElementById('myIframe1').src = document.getElementById('stream_link').innerHTML;
+		console.log("!!>", document.getElementById('myIframe1').src)
+		  }
 	}
 	</script>
 	
@@ -590,7 +597,10 @@ hr.footerline {border-top: 1px rgba(115, 190, 68, 1.0) solid;}
 				
 				if (document.getElementById('myIframe1').src == "http://")
 				{
-					document.getElementById('myIframe1').src = window.location.protocol + "//" + window.location.hostname + ":1984/stream.html?"+ "src="+ obj.stream1 +"&mode=webrtc";
+					var stream_link = window.location.protocol + "//" + window.location.hostname + ":1984/stream.html?"+ "src="+ obj.stream1 +"&mode=webrtc";
+					document.getElementById('stream_link').innerHTML = stream_link;
+//					document.getElementById('myIframe1').src = stream_link;
+//					window.location.protocol + "//" + window.location.hostname + ":1984/stream.html?"+ "src="+ obj.stream1 +"&mode=webrtc";
 					console.log(">>>"+document.getElementById('myIframe1').src);
 				}
 
@@ -760,14 +770,21 @@ hr.footerline {border-top: 1px rgba(115, 190, 68, 1.0) solid;}
 
 	   <tbody>
 				<h2>SCAiLX Web Streaming</h1>
+					<a id="stream_link"></a>
+					<br>
+	   <!--style="color:white;"-->
 	   <tr>
-		   <td width="50%" rowspan="6" align="center" valign="middle" padding-right="10px">
-		   <div class="container">
+		<td width="30%" rowspan="6" align="center" valign="middle" padding-right="10px">
+			</td>
+			<td width="30%" rowspan="6" align="center" valign="middle" padding-right="10px">
+				<div class="container">
 					   <div class="stream" id="stream1"></div>
 					   <iframe id="myIframe1" width="320" height="320" src="" frameborder="1" allowfullscreen></iframe>
 				   </div>
 		   </td>
-		   <!--
+	   <td width="30%" rowspan="6" align="center" valign="middle" padding-right="10px">
+		</td>
+	   <!--
 		   <td width="50%" rowspan="6" align="center" valign="middle" padding-right="100px">
 		   <div class="container">
 					   <div class="stream" id="stream1"></div>
@@ -777,10 +794,14 @@ hr.footerline {border-top: 1px rgba(115, 190, 68, 1.0) solid;}
 			-->
 	   </tr>
 <tr>
-		   <td width="50%" rowspan="6" align="center" valign="middle" padding-right="10px">
+	<td width="30%" rowspan="6" align="center" valign="middle" padding-right="10px">
+	</td>
+   <td width="50%" rowspan="6" align="center" valign="middle" padding-right="10px">
 <label id="label_cam0"></label>
 		   </td>
-		   <!--
+		   <td width="30%" rowspan="6" align="center" valign="middle" padding-right="10px">
+		</td>
+	   <!--
 		   <td width="50%" rowspan="6" align="center" valign="middle" padding-right="10px">
 <a>cam1-gs-AR0234_1080p</a>
 		   </td>
@@ -1667,8 +1688,28 @@ hr.footerline {border-top: 1px rgba(115, 190, 68, 1.0) solid;}
 -->
 
   <div id="DOCUMENTATION" class="tabcontent">
+
+	<table border="0" align="center" cellpadding="0" cellspacing="0">
+
+		<tbody>
+				 <h2>SCAiLX-AI - User Guide</h2>
+		<tr>
+			<td width="50%" rowspan="6" align="center" valign="middle" padding-right="10px">
+				<p><a href="https://www.videologyinc.com/hubfs/pdfs/ug-scailx-ai.pdf">UG_SCAILX-AI</a></p>
+
+//				<iframe src="https://www.videologyinc.com/hubfs/pdfs/ug-scailx-ai.pdf" style="width:600px; height:500px;" frameborder="0"></iframe>
+
+			</td>
+ 		</tr>
+		</tbody>
+	</table>
+
   </div>  <!-- tab content DOCUMENTATION   -->
 
+
+<!--
+  ******************************************************************************************************
+-->
 </div>  <!-- main -->
 
 <div class="footer-top">
