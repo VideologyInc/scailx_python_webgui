@@ -34,7 +34,7 @@ CROSSLINK_CMD_SERIAL_BAUD       = 0x7604
 class CrosslinkSerial():
     def __init__(self, dev_path, start_wait_ms=100, stop_wait_ms=25, baud=9600):
         self.lock = threading.Lock()
-        self.dev = dev
+        self.dev = dev_path
         self.baud = baud
         self.bwms = start_wait_ms
         self.ewms = stop_wait_ms
@@ -77,21 +77,25 @@ class CrosslinkSerial():
 
     def wait_for_rx_stable(self, start_wait_ms, stop_wait_ms):
         start = time_ns()
-        while get_rx_count(self.dev) == 0:
+        while self.get_rx_count() == 0:
             sleep(0.002)
             if time_ns() - start > start_wait_ms*1e6:
                 return False
-        byte_count = get_rx_count(self.dev)
+        byte_count = self.get_rx_count()
         start = time_ns()
         while time_ns() - start < stop_wait_ms*1e6:
             sleep(0.002)
-            cnt = get_rx_count(self.dev)
+            cnt = self.get_rx_count()
             if cnt != byte_count:
                 byte_count = cnt
                 start = time_ns()
         return True
 
-    def transceive(self, data: bytes, count:int=0, start_wait_ms=self.bwms, stop_wait_ms=self.ewms):
+    def transceive(self, data: bytes, count:int=0, start_wait_ms=None, stop_wait_ms=None):
+        if start_wait_ms is None:
+            start_wait_ms = self.bwms
+        if stop_wait_ms is None:
+            stop_wait_ms = self.ewms
         with self.lock:
             self.recv()
             self.send(data)
@@ -103,17 +107,14 @@ def main():
     # get argparse for dev, baudrate, data
     parser = argparse.ArgumentParser(prog='Crosslink_Visca')
     parser.add_argument('-d', '--dev', type=str, default="/dev/v4l-subdev1", help='device path')
-    parser.add_argument('-t', '--timeout', type=int, default=100, help='read timeout to wait for RX data')
+    parser.add_argument('-t', '--timeout', type=int, default=None, help='read timeout to wait for RX data')
     parser.add_argument('data', type=str, help='data to send, as hex string')
     args = parser.parse_args()
     data = bytearray.fromhex(args.data)
     crtvx = CrosslinkSerial(args.dev)
 
-    send(args.dev, data)
+    data = crtvx.transceive(data, start_wait_ms=args.timeout)
 
-    wait_for_rx_stable(args.dev, args.timeout, args.timeout/4)
-    count = get_rx_count(args.dev)
-    data = recv(args.dev)
     print(data.hex())
 
 if __name__ == "__main__":
