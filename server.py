@@ -1,19 +1,18 @@
 # server app
 import http.server
 import socketserver
-import socket 
+import socket
 import time
 import os
 import base64
-#import serial
+import crosslink_visca as ctv
 import logging
 import json
 import psutil
-import binascii
 import subprocess, signal
 from datetime import timezone
 import datetime
- 
+
 import pickle
 import glob
 import yaml
@@ -26,81 +25,6 @@ import argparse
 import fcntl
 import ctypes
 
-# Define the struct
-class CrosslinkIoctlSerial(ctypes.Structure):
-    _fields_ = [
-        ("len", ctypes.c_uint32),
-        ("data", ctypes.c_uint8 * 64),
-    ]
-
-# # define UART status bits
-# CROSSLINK_UART_STAT_BUSY_TX       = 0b0010_0000
-# CROSSLINK_UART_STAT_BUSY_RX       = 0b0001_0000
-# CROSSLINK_UART_STAT_DATA_FULLTX   = 0b0000_1000
-# CROSSLINK_UART_STAT_DATA_EMPTYTX  = 0b0000_0100
-# CROSSLINK_UART_STAT_DATA_FULLRX   = 0b0000_0010
-# CROSSLINK_UART_STAT_DATA_EMPTYRX  = 0b0000_0001
-
-# Define the IOCTL commands
-CROSSLINK_CMD_SERIAL_SEND_TX    = 0x7601
-CROSSLINK_CMD_SERIAL_RECV_RX    = 0x7602
-CROSSLINK_CMD_SERIAL_RX_CNT     = 0x7603
-CROSSLINK_CMD_SERIAL_BAUD       = 0x7604
-
-#-----------------------------------------------------------------------------------
-# Open the device file
-def send(dev_path, data: bytes):
-    if dev_path != '':
-        ioctl_serial = CrosslinkIoctlSerial()
-        ioctl_serial.len = len(data)
-        ioctl_serial.data = (ctypes.c_uint8 * 64)(*data)
-        # Call an IOCTL
-        with open(dev_path) as f:
-            fcntl.ioctl(f, CROSSLINK_CMD_SERIAL_SEND_TX, ioctl_serial)
-
-def recv(dev_path, count:int=0):
-    ioctl_serial = CrosslinkIoctlSerial()
-    ioctl_serial.len = count
-    with open(dev_path) as f:
-        fcntl.ioctl(f, CROSSLINK_CMD_SERIAL_RECV_RX, ioctl_serial)
-    return bytes(ioctl_serial.data[:ioctl_serial.len])
-
-def get_rx_count(dev_path):
-    ioctl_serial = CrosslinkIoctlSerial()
-    with open(dev_path) as f:
-        fcntl.ioctl(f, CROSSLINK_CMD_SERIAL_RX_CNT, ioctl_serial)
-    return ioctl_serial.len
-
-def get_baud(dev_path):
-    ioctl_serial = CrosslinkIoctlSerial()
-    with open(dev_path) as f:
-        fcntl.ioctl(f, CROSSLINK_CMD_SERIAL_BAUD, ioctl_serial)
-    return ioctl_serial.len
-
-def set_baud(dev_path, baud:int):
-    if dev_path != '':
-        ioctl_serial = CrosslinkIoctlSerial()
-        ioctl_serial.len = baud
-        with open(dev_path) as f:
-            fcntl.ioctl(f, CROSSLINK_CMD_SERIAL_BAUD, ioctl_serial)
-
-def wait_for_rx_stable(dev_path, start_wait_ms, stop_wait_ms):
-    start = time_ns()
-    while get_rx_count(dev_path) == 0:
-        sleep(0.002)
-        if time_ns() - start > start_wait_ms*1e6:
-            return False
-    byte_count = get_rx_count(dev_path)
-    start = time_ns()
-    while time_ns() - start < stop_wait_ms*1e6:
-        sleep(0.002)
-        cnt = get_rx_count(dev_path)
-        if cnt != byte_count:
-            byte_count = cnt
-            start = time_ns()
-    return True
-
-#-----------------------------------------------------------------------------------
 
 #print("serial.__version__ = {}".format(serial.__version__))
 
@@ -120,7 +44,7 @@ cur_path = os.path.dirname(__file__)
 #   pickle.dump([min_temp, max_temp, min_temp_24h, max_temp_24h], open(os.path.dirname(__file__) + "/temperature.p", "wb"))
 
 pickle.dump([min_temp, max_temp, min_temp_24h, max_temp_24h], open(cur_path + "/temperature.p", "wb"))
- 
+
 print(min_temp)
 print(max_temp)
 print(min_temp_24h)
@@ -172,7 +96,7 @@ class HttpRequestHandler(http.server.SimpleHTTPRequestHandler):
         ctype = self.guess_type(self.path)
 
         if self.path.startswith('/imx8') == False:
- 
+
                 if self.path.endswith(".html"):
                     f = open(cur_path + self.path[0:]).read()
                     self.send_response(200)
@@ -279,21 +203,10 @@ class HttpRequestHandler(http.server.SimpleHTTPRequestHandler):
 
                 if self.path.startswith('/imx8/cameracontrol') and (DEV != ''):
                     print(DEV)
-                    recv(DEV)
-
-                    send(DEV, bytearray.fromhex('81090002FF'))
-                    wait_for_rx_stable(DEV, 100, 25)
-                    y = recv(DEV)
-                    x = list(y)
-                    CAM_brand = 'no zoom block'
-                    if (len(x)>0):
-                      if (x[4]==4 ):             CAM_brand = 'Videology'
-                      if (x[4]>=6 and x[4]<=7):  CAM_brand = 'Sony'
-                      if (x[4]==240):            CAM_brand = 'Tamron'
-
-                    send(DEV, bytearray.fromhex('8109042472FF'))
-                    wait_for_rx_stable(DEV, 100, 25)
-                    y = recv(DEV)
+                    ctv.recv(DEV)
+                    ctv.send(DEV, bytearray.fromhex('8109042472FF'))
+                    ctv.wait_for_rx_stable(DEV, 100, 25)
+                    y = ctv.recv(DEV)
                     x = list(y)
                     CAM_res = 'None'
                     if (len(x)>0):
@@ -310,99 +223,109 @@ class HttpRequestHandler(http.server.SimpleHTTPRequestHandler):
                       if (x[2]==1 and x[3]==4): CAM_res = '1080p/50fps'
 #                       print(CAM_res)
 
+                    ctv.send(DEV, bytearray.fromhex('81090002FF'))
+                    ctv.wait_for_rx_stable(DEV, 100, 25)
+                    y = ctv.recv(DEV)
+                    x = list(y)
+                    CAM_brand = 'no zoom block'
+                    if (len(x)>0):
+                      if (x[4]==4 ):             CAM_brand = 'Videology'
+                      if (x[4]>=6 and x[4]<=7):  CAM_brand = 'Sony'
+                      if (x[4]==240):            CAM_brand = 'Tamron'
+
                     # RGAIN
-                    send(DEV, bytearray.fromhex('81090443FF'))
-                    wait_for_rx_stable(DEV, 100, 25)
-                    x = list(recv(DEV))
+                    ctv.send(DEV, bytearray.fromhex('81090443FF'))
+                    ctv.wait_for_rx_stable(DEV, 100, 25)
+                    x = list(ctv.recv(DEV))
                     CAM_RGain = "00"
                     if (len(x) == 7 and x[0]==144):
                       CAM_RGain = "{0:0{1}x}".format(16*x[4]+x[5], 2)
 
-                    send(DEV, b'\x81\x09\x04\x44\xFF')
-                    wait_for_rx_stable(DEV, 100, 25)
-                    x = list(recv(DEV))
+                    ctv.send(DEV, b'\x81\x09\x04\x44\xFF')
+                    ctv.wait_for_rx_stable(DEV, 100, 25)
+                    x = list(ctv.recv(DEV))
                     CAM_BGain = "00"
                     if (len(x) == 7 and x[0]==144):
                       CAM_BGain = "{0:0{1}x}".format(16*x[4]+x[5], 2)
-                    
-                    send(DEV, b'\x81\x09\x04\x13\xFF')
-                    wait_for_rx_stable(DEV, 100, 25)
-                    x = list(recv(DEV))
+
+                    ctv.send(DEV, b'\x81\x09\x04\x13\xFF')
+                    ctv.wait_for_rx_stable(DEV, 100, 25)
+                    x = list(ctv.recv(DEV))
                     CAM_Chroma = "00"
                     if (len(x) == 7 and x[0]==144):
                       CAM_Chroma = "{0:0{1}x}".format(16*x[4]+x[5], 2)
 
-                    send(DEV, b'\x81\x09\x04\x4D\xFF')
-                    wait_for_rx_stable(DEV, 100, 25)
-                    x = list(recv(DEV))
+                    ctv.send(DEV, b'\x81\x09\x04\x4D\xFF')
+                    ctv.wait_for_rx_stable(DEV, 100, 25)
+                    x = list(ctv.recv(DEV))
                     CAM_Bright = "00"
                     if (len(x) == 7 and x[0]==144):
                       CAM_Bright = "{0:0{1}x}".format(16*x[4]+x[5], 2)
 
-                    send(DEV, b'\x81\x09\x04\x42\xFF')
-                    wait_for_rx_stable(DEV, 100, 25)
-                    x = list(recv(DEV))
+                    ctv.send(DEV, b'\x81\x09\x04\x42\xFF')
+                    ctv.wait_for_rx_stable(DEV, 100, 25)
+                    x = list(ctv.recv(DEV))
                     CAM_Aperture = "00"
                     if (len(x) == 7 and x[0]==144):
                       CAM_Aperture = "{0:0{1}x}".format(16*x[4]+x[5], 2)
 
-                    send(DEV, b'\x81\x09\x04\x4A\xFF')
-                    wait_for_rx_stable(DEV, 100, 25)
-                    x = list(recv(DEV))
+                    ctv.send(DEV, b'\x81\x09\x04\x4A\xFF')
+                    ctv.wait_for_rx_stable(DEV, 100, 25)
+                    x = list(ctv.recv(DEV))
                     CAM_Shutter = "00"
                     if (len(x) == 7 and x[0]==144):
                       CAM_Shutter = "{0:0{1}x}".format(16*x[4]+x[5], 2)
 
-                    send(DEV, b'\x81\x09\x04\x4B\xFF')
-                    wait_for_rx_stable(DEV, 100, 25)
-                    x = list(recv(DEV))
+                    ctv.send(DEV, b'\x81\x09\x04\x4B\xFF')
+                    ctv.wait_for_rx_stable(DEV, 100, 25)
+                    x = list(ctv.recv(DEV))
                     CAM_Iris = "00"
                     if (len(x) == 7 and x[0]==144):
                       CAM_Iris = "{0:0{1}x}".format(16*x[4]+x[5], 2)
 
-                    send(DEV, b'\x81\x09\x04\x4C\xFF')
-                    wait_for_rx_stable(DEV, 100, 25)
-                    x = list(recv(DEV))
+                    ctv.send(DEV, b'\x81\x09\x04\x4C\xFF')
+                    ctv.wait_for_rx_stable(DEV, 100, 25)
+                    x = list(ctv.recv(DEV))
                     CAM_Gain = "00"
                     if (len(x) == 7 and x[0]==144):
                       CAM_Gain = "{0:0{1}x}".format(16*x[4]+x[5], 2)
 
-                    send(DEV, b'\x81\x09\x04\x27\xFF')
-                    wait_for_rx_stable(DEV, 100, 25)
-                    x = list(recv(DEV))
+                    ctv.send(DEV, b'\x81\x09\x04\x27\xFF')
+                    ctv.wait_for_rx_stable(DEV, 100, 25)
+                    x = list(ctv.recv(DEV))
                     CAM_AF_Mode_Active = "00"
                     CAM_AF_Mode_Interval = "00"
                     if (len(x) == 7 and x[0]==144):
                       CAM_AF_Mode_Active   = "{0:0{1}x}".format(16*x[2]+x[3], 2)
                       CAM_AF_Mode_Interval = "{0:0{1}x}".format(16*x[4]+x[5], 2)
 
-                    send(DEV, b'\x81\x09\x04\x47\xFF')
-                    wait_for_rx_stable(DEV, 100, 25)
-                    x = list(recv(DEV))
+                    ctv.send(DEV, b'\x81\x09\x04\x47\xFF')
+                    ctv.wait_for_rx_stable(DEV, 100, 25)
+                    x = list(ctv.recv(DEV))
                     zoompos = "0000"
                     if (len(x) == 7 and x[0]==144):
                       zoompos  = "{0:0{1}x}".format(16*(16*(16*x[2]+x[3])+x[4])+x[5], 4)
 
-                    send(DEV, b'\x81\x09\x04\x48\xFF')
-                    wait_for_rx_stable(DEV, 100, 25)
-                    x = list(recv(DEV))
+                    ctv.send(DEV, b'\x81\x09\x04\x48\xFF')
+                    ctv.wait_for_rx_stable(DEV, 100, 25)
+                    x = list(ctv.recv(DEV))
                     focuspos = "0000"
                     if (len(x) == 7 and x[0]==144):
                       focuspos  = "{0:0{1}x}".format(16*(16*(16*x[2]+x[3])+x[4])+x[5], 4)
 
-                    send(DEV, b'\x81\x09\x04\x39\xFF')
-                    wait_for_rx_stable(DEV, 100, 25)
+                    ctv.send(DEV, b'\x81\x09\x04\x39\xFF')
+                    ctv.wait_for_rx_stable(DEV, 100, 25)
                     CAM_AEMode = '1'
-                    x = list(recv(DEV))
+                    x = list(ctv.recv(DEV))
                     if (len(x) == 4 and x[0]==144):
                       if (x[2] == 0x00):
                           CAM_AEMode = '1'
                       if (x[2] == 0x03):
                           CAM_AEMode = '0'
 
-                    send(DEV, b'\x81\x09\x04\x5C\xFF')
-                    wait_for_rx_stable(DEV, 100, 25)
-                    x = list(recv(DEV))
+                    ctv.send(DEV, b'\x81\x09\x04\x5C\xFF')
+                    ctv.wait_for_rx_stable(DEV, 100, 25)
+                    x = list(ctv.recv(DEV))
                     CAM_AGCMode = '1'
                     if (len(x) == 4 and x[0]==144):
                       if (x[2] == 0x02):
@@ -410,9 +333,9 @@ class HttpRequestHandler(http.server.SimpleHTTPRequestHandler):
                       if (x[2] == 0x03):
                           CAM_AGCMode = '0'
 
-                    send(DEV, b'\x81\x09\x04\x35\xFF')
-                    wait_for_rx_stable(DEV, 100, 25)
-                    x = list(recv(DEV))
+                    ctv.send(DEV, b'\x81\x09\x04\x35\xFF')
+                    ctv.wait_for_rx_stable(DEV, 100, 25)
+                    x = list(ctv.recv(DEV))
                     CAM_WBMode = 'Auto'
                     if (len(x) == 4 and x[0]==144):
                       if (x[2] == 0x00):
@@ -425,10 +348,10 @@ class HttpRequestHandler(http.server.SimpleHTTPRequestHandler):
                           CAM_WBMode = 'One Push AWB'
                       if (x[2] == 0x05):
                           CAM_WBMode = 'Manual'
-       
-                    send(DEV, b'\x81\x09\x04\x38\xFF')
-                    wait_for_rx_stable(DEV, 100, 25)
-                    x = list(recv(DEV))
+
+                    ctv.send(DEV, b'\x81\x09\x04\x38\xFF')
+                    ctv.wait_for_rx_stable(DEV, 100, 25)
+                    x = list(ctv.recv(DEV))
                     CAM_AEMode = '1'
                     if (len(x) == 4 and x[0]==144):
                       if (x[2] == 0x02):
@@ -456,25 +379,25 @@ class HttpRequestHandler(http.server.SimpleHTTPRequestHandler):
                     s += '"CAM_AFMode": "'  + CAM_AFMode + '",'
 
                     s += '"zoompos": "' + zoompos   + '",'
-                    s += '"focuspos": "' + focuspos 
+                    s += '"focuspos": "' + focuspos
                     s += '"}'
 #                    print(s)
                     self.send_response(200)
                     self.send_header('Content-type', 'text/event-stream')
                     self.end_headers()
                     self.wfile.write(bytes('data: ' + s + '\n\n', 'utf-8'))
-                    
+
                 if self.path.startswith('/imx8/status'):
                     fd = open('/sys/class/thermal/thermal_zone0/temp')
                     temp      = int(fd.read())/1000
-                    
+
                     if temp>max_temp:
                         max_temp=temp
                     if temp<min_temp:
                         min_temp=temp
                     pickle.dump([min_temp, max_temp, min_temp_24h, max_temp_24h], open(cur_path + "/temperature.p", "wb"))
                     print(min_temp, max_temp)
-                      
+
                     upt       = str(uptime())
                     cpu_freq  = str(psutil.cpu_freq().current)
                     cpu_perc  = psutil.cpu_percent(percpu=True)
@@ -499,16 +422,16 @@ class HttpRequestHandler(http.server.SimpleHTTPRequestHandler):
                     print('> ' + visca_resp)
                     if visca_resp == '<NO INFO>':
                         visca_response = '"' + str(0) + '"'
-                    else:               
+                    else:
                         visca_response = '"' + visca_resp + '"'
-                    
+
 #                    print("RTSP running")
                     """
                     p = subprocess.Popen(['ps', '-ax'], stdout=subprocess.PIPE)
                     out, err = p.communicate()
                     rtsp1 = kill_gst_pid(b'gst-variable-rtsp-server -p 9001', out, False)
                     if (rtsp1 == 0):
-                         rtsp1_running = "0" 
+                         rtsp1_running = "0"
                     else:
                          rtsp1_running = "1"
                     rtsp2 = kill_gst_pid(b'gst-variable-rtsp-server -p 9002', out, False)
@@ -528,10 +451,10 @@ class HttpRequestHandler(http.server.SimpleHTTPRequestHandler):
                          rtsp4_running = "1"
                     """
 
-                    rtsp1_running = "0" 
-                    rtsp2_running = "0" 
-                    rtsp3_running = "0" 
-                    rtsp4_running = "0" 
+                    rtsp1_running = "0"
+                    rtsp2_running = "0"
+                    rtsp3_running = "0"
+                    rtsp4_running = "0"
 
                     global IP
                     IP = socket.gethostbyname(socket.getfqdn())
@@ -594,7 +517,7 @@ class HttpRequestHandler(http.server.SimpleHTTPRequestHandler):
         z = self.path.rsplit('/')
         if self.path.startswith('/imx8'):
             if z[2] == 'CAM_POWER':
-               send(DEV, b'\x81\x01\x04\x00\x03\xFF') 
+               ctv.send(DEV, b'\x81\x01\x04\x00\x03\xFF')
 
             #***************************************************
             # INQUIRY
@@ -610,13 +533,13 @@ class HttpRequestHandler(http.server.SimpleHTTPRequestHandler):
 #               s = ['129', '09', '04', '36', '114', '255']  # 81 09 04 24 72 FF
 #               print(type(s))
 #               print(bytearray(s))
-               
-               send(DEV, bytearray.fromhex(z[2]))
-               wait_for_rx_stable(DEV, 100, 25)
-               count = get_rx_count(DEV)
+
+               ctv.send(DEV, bytearray.fromhex(z[2]))
+               ctv.wait_for_rx_stable(DEV, 100, 25)
+               count = ctv.get_rx_count(DEV)
                print("count=", count)
 
-               y = recv(DEV)
+               y = ctv.recv(DEV)
                print("visca_resp=", y.hex())
                visca_resp = y.hex()
 #               print(s[3])
@@ -663,36 +586,36 @@ class HttpRequestHandler(http.server.SimpleHTTPRequestHandler):
                   print(int("0x"+z[2][x]+z[2][x+1],16))
                print(s)
 
-               send(DEV, bytearray.fromhex(z[2]))
+               ctv.send(DEV, bytearray.fromhex(z[2]))
                time.sleep(1)
-               data = recv(DEV, 5)
+               data = ctv.recv(DEV, 5)
 
             if z[2] == 'CAM_ICR':
                if z[3] == 'NIGHT':
-                  send(DEV, b'\x81\x01\x04\x01\x02\xFF')
+                  ctv.send(DEV, b'\x81\x01\x04\x01\x02\xFF')
                if z[3] == 'DAY':
-                  send(DEV, b'\x81\x01\x04\x01\x03\xFF')
+                  ctv.send(DEV, b'\x81\x01\x04\x01\x03\xFF')
 
             if z[2] == 'CAM_MENU':
                if z[3] == 'ENTER':
-                  send(DEV, b'\x81\x01\x04\x16\x10\xFF')
+                  ctv.send(DEV, b'\x81\x01\x04\x16\x10\xFF')
                if z[3] == 'ESC':
-                  send(DEV, b'\x81\x01\x04\x16\x20\xFF')
+                  ctv.send(DEV, b'\x81\x01\x04\x16\x20\xFF')
                if z[3] == 'UP':
-                  send(DEV, b'\x81\x01\x04\x16\x01\xFF')
+                  ctv.send(DEV, b'\x81\x01\x04\x16\x01\xFF')
                if z[3] == 'DOWN':
-                  send(DEV, b'\x81\x01\x04\x16\x02\xFF')
+                  ctv.send(DEV, b'\x81\x01\x04\x16\x02\xFF')
                if z[3] == 'RIGHT':
-                  send(DEV, b'\x81\x01\x04\x16\x08\xFF')
+                  ctv.send(DEV, b'\x81\x01\x04\x16\x08\xFF')
                if z[3] == 'LEFT':
-                  send(DEV, b'\x81\x01\x04\x16\x04\xFF') 
+                  ctv.send(DEV, b'\x81\x01\x04\x16\x04\xFF')
 
             if z[2] == 'CAM_MEMORY':
-#HH               send(DEV, b'\x81\x01\x04\x3F\x01\x00\xFF')
+#HH               ctv.send(DEV, b'\x81\x01\x04\x3F\x01\x00\xFF')
                time.sleep(2)
-               send(DEV, b'\x81\x01\x04\x3F\x01\x7F\xFF')
+               ctv.send(DEV, b'\x81\x01\x04\x3F\x01\x7F\xFF')
                time.sleep(2)
-               send(DEV, b'\x81\x01\x04\x00\x03\xFF')
+               ctv.send(DEV, b'\x81\x01\x04\x00\x03\xFF')
 
             if z[2] == 'CAM_videotestsrc':
                if z[3] =='0':
@@ -718,20 +641,20 @@ class HttpRequestHandler(http.server.SimpleHTTPRequestHandler):
 
             if z[2] == 'CAM_Zoom':
                if z[3] == 'Stop':
-                  send(DEV, b'\x81\x01\x04\x07\x00\xFF')
+                  ctv.send(DEV, b'\x81\x01\x04\x07\x00\xFF')
                if z[3] == 'Tele':
-                  send(DEV, b'\x81\x01\x04\x07\x02\xFF')
+                  ctv.send(DEV, b'\x81\x01\x04\x07\x02\xFF')
                if z[3] == 'Wide':
-                  send(DEV, b'\x81\x01\x04\x07\x03\xFF')
+                  ctv.send(DEV, b'\x81\x01\x04\x07\x03\xFF')
                if z[3] == '1X':
                   x = bytearray()
                   x = [0x81,0x01,0x04,0x47,0x00,0x00,0x00,0x00,0xFF]
                   print(x)
-#                  send(DEV, b'\x81\x01\x04\x47\x00\x00\x00\x00\xFF')
-                  send(DEV, bytearray(x))
+#                  ctv.send(DEV, b'\x81\x01\x04\x47\x00\x00\x00\x00\xFF')
+                  ctv.send(DEV, bytearray(x))
                if z[3] == 'DIRECT':
                   s = [0x81, 0x01, 0x04, 0x47, int("0x0"+z[4][0],16), int("0x0"+z[4][1],16), int("0x0"+z[4][2],16), int("0x0"+z[4][3],16), 0xFF]
-                  send(DEV, bytearray(s))
+                  ctv.send(DEV, bytearray(s))
                if z[3][0] == 'X':
                   if len(z[3]) == 2:
                        s = [0x81, 0x01, 0x04, 0x47, 0x00, 0x00, 0x00, int("0x0"+z[3][1],16), 0xFF]
@@ -742,26 +665,26 @@ class HttpRequestHandler(http.server.SimpleHTTPRequestHandler):
                   if len(z[3]) == 5:
                        s = [0x81, 0x01, 0x04, 0x47, int("0x0"+z[3][1],16), int("0x0"+z[3][2],16), int("0x0"+z[3][3],16), int("0x0"+z[3][4],16), 0xFF]
                   print(s)
-                  send(DEV, bytearray(s))
+                  ctv.send(DEV, bytearray(s))
 
             if z[2] == 'CAM_Focus':
                if z[3] == 'AUTO':
-                  send(DEV, b'\x81\x01\x04\x38\x02\xFF')	# auto focus
+                  ctv.send(DEV, b'\x81\x01\x04\x38\x02\xFF')	# auto focus
                if z[3] == 'MANUAL':
-                  send(DEV, b'\x81\x01\x04\x38\x03\xFF')	# manual focus
+                  ctv.send(DEV, b'\x81\x01\x04\x38\x03\xFF')	# manual focus
                if z[3] == 'Far':
-                  send(DEV, b'\x81\x01\x04\x08\x27\xFF')
+                  ctv.send(DEV, b'\x81\x01\x04\x08\x27\xFF')
                if z[3] == 'Near':
-                  send(DEV, b'\x81\x01\x04\x08\x37\xFF')
+                  ctv.send(DEV, b'\x81\x01\x04\x08\x37\xFF')
                if z[3] == 'Near_near_limit':
-                  send(DEV, b'\x81\x01\x04\x28\x0F\x00\x00\x00\xFF')
+                  ctv.send(DEV, b'\x81\x01\x04\x28\x0F\x00\x00\x00\xFF')
 
             if z[2] == 'CAM_DispSel':
                   x = int(z[3][3])*8 + int(z[3][2])*4 + int(z[3][1])*2 + int(z[3][0])
                   s = [0x81, 0x01, 0x04, 0x14, 0x00, x, 0xFF]
                   print(s)
-                  send(DEV, bytearray(s))
-                  
+                  ctv.send(DEV, bytearray(s))
+
     extensions_map = {
         '': 'application/octet-stream',
         '.manifest': 'text/cache-manifest',
@@ -778,7 +701,7 @@ class HttpRequestHandler(http.server.SimpleHTTPRequestHandler):
 
 
 
-def uptime():  
+def uptime():
     with open('/proc/uptime', 'r') as f:
         uptime_seconds = float(f.readline().split()[0])
         return uptime_seconds
@@ -790,7 +713,7 @@ def convert_to_hrs_min_sec(sec):
    sec %= 3600
    min = sec // 60
    sec %= 60
-   return "%02d:%02d:%02d" % (hour, min, sec) 
+   return "%02d:%02d:%02d" % (hour, min, sec)
 
 
 def bytes2human(n, format="%(value).1f%(symbol)s"):
@@ -823,7 +746,7 @@ def net_usage(inf = "end0"):   #change the inf variable according to the interfa
 
     net_in = round((net_in_2 - net_in_1) / 1024 / 1024, 3)
     net_out = round((net_out_2 - net_out_1) / 1024 / 1024, 3)
-    
+
     return net_in, net_out
 
 #    print(psutil.net_if_stats())
@@ -839,7 +762,7 @@ def kill_gst_pid(tekst, out, kill):
             pid = int(line.split(None, 1)[0])
 #            print('Process PID: '+ str(pid))
             if kill:
-               os.kill(pid, signal.SIGKILL) 
+               os.kill(pid, signal.SIGKILL)
     return pid
 
 
@@ -851,17 +774,17 @@ def kill_gst_pid(tekst, out, kill):
 def checkServiceStatus():
     try:
         print("getty@ttymxc3 status...")
-        
+
         #Check getty service
         for line in os.popen("sudo systemctl status serial-getty@ttymxc3.service"):
             services = line.split()
             print(services)
-            
+
             pass
-        
+
     except OSError as ose:
         print("Error while running the command", ose)
-   
+
     pass
 
 #checkServiceStatus()
@@ -888,7 +811,7 @@ print(stream1)
 
 try:
     print(DEV)
-    set_baud(DEV, 9600)
+    ctv.set_baud(DEV, 9600)
 
     visca_resp = ''
 
