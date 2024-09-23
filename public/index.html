@@ -4,11 +4,11 @@
 <meta charset="utf-8">
 <title>SCAiLX AI Platform</title>
 
-<script src="/scripts/Chart.js"> </script>
+<script src="/assets/scripts/Chart.js"> </script>
 
 <!--
-<script type="text/javascript" src="/scripts/flashphoner.js"></script> <script type="text/javascript" src="/scripts/player-min.js"></script> <style> .fp-Video { 
-	border: 1px double black; width: 322px; height: 242px; .display { width: 100%; height: 100%; display: inline-block; .display > video, object { width: 100%; 
+<script type="text/javascript" src="/scripts/flashphoner.js"></script> <script type="text/javascript" src="/scripts/player-min.js"></script> <style> .fp-Video {
+	border: 1px double black; width: 322px; height: 242px; .display { width: 100%; height: 100%; display: inline-block; .display > video, object { width: 100%;
 	height: 100%; </style>
 -->
 
@@ -22,13 +22,13 @@
   font-family: 'Montserrat';
   font-style: normal;
   font-weight: 400;
-  src: url('../fonts/montserrat-v25-latin-regular.eot'); /* IE9 Compat Modes */
+  src: url('assets/fonts/montserrat-v25-latin-regular.eot'); /* IE9 Compat Modes */
   src: local(''),
-       url('../fonts/montserrat-v25-latin-regular.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
-       url('../fonts/montserrat-v25-latin-regular.woff2') format('woff2'), /* Super Modern Browsers */
-       url('../fonts/montserrat-v25-latin-regular.woff') format('woff'), /* Modern Browsers */
-       url('../fonts/montserrat-v25-latin-regular.ttf') format('truetype'), /* Safari, Android, iOS */
-       url('../fonts/montserrat-v25-latin-regular.svg#Montserrat') format('svg'); /* Legacy iOS */
+       url('assets/fonts/montserrat-v25-latin-regular.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+       url('assets/fonts/montserrat-v25-latin-regular.woff2') format('woff2'), /* Super Modern Browsers */
+       url('assets/fonts/montserrat-v25-latin-regular.woff') format('woff'), /* Modern Browsers */
+       url('assets/fonts/montserrat-v25-latin-regular.ttf') format('truetype'), /* Safari, Android, iOS */
+       url('assets/fonts/montserrat-v25-latin-regular.svg#Montserrat') format('svg'); /* Legacy iOS */
 }
 .header, .footer {
         font-family: Montserrat;
@@ -63,7 +63,7 @@
         margin-top: 20px;
         margin-bottom: 0;
         height: 72px;
-        background-image: url(wave.png);
+        background-image: url(assets/wave.png);
         background-repeat: no-repeat;
         background-position: center;
         background-size: cover;
@@ -96,16 +96,16 @@ hr.footerline {border-top: 1px rgba(115, 190, 68, 1.0) solid;}
         width:100%;
         display:inline-flex;
         }
-.main td.col1r1 { 
-	width:30%; 
-	font-family: Montserrat; 
-	padding-top: 5px; 
+.main td.col1r1 {
+	width:30%;
+	font-family: Montserrat;
+	padding-top: 5px;
 	padding-left: 30px;
 	}
-.main td.col1r2_CPU { 
-	width:20%; 
-	font-family: Montserrat; 
-	padding-top: 5px; 
+.main td.col1r2_CPU {
+	width:20%;
+	font-family: Montserrat;
+	padding-top: 5px;
 	padding-left: 5px;
 	}
 .main td.col1r2 {
@@ -219,10 +219,10 @@ hr.footerline {border-top: 1px rgba(115, 190, 68, 1.0) solid;}
   }
 </style>
 
-<style type="text/css">      
-  html, body, #container { 
-      width: 100%; height: 100%; margin: 0; padding: 0; 
-  } 
+<style type="text/css">
+  html, body, #container {
+      width: 100%; height: 100%; margin: 0; padding: 0;
+  }
 </style>
 
 <style>
@@ -315,7 +315,7 @@ hr.footerline {border-top: 1px rgba(115, 190, 68, 1.0) solid;}
 <!-- <body onload="init_api()"> -->
 
   <body onload="setsrc()">
-    
+
 	<script>
 	function openTab(evt, tabName) {
 	  var i, tabcontent, tablinks;
@@ -338,7 +338,7 @@ hr.footerline {border-top: 1px rgba(115, 190, 68, 1.0) solid;}
 		  }
 	}
 	</script>
-	
+
 	<script>
 
 			//**************************************************
@@ -382,8 +382,8 @@ hr.footerline {border-top: 1px rgba(115, 190, 68, 1.0) solid;}
 					break;
 					}
 					else {
-					}					
-				}						
+					}
+				}
 				return Math.trunc(value*100)/100 + ' ' + pre_fix;
 			}
 
@@ -404,17 +404,17 @@ hr.footerline {border-top: 1px rgba(115, 190, 68, 1.0) solid;}
 			//
 			//**************************************************
 
-			function btn_click(){    
+			function btn_click(){
 				console.log(graph);
 			};
-			
+
 			//**************************************************
 			//
 			//	update graph CPU temp and processors
 			//
 			//**************************************************
 
-			function Xupdate_graph(dat, tijd){    
+			function Xupdate_graph(dat, tijd){
 				x = dat;
 			//	x[0]["x"] = graph.data.datasets[0].data.length + 1;
 				x[0]["x"] = 101;
@@ -431,19 +431,19 @@ hr.footerline {border-top: 1px rgba(115, 190, 68, 1.0) solid;}
 	 		//		graph.data.labels.push(tijd);
 				}
 				if (graph.data.labels.length > 100){
-				    graph.data.labels.pop();	
-				}			
+				    graph.data.labels.pop();
+				}
 				graph.update();
 				//console.log(graph.data);
 			};
 
 			//**************************************************
 			//
-			//	update graph TEMP and CPU 
+			//	update graph TEMP and CPU
 			//
 			//**************************************************
 
-			function update_graph_tempcpu(cpu, temp, max_temp, tijd){    
+			function update_graph_tempcpu(cpu, temp, max_temp, tijd){
 				console.log('GRAPH TEMP/CPU')
 				x1 = cpu;
 				x2 = temp;
@@ -468,7 +468,7 @@ hr.footerline {border-top: 1px rgba(115, 190, 68, 1.0) solid;}
 	 		//		graph.data.labels.push(tijd);
 				}
 				if (graph.data.labels.length > 100){
-				    graph.data.labels.pop();	
+				    graph.data.labels.pop();
 				}
 
 				graph.update();
@@ -481,7 +481,7 @@ hr.footerline {border-top: 1px rgba(115, 190, 68, 1.0) solid;}
 			//
 			//**************************************************
 
-			function update_graph_tcpip(dat1, dat2, tijd){    
+			function update_graph_tcpip(dat1, dat2, tijd){
 				console.log('GRAPH TCP/IP');
 				x1 = dat1;
 				x2 = dat2;
@@ -491,7 +491,7 @@ hr.footerline {border-top: 1px rgba(115, 190, 68, 1.0) solid;}
 				x2[0]["x"] = 101;
 
 				m = [];
-				m[0] = max_eth_sent; 
+				m[0] = max_eth_sent;
 				m[1] = x2[0]["y"];
 
 				if (m[0]<m[1]) {max_eth_sent = m[1]; max_history = 0} else {max_history += 1;};
@@ -510,7 +510,7 @@ hr.footerline {border-top: 1px rgba(115, 190, 68, 1.0) solid;}
 
 				}
 				if (graph_tcpip.data.labels.length > 100){
-				    graph_tcpip.data.labels.pop();	
+				    graph_tcpip.data.labels.pop();
 				}
 
 				graph_tcpip.update();
@@ -530,7 +530,7 @@ hr.footerline {border-top: 1px rgba(115, 190, 68, 1.0) solid;}
 				const obj =JSON.parse(event.data)
 				document.getElementById("CAM_res").innerHTML         = obj.CAM_res;
 				document.getElementById("CAM_brand").innerHTML         = obj.CAM_brand;
-				
+
 				document.getElementById("CAM_RGain").value            = parseInt(obj.CAM_RGain, 16);
 				document.getElementById("CAM_BGain").value            = parseInt(obj.CAM_BGain, 16);
 				document.getElementById("CAM_Chroma").value           = parseInt(obj.CAM_Chroma, 16);
@@ -571,10 +571,10 @@ hr.footerline {border-top: 1px rgba(115, 190, 68, 1.0) solid;}
 				document.getElementById("CAM_AF").value  = obj.CAM_AF;
 				document.getElementById("CAM_AE").value  = obj.CAM_AE;
 				document.getElementById("CAM_AGC").value = obj.CAM_AGC;
-			
+
 				document.getElementById("visca_resp").value = (obj.visca_response);
 				console.log(obj.visca_response);
-			
+
 				var seconds = parseInt(obj.uptime, 10);
 				var days  = Math.floor(seconds / (3600*24));
 				seconds  -= days*3600*24;
@@ -594,7 +594,7 @@ hr.footerline {border-top: 1px rgba(115, 190, 68, 1.0) solid;}
 				document.getElementById("label_cpu_IP_address").innerHTML = "IP address = "+obj.IP;
 
 				document.getElementById("label_cam0").innerHTML = obj.stream1;
-				
+
 				if (document.getElementById('myIframe1').src == "http://")
 				{
 					var stream_link = window.location.protocol + "//" + window.location.hostname + ":1984/stream.html?"+ "src="+ obj.stream1 +"&mode=webrtc";
@@ -607,11 +607,11 @@ hr.footerline {border-top: 1px rgba(115, 190, 68, 1.0) solid;}
 				var currentdate = new Date();
 				var cur_time = currentdate.getHours() + ":" + currentdate.getMinutes() + ":" + currentdate.getSeconds();
 				document.getElementById("tijd").innerHTML = currentdate;
-			
+
 				document.getElementById("label_cpu_freq").innerHTML     = "CPU frequency   = " + obj.cpu_freq    + " MHz";
 				document.getElementById("label_CPU_cpu_freq").innerHTML = "CPU frequency   = " + obj.cpu_freq    + " MHz";
 				document.getElementById("cpu_uptime").innerHTML  = "Uptime = " + uptime;
-			
+
 				document.getElementById("cpu_perc1").value = obj.cpu_perc1;
 				document.getElementById("cpu_perc2").value = obj.cpu_perc2;
 				document.getElementById("cpu_perc3").value = obj.cpu_perc3;
@@ -623,8 +623,8 @@ hr.footerline {border-top: 1px rgba(115, 190, 68, 1.0) solid;}
 				document.getElementById("label_cpu_perc4").innerHTML = "CPU[4]= " + obj.cpu_perc4 + " %";
 
 				const cpu_perc_total = (obj.cpu_perc1 + obj.cpu_perc2 + obj.cpu_perc3 + obj.cpu_perc4)/400;
-				document.getElementById("cpu_perc_total").value = Math.floor(cpu_perc_total*100); 
-				document.getElementById("label_cpu_perc_total").innerHTML = "CPU[total]= "+Math.floor(cpu_perc_total*1000)/10+" %"; 
+				document.getElementById("cpu_perc_total").value = Math.floor(cpu_perc_total*100);
+				document.getElementById("label_cpu_perc_total").innerHTML = "CPU[total]= "+Math.floor(cpu_perc_total*1000)/10+" %";
 
 				var xx1 = [{x:0, y:0}];
 				var xx2 = [{x:0, y:0}];
@@ -666,7 +666,7 @@ hr.footerline {border-top: 1px rgba(115, 190, 68, 1.0) solid;}
 				document.getElementById("label_CPU_ram_free").innerHTML      = "RAM free = "      + value2human(obj.ram_free);
 				document.getElementById("label_CPU_ram_used").innerHTML      = "RAM used = "      + value2human(obj.ram_used);
 
-				console.log('RAM usage: '+obj.ram_usage+' MB') 
+				console.log('RAM usage: '+obj.ram_usage+' MB')
 
 			};
 		}
@@ -677,7 +677,7 @@ hr.footerline {border-top: 1px rgba(115, 190, 68, 1.0) solid;}
 	</script>
 
   	<div class="header">
-	  <img class="videology-logo" src="videology-industrial-grade-cameras.svg" alt="Videology Industrial-Grade Cameras"/>
+	  <img class="videology-logo" src="assets/videology-industrial-grade-cameras.svg" alt="Videology Industrial-Grade Cameras"/>
 	  <h1><b>SCAiLX</b> AI i.MX8M Plus</h1>
 	  <h2 align="center"> <label id="cpu_uptime" for="cpu_uptime"></label> </h2>
 	</div>
@@ -697,7 +697,7 @@ hr.footerline {border-top: 1px rgba(115, 190, 68, 1.0) solid;}
   <button class="tablinks" onclick="openTab(event, 'DOCUMENTATION')"        >DOCUMENTATION</button>
 </div>  <!-- Tab links -->
 
-<!-- 
+<!--
 ******************************************************************************************************
 *
 *   SCAILX-ZB tab page
@@ -714,7 +714,7 @@ hr.footerline {border-top: 1px rgba(115, 190, 68, 1.0) solid;}
 			console.log(">>>"+document.getElementById('myIframe1').src);
 		}
 	  </script>
-  
+
 <!-- <div >  -->
 	<article>
 		<h1 align="left">SCAiLX AI Platform</h1>
@@ -737,7 +737,7 @@ hr.footerline {border-top: 1px rgba(115, 190, 68, 1.0) solid;}
 					</ul>
 				</td>
 				<td>
-					<img src=scailx-board-callouts.png>
+					<img src=assets/scailx-board-callouts.png>
 				</td>
 			</tr>
 		</table>
@@ -751,7 +751,7 @@ hr.footerline {border-top: 1px rgba(115, 190, 68, 1.0) solid;}
 
 </div>   <!-- tab SCAILX-ZB  -->
 
-<!-- 
+<!--
 ******************************************************************************************************
 *
 *   AI APP tab page
@@ -764,7 +764,7 @@ hr.footerline {border-top: 1px rgba(115, 190, 68, 1.0) solid;}
 		   body { font-family: Arial, sans-serif; }
 		   .container { width: 80%; margin: 0 auto; }
 		   .stream { margin: 20px 0; }
-	   </style> 
+	   </style>
 
 	 <table border="0" align="center" cellpadding="0" cellspacing="0">
 
@@ -808,7 +808,7 @@ hr.footerline {border-top: 1px rgba(115, 190, 68, 1.0) solid;}
 		-->
 </tr>
 	   </tbody>
-<!--	     
+<!--
 	   <tbody>
 	   <tr>
 		   <td width="50%" rowspan="6" align="center" valign="middle" padding-right="10px">
@@ -826,7 +826,7 @@ hr.footerline {border-top: 1px rgba(115, 190, 68, 1.0) solid;}
 
 </div>  <!-- AIAPP tabcontent -->
 
-<!-- 
+<!--
 ******************************************************************************************************
 *
 *   TCP/IP tab page
@@ -837,7 +837,7 @@ hr.footerline {border-top: 1px rgba(115, 190, 68, 1.0) solid;}
 <div id="TCPIP" class="tabcontent">
 
 	  <table border="0" align="center" cellpadding="0" cellspacing="0">
-	     
+
 		<tbody>
 		  <tr>
 		    <td width="70%" rowspan="6" align="center" valign="middle">
@@ -855,17 +855,17 @@ hr.footerline {border-top: 1px rgba(115, 190, 68, 1.0) solid;}
 	//	  type: "bar",
 		  type: "line",
 		  data: {
-		    datasets: [	{pointRadius: 1, 
-				 borderColor : "rgb(255,0,0)", 
-				 borderWidth : 0.5, 
-				 fill: false, 
-				 pointBackgroundColor:"rgb(255,0,0)", 
+		    datasets: [	{pointRadius: 1,
+				 borderColor : "rgb(255,0,0)",
+				 borderWidth : 0.5,
+				 fill: false,
+				 pointBackgroundColor:"rgb(255,0,0)",
 				 label:"RX MB/s", },
-		    		{pointRadius: 1, 
-				 borderColor : "rgb(0,0,255)", 
-				 borderWidth : 0.5, 
-				 fill: false, 
-				 pointBackgroundColor : "rgb(0,0,255)", 
+		    		{pointRadius: 1,
+				 borderColor : "rgb(0,0,255)",
+				 borderWidth : 0.5,
+				 fill: false,
+				 pointBackgroundColor : "rgb(0,0,255)",
 				 label : "TX MB/s", }
 			      ],
 		  },
@@ -873,11 +873,11 @@ hr.footerline {border-top: 1px rgba(115, 190, 68, 1.0) solid;}
 		    legend: {display: true, align:"right", labelString: "TCP/IP"},
 		    scales: {
 		      xAxes: [{ticks: {min: 0, max:100}}],
-		      yAxes: [{ticks: {min: 0, max:100},   
-			       scaleLabel: { display: true, 
+		      yAxes: [{ticks: {min: 0, max:100},
+			       scaleLabel: { display: true,
 					     labelString: 'TX MB/s' }},
 			      {ticks: {min: 0, max:0.1},
-			       scaleLabel: { display: true, 
+			       scaleLabel: { display: true,
 					     labelString: 'RX MB/s' }},
 			     ],
 		    }
@@ -886,7 +886,7 @@ hr.footerline {border-top: 1px rgba(115, 190, 68, 1.0) solid;}
 		</script>
 
 		    </td>
-		
+
 		    <td width="30%"  rowspan="6" align="center" valign="middle">
 			<p align="left" id="eth_send_Gbps">x</p>
 			<p align="left" id="eth_send_Mbps">x</p>
@@ -904,7 +904,7 @@ hr.footerline {border-top: 1px rgba(115, 190, 68, 1.0) solid;}
 				<td align="center" valign="middle" bgcolor="#999999" class="col2_h"><h2>Main Window</h2></td>
 			</tr>
 -->
-			<tr>	
+			<tr>
 				  <td class="col1r1" rowspan="7" padding-left="30px" align="left" valign="top">
 					<label id="label_temp"          for="label_temp"></label>
 					<br>
@@ -944,7 +944,7 @@ hr.footerline {border-top: 1px rgba(115, 190, 68, 1.0) solid;}
 
 </div>  <!-- tabcontent TCP/IP  -->
 
-<!-- 
+<!--
 ******************************************************************************************************
 *
 *   CPU tab page
@@ -955,7 +955,7 @@ hr.footerline {border-top: 1px rgba(115, 190, 68, 1.0) solid;}
 <div id="CPU" class="tabcontent">
 
 	  <table border="0" align="center" cellpadding="0" cellspacing="0">
-	     
+
 		<tbody>
 		<tr>
 			<td width="80%" rowspan="6" align="center" valign="middle">
@@ -982,17 +982,17 @@ hr.footerline {border-top: 1px rgba(115, 190, 68, 1.0) solid;}
 		    legend: {display: true, align:"right", labelString: "Temperature / CPU load"},
 		    scales: {
 		      xAxes: [{ticks: {min: 0, max:100}}],
-		      yAxes: [ { id:'y-axis-0', 
-				 ticks: {min: -20, max:100},   
+		      yAxes: [ { id:'y-axis-0',
+				 ticks: {min: -20, max:100},
 				 scaleLabel: {display: true,
-					      labelString: 'CPU temperature [\u00B0C]' 
+					      labelString: 'CPU temperature [\u00B0C]'
 					}
 				},
-				{id:'y-axis-1', ticks: {min: 0, max:100},   
-						scaleLabel: { display: true, 
+				{id:'y-axis-1', ticks: {min: 0, max:100},
+						scaleLabel: { display: true,
 						      labelString: 'CPU load [%]' }},
-				{id:'y-axis-2', ticks: {min: -20, max:100},   
-						scaleLabel: { display: true, 
+				{id:'y-axis-2', ticks: {min: -20, max:100},
+						scaleLabel: { display: true,
 					 	      labelString: 'CPU max. temp. [\u00B0C]' }},
 			     ],
 		    }
@@ -1089,7 +1089,7 @@ hr.footerline {border-top: 1px rgba(115, 190, 68, 1.0) solid;}
 
 </div>  <!-- tabcontent CPU -->
 
-<!-- 
+<!--
 ******************************************************************************************************
 *
 *   VISCA tab page
@@ -1112,7 +1112,7 @@ hr.footerline {border-top: 1px rgba(115, 190, 68, 1.0) solid;}
 	//	    if (document.getElementById("Show System message").checked) {s[3]='1';} else {s[3]='0';};
 		    s[3] = '0';
 	//	    console.log('imx8/CAM_DispSel/'+s[0]+s[1]+s[2]+s[3]);
-		    VISCA('imx8/CAM_DispSel/'+s[0]+s[1]+s[2]+s[3]); 
+		    VISCA('imx8/CAM_DispSel/'+s[0]+s[1]+s[2]+s[3]);
 		}
 	</script>
 
@@ -1152,7 +1152,7 @@ hr.footerline {border-top: 1px rgba(115, 190, 68, 1.0) solid;}
 
 		  function visca_request(box){
 		    VISCA('/imx8/'+this.value)
-		  } 
+		  }
 	</script>
 	<script>
 		//***********************************************
@@ -1178,15 +1178,15 @@ hr.footerline {border-top: 1px rgba(115, 190, 68, 1.0) solid;}
 			if(x==1) {VISCA('/imx8/CAM_videotestsrc_kill/0')} else {VISCA('/imx8/CAM_videotestsrc_kill/1')}
 		}
 	</script>
-		
+
 <div id="VISCA" class="tabcontent">
 
   <table border="0" align="center" cellpadding="0" cellspacing="0">
 	<tbody>
 
-<!-- 
-<tr> <td align="center" valign="middle" bgcolor="#999999" class="col1"><h2>Menu</h2></td> <td align="center" valign="middle" 
-					  bgcolor="#999999" class="col2_h"><h2>Main Window</h2></td> </tr> 
+<!--
+<tr> <td align="center" valign="middle" bgcolor="#999999" class="col1"><h2>Menu</h2></td> <td align="center" valign="middle"
+					  bgcolor="#999999" class="col2_h"><h2>Main Window</h2></td> </tr>
 -->
 
 	<div class="slidecontainer">
@@ -1195,11 +1195,11 @@ hr.footerline {border-top: 1px rgba(115, 190, 68, 1.0) solid;}
 	  <label id="CAM_brand" for="CAM_brand"></label><br>
 <br>
 	  <p>Zoom slider</p>
-	  <input id="zoomslider" 
-		onwheel="slider_click(this.range)" 
-		onchange="slider_change(this.value)" 
-		type="range" min="0" max="16383" value="0" 
-		class="slider" 
+	  <input id="zoomslider"
+		onwheel="slider_click(this.range)"
+		onchange="slider_change(this.value)"
+		type="range" min="0" max="16383" value="0"
+		class="slider"
 		id="myRange">
 	</div>
 
@@ -1208,7 +1208,7 @@ hr.footerline {border-top: 1px rgba(115, 190, 68, 1.0) solid;}
 			<p id="cam_reset" onclick="VISCA('/imx8/CAM_POWER')" class="cta-button">Camera RESET</p>
 		  </td>
 		  <td class="col1" align="center" valign="middle">
-			
+
 		  </td>
 		  <td class="col1" align="center" valign="middle"></td>
 		  <td class="col1" align="center" valign="middle"></td>
@@ -1217,11 +1217,11 @@ hr.footerline {border-top: 1px rgba(115, 190, 68, 1.0) solid;}
 
 		<tr>
 		  <td class="col1" align="center" valign="middle">
-			<p id="cam_day_mode" onclick="VISCA('/imx8/CAM_ICR/DAY')" 
+			<p id="cam_day_mode" onclick="VISCA('/imx8/CAM_ICR/DAY')"
 				class="cta-button">DAY<br>mode</p>
 		  </td>
 		  <td class="col1" align="center" valign="middle">
-			<p id="cam_night_mode" onclick="VISCA('/imx8/CAM_ICR/NIGHT')" 
+			<p id="cam_night_mode" onclick="VISCA('/imx8/CAM_ICR/NIGHT')"
 				class="cta-button">NIGHT<br> mode</p>
 		  </td>
 		  <td class="col1" align="center" valign="middle"></td>
@@ -1249,7 +1249,7 @@ hr.footerline {border-top: 1px rgba(115, 190, 68, 1.0) solid;}
 
 		<tr>
 		  <td class="col1" align="center" valign="middle">
-			<p id="cam_menu_esc" onclick="VISCA('/imx8/CAM_MENU/ESC')" 
+			<p id="cam_menu_esc" onclick="VISCA('/imx8/CAM_MENU/ESC')"
 				class="cta-button">MENU <br> ESC</p>
 		  </td>
 		  <td class="col1" align="center" valign="middle">
@@ -1276,23 +1276,23 @@ hr.footerline {border-top: 1px rgba(115, 190, 68, 1.0) solid;}
 		  </td>
 -->
 		  <td class="col1" align="left" valign="middle">
-			<label><input id="Show ID"    
-				type='checkbox' 
+			<label><input id="Show ID"
+				type='checkbox'
 				onchange='dispSelClick(this);'>Camera ID</label>
 			<br>
-			<label><input id="Show Title" 
-				type='checkbox' 
+			<label><input id="Show Title"
+				type='checkbox'
 				onchange='dispSelClick(this);'>Title</label>
 			<br>
-			<label><input id="Show Zoom factor" 
-				type='checkbox' 
+			<label><input id="Show Zoom factor"
+				type='checkbox'
 				onchange='dispSelClick(this);'>Zoom factor</label>
 			<br>
 
 <!--
-			<label><input id="Show System message" 
-				type='checkbox' 
-				onchange='dispSelClick(this);'>System message</label>    
+			<label><input id="Show System message"
+				type='checkbox'
+				onchange='dispSelClick(this);'>System message</label>
 -->
 		  </td>
 		  <td class="col1" align="center" valign="middle"> </td>
@@ -1302,42 +1302,42 @@ hr.footerline {border-top: 1px rgba(115, 190, 68, 1.0) solid;}
 
 		<tr>
 		  <td class="col1" align="center" valign="middle">
-			<p id="btn_zoom_tele" 
-				onmousedown="VISCA('/imx8/CAM_Zoom/Tele')" 
-				onmouseup="VISCA('/imx8/CAM_Zoom/Stop')" 
+			<p id="btn_zoom_tele"
+				onmousedown="VISCA('/imx8/CAM_Zoom/Tele')"
+				onmouseup="VISCA('/imx8/CAM_Zoom/Stop')"
 				class="cta-button">ZOOM<br>Tele</p>
 		  </td>
 		  <td class="col1" align="center" valign="middle">
-			<p id="btn_focus_far" 
-				onmousedown="VISCA('/imx8/CAM_Focus/Far')" 
-				onmouseup="VISCA('/imx8/CAM_Focus/Stop')" 
+			<p id="btn_focus_far"
+				onmousedown="VISCA('/imx8/CAM_Focus/Far')"
+				onmouseup="VISCA('/imx8/CAM_Focus/Stop')"
 				class="cta-button">FOCUS<br>Far</p>
 		  </td>
 		  <td class="col1" align="center" valign="middle">
-			<p id="btn_focus_far" 
-				onmousedown="VISCA('/imx8/CAM_Focus/AUTO')" 
+			<p id="btn_focus_far"
+				onmousedown="VISCA('/imx8/CAM_Focus/AUTO')"
 				class="cta-button">AF<br>AUTO</p>
 		  </td>
 		  <td class="col1" align="center" valign="middle"> </td>
 		  <td class="col1" align="center" valign="middle"> </td>
 		</tr>
-		
+
 		<tr>
 		  <td class="col1" align="center" valign="middle">
-			<p id="btn_zoom_wide" 
-				onmousedown="VISCA('/imx8/CAM_Zoom/Wide')" 
-				onmouseup="VISCA('/imx8/CAM_Zoom/Stop')" 
+			<p id="btn_zoom_wide"
+				onmousedown="VISCA('/imx8/CAM_Zoom/Wide')"
+				onmouseup="VISCA('/imx8/CAM_Zoom/Stop')"
 				class="cta-button">ZOOM<br>Wide</p>
 		  </td>
 		  <td class="col1" align="center" valign="middle">
-			<p id="btn_focus_far" 
-				onmousedown="VISCA('/imx8/CAM_Focus/Near')" 
-				onmouseup="VISCA('/imx8/CAM_Focus/Stop')" 
+			<p id="btn_focus_far"
+				onmousedown="VISCA('/imx8/CAM_Focus/Near')"
+				onmouseup="VISCA('/imx8/CAM_Focus/Stop')"
 				class="cta-button">FOCUS<br>Near</p>
 		  </td>
 		  <td class="col1" align="center" valign="middle">
-			<p id="btn_focus_far" 
-				onmousedown="VISCA('/imx8/CAM_Focus/MANUAL')" 
+			<p id="btn_focus_far"
+				onmousedown="VISCA('/imx8/CAM_Focus/MANUAL')"
 				class="cta-button">AF<br>MANUAL</p>
 		  </td>
 		  <td class="col1" align="center" valign="middle">
@@ -1385,13 +1385,13 @@ hr.footerline {border-top: 1px rgba(115, 190, 68, 1.0) solid;}
 	  <tbody>
 	  	<tr>
 	  	  <td class="col1" align="center" valign="middle">
-			<p id="btn1" 
-				onclick="videotest()" 
+			<p id="btn1"
+				onclick="videotest()"
 				class="cta-button">Test colorbar<br>START</p>
 	  	  </td>
 	  	  <td class="col1" align="center" valign="middle">
-			<p id="btn2" 
-				onclick="killtest()" 
+			<p id="btn2"
+				onclick="killtest()"
 				class="cta-button">Test colorbar<br>STOP</p>
 		  </td>
 		  <td class="col1" width="15%" align="left" valign="middle">
@@ -1460,11 +1460,11 @@ hr.footerline {border-top: 1px rgba(115, 190, 68, 1.0) solid;}
 </div>
 
 <!--
- tab content VISCA   
+ tab content VISCA
 -->
 
 
-<!-- 
+<!--
 ******************************************************************************************************
 *
 *   CAMERA CONTROL tab page
@@ -1539,29 +1539,29 @@ hr.footerline {border-top: 1px rgba(115, 190, 68, 1.0) solid;}
 
    	<tr>
 	  <td class="col2" align="right" valign="middle">
-		<label align="left" >RED gain:</label>	
+		<label align="left" >RED gain:</label>
 	  </td>
 	  <td class="col2" align="center" valign="middle">
-		<input valign="center" 
-			onchange="camctrl_change(this.id)" 
-			type="range" min="1" max="20" value="10" 
+		<input valign="center"
+			onchange="camctrl_change(this.id)"
+			type="range" min="1" max="20" value="10"
 			class="slider" id="CAM_RGain">
-	  </td> 
+	  </td>
 	  <td class="col2" align="center" valign="middle">
 		<label id="rgain_value"> </label>
 	  </td>
 	</tr>
 
 	<tr>
-	  <td class="col2" align="right" valign="middle">	
-		<label align="left" >BLUE gain:</label>	
+	  <td class="col2" align="right" valign="middle">
+		<label align="left" >BLUE gain:</label>
 	  </td>
 	  <td class="col2" align="center" valign="middle">
-		<input valign="center" 
-			onchange="camctrl_change(this.id)" 
-			type="range" min="1" max="20" value="10" 
+		<input valign="center"
+			onchange="camctrl_change(this.id)"
+			type="range" min="1" max="20" value="10"
 			class="slider" id="CAM_BGain">
-	  </td> 
+	  </td>
 	  <td class="col2" align="center" valign="middle">
 		<label id="bgain_value"></label>
 	  </td>
@@ -1572,9 +1572,9 @@ hr.footerline {border-top: 1px rgba(115, 190, 68, 1.0) solid;}
 		<label align="left" >Chroma:</label>
 	  </td>
 	  <td class="col2" align="center" valign="middle">
-		<input valign="center" 
-			onchange="camctrl_change(this.id)" 
-			type="range" min="1" max="20" value="10" 
+		<input valign="center"
+			onchange="camctrl_change(this.id)"
+			type="range" min="1" max="20" value="10"
 			class="slider" id="CAM_Chroma">
 	  </td>
 	  <td class="col2" align="center" valign="middle">
@@ -1586,9 +1586,9 @@ hr.footerline {border-top: 1px rgba(115, 190, 68, 1.0) solid;}
 	  <td class="col2" align="right" valign="middle">
 		<label align="left" >Aperture:</label>	</td>
 	  <td class="col2" align="center" valign="middle">
-		<input valign="center" 
-			onchange="camctrl_change(this.id)" 
-			type="range" min="1" max="20" value="10" 
+		<input valign="center"
+			onchange="camctrl_change(this.id)"
+			type="range" min="1" max="20" value="10"
 			class="slider" id="CAM_Aperture">
 	  </td>
 	  <td class="col2" align="center" valign="middle">
@@ -1597,14 +1597,14 @@ hr.footerline {border-top: 1px rgba(115, 190, 68, 1.0) solid;}
 	</tr>
 
 	<tr>
-	  <td class="col2" align="right" valign="middle">	
+	  <td class="col2" align="right" valign="middle">
 		<label align="left" >Shutter:</label>
 	  </td>
 	  <td class="col2" align="center" valign="middle">
 		<input valign="center" onchange="camctrl_change(this.id)" type="range" min="0" max="13" value="10" class="slider" id="CAM_Shutter">
 	  </td>
 	  <td class="col2" align="center" valign="middle">
-		<label id="shutter_value"></label>	
+		<label id="shutter_value"></label>
 	  </td>
 	</tr>
 
@@ -1629,24 +1629,24 @@ hr.footerline {border-top: 1px rgba(115, 190, 68, 1.0) solid;}
 		<label align="left" >Bright:</label>
 	  </td>
 	  <td class="col2" align="center" valign="middle">
-		<input valign="center" 
-			onchange="camctrl_change(this.id)" 
-			type="range" min="0" max="27" value="10" 
+		<input valign="center"
+			onchange="camctrl_change(this.id)"
+			type="range" min="0" max="27" value="10"
 			class="slider" id="CAM_Bright">
 	  </td>
 	  <td class="col2" align="center" valign="middle">
 		<label id="bright_value"> </label>
 	  </td>
 	</tr>
- 
+
 	<tr>
 	  <td class="col2" align="right" valign="middle">
 	 	<label align="left" >AF Mode Active:</label>
 	  </td>
 	  <td class="col2" align="center" valign="middle">
-		<input valign="center" 
-			onchange="camctrl_change(this.id)" 
-			type="range" min="1" max="255" value="10" 
+		<input valign="center"
+			onchange="camctrl_change(this.id)"
+			type="range" min="1" max="255" value="10"
 			class="slider" id="CAM_AF_Mode_Active">
 	  </td>
 	  <td class="col2" align="center" valign="middle">
@@ -1658,9 +1658,9 @@ hr.footerline {border-top: 1px rgba(115, 190, 68, 1.0) solid;}
 	  <td class="col2" align="right" valign="middle">
 		<label align="left" >AF Mode Interval:</label>	</td>
 	  <td class="col2" align="center" valign="middle">
-		<input valign="center" 
-			onchange="camctrl_change(this.id)" 
-			type="range" min="1" max="255" value="10" 
+		<input valign="center"
+			onchange="camctrl_change(this.id)"
+			type="range" min="1" max="255" value="10"
 			class="slider" id="CAM_AF_Mode_Interval">
 	  </td>
 	  <td class="col2" align="center" valign="middle">
@@ -1679,7 +1679,7 @@ hr.footerline {border-top: 1px rgba(115, 190, 68, 1.0) solid;}
 	tab content CAMCTRL
 -->
 
-<!-- 
+<!--
 ******************************************************************************************************
 *
 *   DOCUMENTATION tab page
@@ -1714,7 +1714,7 @@ hr.footerline {border-top: 1px rgba(115, 190, 68, 1.0) solid;}
 
 <div class="footer-top">
 
-<!-- 
+<!--
 ******************************************************************************************************
 *
 *   FOOTER
@@ -1740,7 +1740,7 @@ hr.footerline {border-top: 1px rgba(115, 190, 68, 1.0) solid;}
 		</tr>
 	  </tbody>
 	</table>
-	
+
 	<ul class="footer-menu"><hr class="footerline" noshade="noshade">
 	  <li class=""><a href="https://www.videologyinc.com/privacy-policy" target="_self">Privacy Policy</a></li><li class=""><p class="hhs-foot-copyright">© 2024 Videology Industrial-Grade Cameras</p>
 	  </li>
