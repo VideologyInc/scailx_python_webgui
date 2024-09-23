@@ -462,6 +462,6 @@ if __name__ == "__main__" and len(sys.argv) > 1:
     match sys.argv[1]:
         case 'dev' | "--dev" | "-d":
             print("dev")
-            uvicorn.run("server:app", port=PORT, reload=True)
+            uvicorn.run("server:app", host="0.0.0.0", port=PORT, reload=True)
         case _:
-            uvicorn.run("server:app", port=PORT)
+            uvicorn.run("server:app", host="0.0.0.0", port=PORT)
