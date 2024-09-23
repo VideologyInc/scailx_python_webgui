@@ -4,7 +4,6 @@
 # ioctl based access to I2C <-> Serial adapter of the FPGA.
 #
 
-from periphery import Serial
 from time import sleep, time_ns
 import argparse
 import fcntl
