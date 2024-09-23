@@ -10,7 +10,7 @@ async def gen_cameracontrol(ctv: crosslink_visca.CrosslinkSerial):
     if not ctv:
         yield 'data: {} \n\n'
     else:
-        ctv.recv(dev)
+        ctv.recv()
         y = ctv.transceive(bytearray.fromhex('8109042472FF'))
         x = list(y)
         CAM_res = 'None'

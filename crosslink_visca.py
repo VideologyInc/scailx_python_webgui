@@ -38,8 +38,8 @@ class CrosslinkSerial():
         self.baud = baud
         self.bwms = start_wait_ms
         self.ewms = stop_wait_ms
-        self.set_baud(self.dev, self.baud)
-        self.recv(self.dev)        # clear RX fifo
+        self.set_baud(self.baud)
+        self.recv()        # clear RX fifo
 
     # Open the device file
     def send(self, data: bytes):

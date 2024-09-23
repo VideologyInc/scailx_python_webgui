@@ -44,12 +44,10 @@ max_temp_24h = -40
 min_temp_24h = 120
 ctv = None
 
-cnt_cam0 = len(glob.glob("/sys/firmware/devicetree/base/chosen/overlays/cam0-crosslink"))
-cnt_cam1 = len(glob.glob("/sys/firmware/devicetree/base/chosen/overlays/cam1-crosslink"))
-#cnt = len(glob.glob("/sys/firmware/devicetree/base/chosen/overlays/cam*"))
-
-if cnt_cam0 == 1 or cnt_cam1 == 1:
-    DEV = os.path.realpath(glob.glob("/dev/links/crosslink_mipi_*")[0])
+crosslinks = glob.glob("/dev/links/crosslink_mipi_*")
+if crosslinks:
+    DEV = os.path.realpath(crosslinks[0])
+    ctv = crosslink_visca.CrosslinkSerial(DEV, baud=9600)
 
 stream1 = ""
 try:
@@ -57,9 +55,6 @@ try:
         data = yaml.load(f, Loader=yaml.SafeLoader)
     stream1 = list(data['streams'])[0]
     print(stream1)
-
-    if DEV:
-        ctv = crosslink_visca.CrosslinkSerial(DEV, baud=9600)
 except:
     print("No cam_config.yaml file found")
 
