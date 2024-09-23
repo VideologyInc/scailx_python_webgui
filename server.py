@@ -8,7 +8,7 @@ import socket
 import time
 import os
 import base64
-import crosslink_visca as ctv
+import crosslink_visca
 import logging
 import json
 import psutil
@@ -37,14 +37,13 @@ def main():
 app.mount("/assets", StaticFiles(directory="public/assets"), name="assets")
 
 PORT = 8088
-DEV  = ''
 IP = None
 max_temp = -40
 min_temp = 120
 max_temp_24h = -40
 min_temp_24h = 120
+ctv = None
 
-DEV=''
 cnt_cam0 = len(glob.glob("/sys/firmware/devicetree/base/chosen/overlays/cam0-crosslink"))
 cnt_cam1 = len(glob.glob("/sys/firmware/devicetree/base/chosen/overlays/cam1-crosslink"))
 #cnt = len(glob.glob("/sys/firmware/devicetree/base/chosen/overlays/cam*"))
@@ -60,7 +59,7 @@ try:
     print(stream1)
 
     if DEV:
-        ctv.set_baud(DEV, 9600)
+        ctv = crosslink_visca.CrosslinkSerial(DEV, baud=9600)
 except:
     print("No cam_config.yaml file found")
 
@@ -115,7 +114,7 @@ async def get_visca_response():
 
 @app.get("/imx8/cameracontrol")
 async def get_cameracontrol():
-    return StreamingResponse(gen_cameracontrol(DEV), media_type="text/event-stream")
+    return StreamingResponse(gen_cameracontrol(ctv), media_type="text/event-stream")
 
 async def gen_status():
     global min_temp, max_temp, IP
@@ -190,7 +189,7 @@ async def get_status():
 
 @app.post("/imx8/CAM_POWER")
 async def post_cam_power():
-    ctv.send(DEV, b'\x81\x01\x04\x00\x03\xFF')
+    ctv.transceive(b'\x81\x01\x04\x00\x03\xFF')
 
 #***************************************************
 # VISCA INQUIRY
@@ -205,12 +204,7 @@ async def inquiry(visca: str):
         for x in range(0, len(visca)-1, 2):
             s.append(int("0x"+visca[x]+visca[x+1],16))
 
-        ctv.send(DEV, bytearray.fromhex(visca))
-        ctv.wait_for_rx_stable(DEV, 100, 25)
-        count = ctv.get_rx_count(DEV)
-        print("count=", count)
-
-        y = ctv.recv(DEV)
+        y = ctv.transceive(bytearray.fromhex(visca))
         print("visca_resp=", y.hex())
         visca_resp = y.hex()
 #               print(s[3])
@@ -258,17 +252,14 @@ async def inquiry(visca: str):
             print(int("0x"+visca[x]+visca[x+1],16))
         print(s)
 
-        ctv.send(DEV, bytearray.fromhex(visca))
-        time.sleep(1)
-        data = ctv.recv(DEV, 5)
-
+        data = ctv.transceive(bytearray.fromhex(visca), start_wait_ms=1000)
 
 @app.post("/imx8/CAM_ICR/{type}")
 async def cam_icr(type: str):
     if type == 'NIGHT':
-        ctv.send(DEV, b'\x81\x01\x04\x01\x02\xFF')
+        ctv.transceive(b'\x81\x01\x04\x01\x02\xFF')
     if type == 'DAY':
-        ctv.send(DEV, b'\x81\x01\x04\x01\x03\xFF')
+        ctv.transceive(b'\x81\x01\x04\x01\x03\xFF')
 
 class CamMenu(str, Enum):
     ENTER = 'ENTER'
@@ -281,25 +272,25 @@ class CamMenu(str, Enum):
 @app.post("/imx8/CAM_MENU/{menu_entry}")
 async def cam_icr(menu_entry: CamMenu):
     if menu_entry.value == 'ENTER':
-        ctv.send(DEV, b'\x81\x01\x04\x16\x10\xFF')
+        ctv.transceive(b'\x81\x01\x04\x16\x10\xFF')
     if menu_entry.value == 'ESC':
-        ctv.send(DEV, b'\x81\x01\x04\x16\x20\xFF')
+        ctv.transceive(b'\x81\x01\x04\x16\x20\xFF')
     if menu_entry.value == 'UP':
-        ctv.send(DEV, b'\x81\x01\x04\x16\x01\xFF')
+        ctv.transceive(b'\x81\x01\x04\x16\x01\xFF')
     if menu_entry.value == 'DOWN':
-        ctv.send(DEV, b'\x81\x01\x04\x16\x02\xFF')
+        ctv.transceive(b'\x81\x01\x04\x16\x02\xFF')
     if menu_entry.value == 'RIGHT':
-        ctv.send(DEV, b'\x81\x01\x04\x16\x08\xFF')
+        ctv.transceive(b'\x81\x01\x04\x16\x08\xFF')
     if menu_entry.value == 'LEFT':
-        ctv.send(DEV, b'\x81\x01\x04\x16\x04\xFF')
+        ctv.transceive(b'\x81\x01\x04\x16\x04\xFF')
 
 @app.post("/imx8/CAM_MEMORY")
 async def cam_memory():
-#HH               ctv.send(DEV, b'\x81\x01\x04\x3F\x01\x00\xFF')
+#HH               ctv.transceive(b'\x81\x01\x04\x3F\x01\x00\xFF')
     time.sleep(2)
-    ctv.send(DEV, b'\x81\x01\x04\x3F\x01\x7F\xFF')
+    ctv.transceive(b'\x81\x01\x04\x3F\x01\x7F\xFF')
     time.sleep(2)
-    ctv.send(DEV, b'\x81\x01\x04\x00\x03\xFF')
+    ctv.transceive(b'\x81\x01\x04\x00\x03\xFF')
 
 @app.post("/imx8/CAM_videotestsrc/{src}")
 async def cam_videotestsrc(src: str):
@@ -328,20 +319,20 @@ async def cam_videotestsrc(src: str):
 @app.post("/imx8/CAM_Zoom/{zoom}")
 async def cam_zoom(zoom: str):
     if zoom == 'Stop':
-        ctv.send(DEV, b'\x81\x01\x04\x07\x00\xFF')
+        ctv.transceive(b'\x81\x01\x04\x07\x00\xFF')
     if zoom == 'Tele':
-        ctv.send(DEV, b'\x81\x01\x04\x07\x02\xFF')
+        ctv.transceive(b'\x81\x01\x04\x07\x02\xFF')
     if zoom == 'Wide':
-        ctv.send(DEV, b'\x81\x01\x04\x07\x03\xFF')
+        ctv.transceive(b'\x81\x01\x04\x07\x03\xFF')
     if zoom == '1X':
         x = bytearray()
         x = [0x81,0x01,0x04,0x47,0x00,0x00,0x00,0x00,0xFF]
         print(x)
-#                  ctv.send(DEV, b'\x81\x01\x04\x47\x00\x00\x00\x00\xFF')
-        ctv.send(DEV, bytearray(x))
+#                  ctv.transceive(b'\x81\x01\x04\x47\x00\x00\x00\x00\xFF')
+        ctv.transceive(bytearray(x))
     if zoom == 'DIRECT':
         s = [0x81, 0x01, 0x04, 0x47, int("0x0"+z[4][0],16), int("0x0"+z[4][1],16), int("0x0"+z[4][2],16), int("0x0"+z[4][3],16), 0xFF]
-        ctv.send(DEV, bytearray(s))
+        ctv.transceive(bytearray(s))
     if zoom[0] == 'X':
         if len(zoom) == 2:
             s = [0x81, 0x01, 0x04, 0x47, 0x00, 0x00, 0x00, int("0x0"+zoom[1],16), 0xFF]
@@ -352,27 +343,27 @@ async def cam_zoom(zoom: str):
         if len(zoom) == 5:
             s = [0x81, 0x01, 0x04, 0x47, int("0x0"+zoom[1],16), int("0x0"+zoom[2],16), int("0x0"+zoom[3],16), int("0x0"+zoom[4],16), 0xFF]
         print(s)
-        ctv.send(DEV, bytearray(s))
+        ctv.transceive(bytearray(s))
 
 @app.post("/imx8/CAM_Focus/{focus}")
 async def cam_focus(focus: str):
     if focus == 'AUTO':
-        ctv.send(DEV, b'\x81\x01\x04\x38\x02\xFF')	# auto focus
+        ctv.transceive(b'\x81\x01\x04\x38\x02\xFF')	# auto focus
     if focus == 'MANUAL':
-        ctv.send(DEV, b'\x81\x01\x04\x38\x03\xFF')	# manual focus
+        ctv.transceive(b'\x81\x01\x04\x38\x03\xFF')	# manual focus
     if focus == 'Far':
-        ctv.send(DEV, b'\x81\x01\x04\x08\x27\xFF')
+        ctv.transceive(b'\x81\x01\x04\x08\x27\xFF')
     if focus == 'Near':
-        ctv.send(DEV, b'\x81\x01\x04\x08\x37\xFF')
+        ctv.transceive(b'\x81\x01\x04\x08\x37\xFF')
     if focus == 'Near_near_limit':
-        ctv.send(DEV, b'\x81\x01\x04\x28\x0F\x00\x00\x00\xFF')
+        ctv.transceive(b'\x81\x01\x04\x28\x0F\x00\x00\x00\xFF')
 
 @app.post("/imx8/CAM_DispSel")
 async def cam_dispel():
     x = int(z[3][3])*8 + int(z[3][2])*4 + int(z[3][1])*2 + int(z[3][0])
     s = [0x81, 0x01, 0x04, 0x14, 0x00, x, 0xFF]
     print(s)
-    ctv.send(DEV, bytearray(s))
+    ctv.transceive(bytearray(s))
 
 
 # def convert_to_hrs_min_sec(sec):

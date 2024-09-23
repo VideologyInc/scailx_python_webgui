@@ -1,20 +1,17 @@
 #! /usr/bin/env python3
-import crosslink_visca as ctv
+import crosslink_visca
 import json
 
 #----------------------------------------------------------
 # CAMERACONTROL
 #----------------------------------------------------------
 
-async def gen_cameracontrol(dev):
-    if not dev:
+async def gen_cameracontrol(ctv: crosslink_visca.CrosslinkSerial):
+    if not ctv:
         yield 'data: {} \n\n'
     else:
-        print(dev)
         ctv.recv(dev)
-        ctv.send(dev, bytearray.fromhex('8109042472FF'))
-        ctv.wait_for_rx_stable(dev, 100, 25)
-        y = ctv.recv(dev)
+        y = ctv.transceive(bytearray.fromhex('8109042472FF'))
         x = list(y)
         CAM_res = 'None'
         if (len(x)>0):
@@ -29,10 +26,7 @@ async def gen_cameracontrol(dev):
             if (x[2]==1 and x[3]==4): CAM_res = '1080p/50fps'
     #                       print(CAM_res)
 
-        ctv.send(dev, bytearray.fromhex('81090002FF'))
-        ctv.wait_for_rx_stable(dev, 100, 25)
-        y = ctv.recv(dev)
-        x = list(y)
+        x = list(ctv.transceive(bytearray.fromhex('81090002FF')))
         CAM_brand = 'no zoom block'
         if (len(x)>0):
             if (x[4]==4 ):             CAM_brand = 'Videology'
@@ -40,98 +34,72 @@ async def gen_cameracontrol(dev):
             if (x[4]==240):            CAM_brand = 'Tamron'
 
         # RGAIN
-        ctv.send(dev, bytearray.fromhex('81090443FF'))
-        ctv.wait_for_rx_stable(dev, 100, 25)
-        x = list(ctv.recv(dev))
+        x = list(ctv.transceive(bytearray.fromhex('81090443FF')))
         CAM_RGain = "00"
         if (len(x) == 7 and x[0]==144):
             CAM_RGain = "{0:0{1}x}".format(16*x[4]+x[5], 2)
 
-        ctv.send(dev, b'\x81\x09\x04\x44\xFF')
-        ctv.wait_for_rx_stable(dev, 100, 25)
-        x = list(ctv.recv(dev))
+        x = list(ctv.transceive(b'\x81\x09\x04\x44\xFF'))
         CAM_BGain = "00"
         if (len(x) == 7 and x[0]==144):
             CAM_BGain = "{0:0{1}x}".format(16*x[4]+x[5], 2)
 
-        ctv.send(dev, b'\x81\x09\x04\x13\xFF')
-        ctv.wait_for_rx_stable(dev, 100, 25)
-        x = list(ctv.recv(dev))
+        x = list(ctv.transceive(b'\x81\x09\x04\x13\xFF'))
         CAM_Chroma = "00"
         if (len(x) == 7 and x[0]==144):
             CAM_Chroma = "{0:0{1}x}".format(16*x[4]+x[5], 2)
 
-        ctv.send(dev, b'\x81\x09\x04\x4D\xFF')
-        ctv.wait_for_rx_stable(dev, 100, 25)
-        x = list(ctv.recv(dev))
+        x = list(ctv.transceive(b'\x81\x09\x04\x4D\xFF'))
         CAM_Bright = "00"
         if (len(x) == 7 and x[0]==144):
             CAM_Bright = "{0:0{1}x}".format(16*x[4]+x[5], 2)
 
-        ctv.send(dev, b'\x81\x09\x04\x42\xFF')
-        ctv.wait_for_rx_stable(dev, 100, 25)
-        x = list(ctv.recv(dev))
+        x = list(ctv.transceive(b'\x81\x09\x04\x42\xFF'))
         CAM_Aperture = "00"
         if (len(x) == 7 and x[0]==144):
             CAM_Aperture = "{0:0{1}x}".format(16*x[4]+x[5], 2)
 
-        ctv.send(dev, b'\x81\x09\x04\x4A\xFF')
-        ctv.wait_for_rx_stable(dev, 100, 25)
-        x = list(ctv.recv(dev))
+        x = list(ctv.transceive(b'\x81\x09\x04\x4A\xFF'))
         CAM_Shutter = "00"
         if (len(x) == 7 and x[0]==144):
             CAM_Shutter = "{0:0{1}x}".format(16*x[4]+x[5], 2)
 
-        ctv.send(dev, b'\x81\x09\x04\x4B\xFF')
-        ctv.wait_for_rx_stable(dev, 100, 25)
-        x = list(ctv.recv(dev))
+        x = list(ctv.transceive(b'\x81\x09\x04\x4B\xFF'))
         CAM_Iris = "00"
         if (len(x) == 7 and x[0]==144):
             CAM_Iris = "{0:0{1}x}".format(16*x[4]+x[5], 2)
 
-        ctv.send(dev, b'\x81\x09\x04\x4C\xFF')
-        ctv.wait_for_rx_stable(dev, 100, 25)
-        x = list(ctv.recv(dev))
+        x = list(ctv.transceive(b'\x81\x09\x04\x4C\xFF'))
         CAM_Gain = "00"
         if (len(x) == 7 and x[0]==144):
             CAM_Gain = "{0:0{1}x}".format(16*x[4]+x[5], 2)
 
-        ctv.send(dev, b'\x81\x09\x04\x27\xFF')
-        ctv.wait_for_rx_stable(dev, 100, 25)
-        x = list(ctv.recv(dev))
+        x = list(ctv.transceive(b'\x81\x09\x04\x27\xFF'))
         CAM_AF_Mode_Active = "00"
         CAM_AF_Mode_Interval = "00"
         if (len(x) == 7 and x[0]==144):
             CAM_AF_Mode_Active   = "{0:0{1}x}".format(16*x[2]+x[3], 2)
             CAM_AF_Mode_Interval = "{0:0{1}x}".format(16*x[4]+x[5], 2)
 
-        ctv.send(dev, b'\x81\x09\x04\x47\xFF')
-        ctv.wait_for_rx_stable(dev, 100, 25)
-        x = list(ctv.recv(dev))
+        x = list(ctv.transceive(b'\x81\x09\x04\x47\xFF'))
         zoompos = "0000"
         if (len(x) == 7 and x[0]==144):
             zoompos  = "{0:0{1}x}".format(16*(16*(16*x[2]+x[3])+x[4])+x[5], 4)
 
-        ctv.send(dev, b'\x81\x09\x04\x48\xFF')
-        ctv.wait_for_rx_stable(dev, 100, 25)
-        x = list(ctv.recv(dev))
+        x = list(ctv.transceive(b'\x81\x09\x04\x48\xFF'))
         focuspos = "0000"
         if (len(x) == 7 and x[0]==144):
             focuspos  = "{0:0{1}x}".format(16*(16*(16*x[2]+x[3])+x[4])+x[5], 4)
 
-        ctv.send(dev, b'\x81\x09\x04\x39\xFF')
-        ctv.wait_for_rx_stable(dev, 100, 25)
+        x = list(ctv.transceive(b'\x81\x09\x04\x39\xFF'))
         CAM_AEMode = '1'
-        x = list(ctv.recv(dev))
         if (len(x) == 4 and x[0]==144):
             if (x[2] == 0x00):
                 CAM_AEMode = '1'
             if (x[2] == 0x03):
                 CAM_AEMode = '0'
 
-        ctv.send(dev, b'\x81\x09\x04\x5C\xFF')
-        ctv.wait_for_rx_stable(dev, 100, 25)
-        x = list(ctv.recv(dev))
+        x = list(ctv.transceive(b'\x81\x09\x04\x5C\xFF'))
         CAM_AGCMode = '1'
         if (len(x) == 4 and x[0]==144):
             if (x[2] == 0x02):
@@ -139,9 +107,7 @@ async def gen_cameracontrol(dev):
             if (x[2] == 0x03):
                 CAM_AGCMode = '0'
 
-        ctv.send(dev, b'\x81\x09\x04\x35\xFF')
-        ctv.wait_for_rx_stable(dev, 100, 25)
-        x = list(ctv.recv(dev))
+        x = list(ctv.transceive(b'\x81\x09\x04\x35\xFF'))
         CAM_WBMode = 'Auto'
         if (len(x) == 4 and x[0]==144):
             if (x[2] == 0x00):
@@ -155,9 +121,7 @@ async def gen_cameracontrol(dev):
             if (x[2] == 0x05):
                 CAM_WBMode = 'Manual'
 
-        ctv.send(dev, b'\x81\x09\x04\x38\xFF')
-        ctv.wait_for_rx_stable(dev, 100, 25)
-        x = list(ctv.recv(dev))
+        x = list(ctv.transceive(b'\x81\x09\x04\x38\xFF'))
         CAM_AEMode = '1'
         if (len(x) == 4 and x[0]==144):
             if (x[2] == 0x02):
