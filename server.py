@@ -28,13 +28,12 @@ import argparse
 from enum import Enum
 
 
-# print("serial.__version__ = {}".format(serial.__version__))
-
+appdir = os.path.dirname(os.path.realpath(__file__))
 app = FastAPI()
 @app.get("/", response_class=FileResponse)
 def main():
-    return "public/index.html"
-app.mount("/assets", StaticFiles(directory="public/assets"), name="assets")
+    return os.path.join(appdir, "public/index.html")
+app.mount("/assets", StaticFiles(directory=os.path.join(appdir, "public/assets")), name="assets")
 
 PORT = 8088
 IP = None
