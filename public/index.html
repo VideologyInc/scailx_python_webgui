@@ -6,12 +6,6 @@
 
 <script src="/assets/scripts/Chart.js"> </script>
 
-<!--
-<script type="text/javascript" src="/scripts/flashphoner.js"></script> <script type="text/javascript" src="/scripts/player-min.js"></script> <style> .fp-Video {
-	border: 1px double black; width: 322px; height: 242px; .display { width: 100%; height: 100%; display: inline-block; .display > video, object { width: 100%;
-	height: 100%; </style>
--->
-
 <style>
   img {
     width: 100%;
@@ -322,6 +316,7 @@ hr.footerline {border-top: 1px rgba(115, 190, 68, 1.0) solid;}
 	  tabcontent = document.getElementsByClassName("tabcontent");
 	  for (i = 0; i < tabcontent.length; i++) {
 	    tabcontent[i].style.display = "none";
+    	    console.log("TAB: "+ tabcontent[i].id);
 	  }
 	  tablinks = document.getElementsByClassName("tablinks");
 	  for (i = 0; i < tablinks.length; i++) {
@@ -439,36 +434,40 @@ hr.footerline {border-top: 1px rgba(115, 190, 68, 1.0) solid;}
 
 			//**************************************************
 			//
-			//	update graph TEMP and CPU
+			//	update graph TEMP CPU PWR
 			//
 			//**************************************************
 
-			function update_graph_tempcpu(cpu, temp, max_temp, tijd){
-				console.log('GRAPH TEMP/CPU')
+			function update_graph_tempcpupwr(cpu, temp, max_temp, pwr, tijd){    
+				console.log('GRAPH TEMP/CPU/PWR')
 				x1 = cpu;
 				x2 = temp;
 				x3 = max_temp;
+				x4 = pwr;
 			//	console.log(cpu);
 			//	console.log(temp);
 				x1[0]["x"] = 101;
 				x2[0]["x"] = 101;
 				x3[0]["x"] = 101;
+				x4[0]["x"] = 101;
 
 	  			if (graph.data.datasets[0].data.length == 100){
 					graph.data.datasets[0].data.shift(x1[0]);
 					graph.data.datasets[1].data.shift(x2[0]);
 					graph.data.datasets[2].data.shift(x3[0]);
+					graph.data.datasets[3].data.shift(x4[0]);
 			//		y = graph.data.labels.shift(1);
 				} else {
 					graph.data.datasets[0].data.push(x1[0]);
 					graph.data.datasets[1].data.push(x2[0]);
 					graph.data.datasets[2].data.push(x3[0]);
+					graph.data.datasets[3].data.push(x4[0]);
 					graph.data.labels.push(graph.data.datasets[0].data.length);
 
 	 		//		graph.data.labels.push(tijd);
 				}
 				if (graph.data.labels.length > 100){
-				    graph.data.labels.pop();
+				    graph.data.labels.pop();	
 				}
 
 				graph.update();
@@ -610,7 +609,8 @@ hr.footerline {border-top: 1px rgba(115, 190, 68, 1.0) solid;}
 
 				document.getElementById("label_cpu_freq").innerHTML     = "CPU frequency   = " + obj.cpu_freq    + " MHz";
 				document.getElementById("label_CPU_cpu_freq").innerHTML = "CPU frequency   = " + obj.cpu_freq    + " MHz";
-				document.getElementById("cpu_uptime").innerHTML  = "Uptime = " + uptime;
+				document.getElementById("cpu_uptime").innerHTML = "Uptime = " + uptime;
+				document.getElementById("fw_version").innerHTML = obj.fw_version; 
 
 				document.getElementById("cpu_perc1").value = obj.cpu_perc1;
 				document.getElementById("cpu_perc2").value = obj.cpu_perc2;
@@ -629,11 +629,14 @@ hr.footerline {border-top: 1px rgba(115, 190, 68, 1.0) solid;}
 				var xx1 = [{x:0, y:0}];
 				var xx2 = [{x:0, y:0}];
 				var xx3 = [{x:0, y:0}];
+				var xx4 = [{x:0, y:0}];
 
 				xx1[0]["y"] = obj.temperature;
 				xx2[0]["y"] = Math.floor(cpu_perc_total*1000)/10;
 				xx3[0]["y"] = obj.max_temp;
-				update_graph_tempcpu(xx1, xx2, xx3, cur_time);
+				xx4[0]["y"] = Math.floor(parseInt(obj.pwr)/1000)/1000;
+				console.log("PWR:" + (Math.floor(parseInt(obj.pwr)/1000)/1000));
+				update_graph_tempcpupwr(xx1, xx2, xx3, xx4, cur_time);
 
 				var xy1 = [{x:0, y:0}];
 				var xy2 = [{x:0, y:0}];
@@ -680,6 +683,7 @@ hr.footerline {border-top: 1px rgba(115, 190, 68, 1.0) solid;}
 	  <img class="videology-logo" src="assets/videology-industrial-grade-cameras.svg" alt="Videology Industrial-Grade Cameras"/>
 	  <h1><b>SCAiLX</b> AI i.MX8M Plus</h1>
 	  <h2 align="center"> <label id="cpu_uptime" for="cpu_uptime"></label> </h2>
+	  <label id="fw_version" for="fw_version"></label>
 	</div>
 
   <div class="main">
@@ -695,7 +699,17 @@ hr.footerline {border-top: 1px rgba(115, 190, 68, 1.0) solid;}
   <button class="tablinks" onclick="openTab(event, 'VISCA')"                >VISCA</button>
   <button class="tablinks" onclick="openTab(event, 'CAMCTRL')"              >CAMERA CONTROL</button>
   <button class="tablinks" onclick="openTab(event, 'DOCUMENTATION')"        >DOCUMENTATION</button>
-</div>  <!-- Tab links -->
+</div> 
+
+<script>
+	function hide_VISCA_tab(){
+		var tab=document.getElementsByClassName("tabcontent");
+		console.log(">>"+tab.id);
+		if (tab.classList.contains('VISCA')){
+			console.log(">>"+'VISCA');
+		} 
+	}
+</script>
 
 <!--
 ******************************************************************************************************
@@ -712,6 +726,7 @@ hr.footerline {border-top: 1px rgba(115, 190, 68, 1.0) solid;}
 			console.log(">>>"+document.getElementById('myIframe1').src);
 			document.getElementById('myIframe1').src="http://";
 			console.log(">>>"+document.getElementById('myIframe1').src);
+			hide_VISCA_tab();
 		}
 	  </script>
 
@@ -743,12 +758,6 @@ hr.footerline {border-top: 1px rgba(115, 190, 68, 1.0) solid;}
 		</table>
 	</article>
 
-<!--
-	<aside class="aside">
-		TEXT
-	</aside>
--->
-
 </div>   <!-- tab SCAILX-ZB  -->
 
 <!--
@@ -774,54 +783,25 @@ hr.footerline {border-top: 1px rgba(115, 190, 68, 1.0) solid;}
 					<br>
 	   <!--style="color:white;"-->
 	   <tr>
-		<td width="30%" rowspan="6" align="center" valign="middle" padding-right="10px">
+		<td width="100%" rowspan="6" align="center" valign="middle" padding-right="10px">
 			</td>
-			<td width="30%" rowspan="6" align="center" valign="middle" padding-right="10px">
+			<td width="100%" rowspan="6" align="center" valign="middle" padding-right="10px">
 				<div class="container">
 					   <div class="stream" id="stream1"></div>
 					   <iframe id="myIframe1" width="320" height="320" src="" frameborder="1" allowfullscreen></iframe>
 				   </div>
 		   </td>
-	   <td width="30%" rowspan="6" align="center" valign="middle" padding-right="10px">
-		</td>
-	   <!--
-		   <td width="50%" rowspan="6" align="center" valign="middle" padding-right="100px">
-		   <div class="container">
-					   <div class="stream" id="stream1"></div>
-					   <iframe id="myIframe2" width="320" height="320" src="" frameborder="1" allowfullscreen></iframe>
-				   </div>
-			 </td>
-			-->
 	   </tr>
-<tr>
-	<td width="30%" rowspan="6" align="center" valign="middle" padding-right="10px">
-	</td>
-   <td width="50%" rowspan="6" align="center" valign="middle" padding-right="10px">
-<label id="label_cam0"></label>
+   <tr>
+	 <td width="30%" rowspan="6" align="center" valign="middle" padding-right="10px">
+	  </td>
+       <td width="50%" rowspan="6" align="center" valign="middle" padding-right="10px">
+       <label id="label_cam0"></label>
 		   </td>
 		   <td width="30%" rowspan="6" align="center" valign="middle" padding-right="10px">
 		</td>
-	   <!--
-		   <td width="50%" rowspan="6" align="center" valign="middle" padding-right="10px">
-<a>cam1-gs-AR0234_1080p</a>
-		   </td>
-		-->
-</tr>
+       </tr>
 	   </tbody>
-<!--
-	   <tbody>
-	   <tr>
-		   <td width="50%" rowspan="6" align="center" valign="middle" padding-right="10px">
-		   <img id="AIpose" src="example-pose.png" >
-		 </td>
-		 <td width="1%">
-		 </td>
-		   <td width="50%" rowspan="6" align="center" valign="middle" padding-left="10px">
-		   <img id="AIdetect" src="example-detection.png" >
-		 </td>
-	   </tr>
-	   </tbody>
--->
    </table>
 
 </div>  <!-- AIAPP tabcontent -->
@@ -975,7 +955,8 @@ hr.footerline {border-top: 1px rgba(115, 190, 68, 1.0) solid;}
 		  data: {
 		    datasets: [	{yAxisID: 'y-axis-0', pointRadius: 1, borderColor : "rgb(255,0,0)", borderWidth : 0.5, fill: false, pointBackgroundColor : "rgb(255,0,0)", label:"CPU temperature [\u00B0C]", },
 						{yAxisID: 'y-axis-1', pointRadius: 1, borderColor : "rgb(0,0,255)", borderWidth : 0.5, fill: false, pointBackgroundColor : "rgb(0,0,255)", label : "CPU load [%]", },
-						{yAxisID: 'y-axis-2', pointRadius: 1, borderColor : "rgb(0,255,0)", borderWidth : 0.5, fill: false, pointBackgroundColor : "rgb(0,255,0)", label : "CPU max. temp. [\u00B0C]", }
+						{yAxisID: 'y-axis-2', pointRadius: 1, borderColor : "rgb(0,255,0)", borderWidth : 0.5, fill: false, pointBackgroundColor : "rgb(0,255,0)", label : "CPU max. temp. [\u00B0C]", },
+						{yAxisID: 'y-axis-3', pointRadius: 1, borderColor : "rgb(255,165,0)", borderWidth : 0.5, fill: false, pointBackgroundColor : "rgb(255,165,0)", label : "PWR [W]", }
 			      ],
 		  },
 		  options: {
@@ -994,7 +975,10 @@ hr.footerline {border-top: 1px rgba(115, 190, 68, 1.0) solid;}
 				{id:'y-axis-2', ticks: {min: -20, max:100},
 						scaleLabel: { display: true,
 					 	      labelString: 'CPU max. temp. [\u00B0C]' }},
-			     ],
+							   {id:'y-axis-3', ticks: {min: 0, max:10},   
+						scaleLabel: { display: true, 
+					 	      labelString: 'PWR [W]' }},			     
+				 ],
 		    }
 		  }
 		});
@@ -1124,24 +1108,9 @@ hr.footerline {border-top: 1px rgba(115, 190, 68, 1.0) solid;}
 		//***********************************************
 
 		function slider_change(value){
-	//	    console.log((value*1).toString(16))
-	//	    console.log('/imx8/Zoom/X' + (value*1).toString(16))
 	            VISCA('/imx8/CAM_Zoom/X' + (value*1).toString(16))
 		}
 
-		//***********************************************
-		//
-		//  SLIDER CLICK
-		//
-		//***********************************************
-
-		function slider_click(value){
-	/*	    console.log((value*1).toString(16))
-	            console.log( (value*1).toString(16) )
-	            VISCA('/imx8/CAM_Zoom/X' + (value*1).toString(16))
-		    console.log('/imx8/CAM_Zoom/X' + (value*1).toString(16))
-	*/
-		}
 	</script>
 	<script>
 		//***********************************************
@@ -1184,11 +1153,6 @@ hr.footerline {border-top: 1px rgba(115, 190, 68, 1.0) solid;}
   <table border="0" align="center" cellpadding="0" cellspacing="0">
 	<tbody>
 
-<!--
-<tr> <td align="center" valign="middle" bgcolor="#999999" class="col1"><h2>Menu</h2></td> <td align="center" valign="middle"
-					  bgcolor="#999999" class="col2_h"><h2>Main Window</h2></td> </tr>
--->
-
 	<div class="slidecontainer">
 	  <p><b>VISCA</b> control for <b>[SCAILX-ZB]</b> or <b>[SCAILX-AI + SCAILX-LVDS-2-MIPI]</b> only</p>
 	  <label id="CAM_res" for="CAM_res"></label><label>&nbsp;&nbsp;&nbsp;&nbsp;</label>
@@ -1196,7 +1160,6 @@ hr.footerline {border-top: 1px rgba(115, 190, 68, 1.0) solid;}
 <br>
 	  <p>Zoom slider</p>
 	  <input id="zoomslider"
-		onwheel="slider_click(this.range)"
 		onchange="slider_change(this.value)"
 		type="range" min="0" max="16383" value="0"
 		class="slider"
@@ -1379,83 +1342,6 @@ hr.footerline {border-top: 1px rgba(115, 190, 68, 1.0) solid;}
 
 	  </tbody>
 	</table>
-
-  <!--
-	<table border="0" align="center" cellpadding="0" cellspacing="0">
-	  <tbody>
-	  	<tr>
-	  	  <td class="col1" align="center" valign="middle">
-			<p id="btn1"
-				onclick="videotest()"
-				class="cta-button">Test colorbar<br>START</p>
-	  	  </td>
-	  	  <td class="col1" align="center" valign="middle">
-			<p id="btn2"
-				onclick="killtest()"
-				class="cta-button">Test colorbar<br>STOP</p>
-		  </td>
-		  <td class="col1" width="15%" align="left" valign="middle">
-			<form>
-			  <br>
-			  <div id="rates">
-			    <input type="radio" id="test640x480" name="colorbar" value="1" checked="checked">
-			    <label for="test640x480">640x480</label>
-			    <br>
-			    <input type="radio" id="test1920x1080" name="colorbar" value="0">
-			    <label for="test1920x1080">1920x1080</label>
-			    <br>
-			  </div>
-			</form>
-		    </td>
-		</tr>
-
-		<tr>
-		  <td class="col1" align="left" valign="middle">
-		  </td>
-		  <td class="col_1" align="right" valign="middle">
-			<label>Object Detection application </label>
-			<br>
-			<label>camera live video stream 1920x1080@60 (H.264) </label>
-			<br>
-			<label>camera live video stream  1280x720@60 (H.265)</label>
-			<br>
-			<label>IMX8 processor test stream color bar (640x480)</label>
-			<br>
-			<label>IMX8 processor test stream color bar (1920x1080)</label>
-		  </td>
-
-		  <td class="col_1" align="left" valign="middle">
-			<label>:&nbsp;&nbsp;rtsp://</label><label id="IP0"></label><label>:8554/stream</label>
-			<br>
-			<label>:&nbsp;&nbsp;rtsp://</label><label id="IP1"></label><label>:9001/stream</label>
-			<br>
-			<label>:&nbsp;&nbsp;rtsp://</label><label id="IP2"></label><label>:9002/stream</label>
-			<br>
-			<label>:&nbsp;&nbsp;rtsp://</label><label id="IP3"></label><label>:9003/stream</label>
-			<br>
-			<label>:&nbsp;&nbsp;rtsp://</label><label id="IP4"></label><label>:9004/stream</label>
-		  </td>
-
-		  <td class="col1" align="left" valign="middle">
-			<label id="label_rtsp0_running" for="label_rtsp0_running"> </label>
-			<br>
-			<label id="label_rtsp1_running" for="label_rtsp1_running"> </label>
-			<br>
-			<label id="label_rtsp2_running" for="label_rtsp2_running"> </label>
-			<br>
-			<label id="label_rtsp3_running" for="label_rtsp3_running"> </label>
-			<br>
-			<label id="label_rtsp4_running" for="label_rtsp4_running"> </label>
-		  </td>
-		</tr>
-		<tr>
-			<label>gst-launch-1.0 rtspsrc location=rtsp://.....:9001/stream ! queue ! rtph264depay ! avdec_h264 ! autovideosink</label>
-			<br>
-			<label>gst-launch-1.0 rtspsrc location=rtsp://.....:9002/stream ! queue ! rtph265depay ! avdec_h265 ! autovideosink</label>
-		</tr>
-	 </tbody>
-	</table>
-  -->
 
 </div>
 
@@ -1694,10 +1580,9 @@ hr.footerline {border-top: 1px rgba(115, 190, 68, 1.0) solid;}
 		<tbody>
 				 <h2>SCAiLX-AI - User Guide</h2>
 		<tr>
-			<td width="50%" rowspan="6" align="center" valign="middle" padding-right="10px">
+			<td width="100%" rowspan="6" align="center" valign="middle" padding-right="10px">
 				<p><a href="https://www.videologyinc.com/hubfs/pdfs/ug-scailx-ai.pdf">UG_SCAILX-AI</a></p>
-
-//				<iframe src="https://www.videologyinc.com/hubfs/pdfs/ug-scailx-ai.pdf" style="width:600px; height:500px;" frameborder="0"></iframe>
+				<iframe src="https://www.videologyinc.com/hubfs/pdfs/ug-scailx-ai.pdf" style="width:100%; height:500px;" frameborder="0"></iframe>
 
 			</td>
  		</tr>
