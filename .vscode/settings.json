@@ -1,4 +1,4 @@
 {
-    "python.languageServer": "Jedi",
+    "python.languageServer": "None",
     "remote.autoForwardPorts": false
 }

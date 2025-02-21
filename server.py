@@ -43,9 +43,11 @@ min_temp = 120
 max_temp_24h = -40
 min_temp_24h = 120
 ctv = None
+fw_version = None
 
-crosslinks = glob.glob("/dev/links/crosslink_mipi_*")
+crosslinks = glob.glob("/dev/links/lvds2mipi_*")
 if crosslinks:
+    print(crosslinks)
     DEV = os.path.realpath(crosslinks[0])
     ctv = crosslink_visca.CrosslinkSerial(DEV, baud=9600)
 
@@ -112,7 +114,7 @@ async def get_cameracontrol():
     return StreamingResponse(gen_cameracontrol(ctv), media_type="text/event-stream")
 
 async def gen_status():
-    global min_temp, max_temp, IP
+    global min_temp, max_temp, IP, fw_version
     status = {}
 
     with open('/sys/class/thermal/thermal_zone0/temp') as fd:
@@ -127,6 +129,7 @@ async def gen_status():
 
     with open('/proc/uptime', 'r') as f:
         uptime_seconds = float(f.readline().split()[0])
+    status['fw_version']    = fw_version
     status['uptime']        = uptime_seconds
     status['cpu_freq']      = psutil.cpu_freq().current
     cpu_perc = psutil.cpu_percent(percpu=True)
@@ -149,6 +152,14 @@ async def gen_status():
     status['eth_pkt_sent']  =  psutil.net_io_counters().packets_sent
     status['eth_pkt_recv']  =  psutil.net_io_counters().packets_recv
 
+    if os.path.isfile('/sys/class/hwmon/hwmon2/power1_input'):
+        f=open('/sys/class/hwmon/hwmon2/power1_input')
+        pwr = f.read().splitlines()[0]
+        f.close()
+    else: pwr = '0'
+
+    status['pwr'] = pwr
+
     net_in, net_out = net_usage(intf)
 
 #                    print(f"Current net-usage: IN: {net_in} MB/s, OUT: {net_out} MB/s")
@@ -160,6 +171,8 @@ async def gen_status():
         visca_response = '"' + visca_resp + '"'
 
     IP = socket.gethostbyname(socket.getfqdn())
+    
+    print(status)
 
     status |= {
         'temperature': temp,
@@ -419,31 +432,6 @@ def kill_gst_pid(tekst, out, kill):
                os.kill(pid, signal.SIGKILL)
     return pid
 
-
-#*********************************************************************************************
-#
-#  STOP serial-getty on /dev/ttymxc3
-#
-
-def checkServiceStatus():
-    try:
-        print("getty@ttymxc3 status...")
-
-        #Check getty service
-        for line in os.popen("sudo systemctl status serial-getty@ttymxc3.service"):
-            services = line.split()
-            print(services)
-
-            pass
-
-    except OSError as ose:
-        print("Error while running the command", ose)
-
-    pass
-
-#checkServiceStatus()
-#os.popen("systemctl stop serial-getty@ttymxc3.service")
-
 #*********************************************************************************************
 
 HOST_NAME = socket.gethostname()
@@ -452,6 +440,11 @@ print(HOST_NAME)
 print('IP:'+IP)
 print(f"serving at <{IP}>:{PORT}")
 
+with open('/etc/scailx-version') as fd:
+        fw_version = fd.read().splitlines()[0]
+        fd.close()
+
+print(fw_version)
 
 if __name__ == "__main__" and len(sys.argv) > 1:
     match sys.argv[1]:
