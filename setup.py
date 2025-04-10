@@ -10,26 +10,26 @@ class PostInstallCommand(install):
     def run(self):
         # Run parent install first
         install.run(self)
+# Install systemd service file
+print("Installing systemd service file...")
+systemd_dir = '/etc/systemd/system/'
+service_file_path = 'webservice.service'
 
-        # Install systemd service file
-        print("Installing systemd service file...")
-        service_file = os.path.join(self.install_dir, 'webservice.service')
-        systemd_dir = '/etc/systemd/system/'
+if os.path.exists(service_file_path):
+    if not os.path.exists(systemd_dir):
+        os.makedirs(systemd_dir, exist_ok=True)
 
-        if os.path.exists('webservice.service'):
-            if not os.path.exists(systemd_dir):
-                os.makedirs(systemd_dir, exist_ok=True)
+    # Copy service file to systemd directory
+    shutil.copy2(service_file_path, os.path.join(systemd_dir, 'webservice.service'))
 
-            # Copy service file to systemd directory
-            shutil.copy2('webservice.service', os.path.join(systemd_dir, 'webservice.service'))
-
-            # Reload systemd daemon
-            os.system('systemctl daemon-reload')
-            print(f"Systemd service file installed to {systemd_dir}webservice.service")
-            print("To enable and start the service, run:")
-            print("  sudo systemctl enable webservice.service")
-            print("  sudo systemctl start webservice.service")
-        else:
+    # Reload systemd daemon
+    os.system('systemctl daemon-reload')
+    print(f"Systemd service file installed to {systemd_dir}webservice.service")
+    print("To enable and start the service, run:")
+    print("  sudo systemctl enable webservice.service")
+    print("  sudo systemctl start webservice.service")
+else:
+    print(f"Warning: webservice.service file not found at {service_file_path}")
             print("Warning: webservice.service file not found in current directory")
 
 setup(
@@ -37,13 +37,14 @@ setup(
     version="0.1.0",
     description="Scailx simple web UI",
     author="Scailx",
-    packages=find_packages(),
+    packages=['scailx_python_webgui'],
     include_package_data=True,
     install_requires=[
         "fastapi",
         "uvicorn",
         "psutil",
         "pyyaml",
+        "vdlg_lvds @ git+https://github.com/VideologyInc/kernel-module-crosslink",
     ],
     python_requires=">=3.6",
     cmdclass={
@@ -51,12 +52,21 @@ setup(
     },
     # Include non-python files
     package_data={
-        '': ['*.service', 'public/*', 'public/assets/*', 'public/assets/fonts/*', 'public/assets/scripts/*'],
+        'scailx_python_webgui': [
+            'public/*',
+            'public/assets/*',
+            'public/assets/fonts/*',
+            'public/assets/scripts/*',
+        ],
     },
+    # Include data files
+    data_files=[
+        ('', ['webservice.service']),
+    ],
     # Create a scailx-webgui command to run the server
     entry_points={
         'console_scripts': [
-            'scailx-webgui=server:main',
+            'scailx-webgui=scailx_python_webgui.server:main',
         ],
     },
 )
