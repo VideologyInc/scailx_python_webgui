@@ -35,7 +35,6 @@ def main():
     return os.path.join(appdir, "public/index.html")
 app.mount("/assets", StaticFiles(directory=os.path.join(appdir, "public/assets")), name="assets")
 
-PORT = 8088
 IP = None
 max_temp = -40
 min_temp = 120
@@ -170,6 +169,7 @@ async def gen_status():
         visca_response = '"' + visca_resp + '"'
 
     IP = socket.gethostbyname(socket.getfqdn())
+    HOST_NAME = socket.gethostname()
 
     print(status)
 
@@ -432,23 +432,3 @@ def kill_gst_pid(tekst, out, kill):
     return pid
 
 #*********************************************************************************************
-
-HOST_NAME = socket.gethostname()
-IP        = socket.gethostbyname(socket.getfqdn())
-print(HOST_NAME)
-print('IP:'+IP)
-print(f"serving at <{IP}>:{PORT}")
-
-with open('/etc/scailx-version') as fd:
-        fw_version = fd.read().splitlines()[0]
-        fd.close()
-
-print(fw_version)
-
-if __name__ == "__main__" and len(sys.argv) > 1:
-    match sys.argv[1]:
-        case 'dev' | "--dev" | "-d":
-            print("dev")
-            uvicorn.run("server:app", host="0.0.0.0", port=PORT, reload=True)
-        case _:
-            uvicorn.run("server:app", host="0.0.0.0", port=PORT)

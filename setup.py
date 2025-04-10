@@ -1,19 +1,9 @@
 #!/usr/bin/env python3
 
-from setuptools import setup, find_packages
+from setuptools import setup
 import os
 import shutil
-import importlib.util
 from setuptools.command.install import install
-
-# Check if vdlg_lvds is already installed
-def is_package_installed(package_name):
-    """Check if a package is already installed"""
-    try:
-        spec = importlib.util.find_spec(package_name)
-        return spec is not None
-    except (ModuleNotFoundError, ValueError):
-        return False
 
 class PostInstallCommand(install):
     """Post-installation for installation mode."""
@@ -53,7 +43,8 @@ setup(
         "uvicorn",
         "psutil",
         "pyyaml",
-    ] + ([] if is_package_installed("vdlg_lvds") else ["vdlg_lvds @ git+https://github.com/VideologyInc/kernel-module-crosslink"]),
+        "vdlg_lvds",
+    ],
     python_requires=">=3.6",
     cmdclass={
         'install': PostInstallCommand,
@@ -74,7 +65,7 @@ setup(
     # Create a scailx-webgui command to run the server
     entry_points={
         'console_scripts': [
-            'scailx-webgui=scailx_python_webgui.server:main',
+            'scailx-webgui=scailx_python_webgui.run:main',
         ],
     },
 )

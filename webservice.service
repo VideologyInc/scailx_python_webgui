@@ -3,7 +3,7 @@ Description=Scailx simple python webgui
 After=go2rtc.service
 
 [Service]
-ExecStart=python3 /usr/bin/ui_scailx_py/server.py run
+ExecStart=scailx-webgui
 
 [Install]
 WantedBy=multi-user.target
