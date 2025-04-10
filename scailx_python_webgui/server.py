@@ -8,7 +8,7 @@ import socket
 import time
 import os
 import base64
-import crosslink_visca
+from vdlg_lvds.serial import LvdsSerial
 import logging
 import json
 import psutil
@@ -44,11 +44,11 @@ min_temp_24h = 120
 ctv = None
 fw_version = None
 
-crosslinks = glob.glob("/dev/links/lvds2mipi_*")
-if crosslinks:
-    print(crosslinks)
-    DEV = os.path.realpath(crosslinks[0])
-    ctv = crosslink_visca.CrosslinkSerial(DEV, baud=9600)
+lvds_devs = glob.glob("/dev/links/lvds2mipi_*")
+if lvds_devs:
+    print(lvds_devs)
+    DEV = os.path.realpath(lvds_devs[0])
+    ctv = LvdsSerial(DEV, baud=9600)
 
 stream1 = ""
 try:
@@ -170,7 +170,7 @@ async def gen_status():
         visca_response = '"' + visca_resp + '"'
 
     IP = socket.gethostbyname(socket.getfqdn())
-    
+
     print(status)
 
     status |= {

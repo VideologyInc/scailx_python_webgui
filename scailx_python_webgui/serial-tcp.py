@@ -1,9 +1,9 @@
 #! /usr/bin/env pyhton3
 
-#===================================
+# ===================================
 # crosslink serial tcpserver
 # I2C-serial <-> tcp server
-#===================================
+# ===================================
 
 import select
 import socket
@@ -14,9 +14,10 @@ import socketserver
 import time
 import threading
 import glob
-from crosslink_visca import CrosslinkSerial
+from vdlg_lvds.serial import LvdsSerial
 
 logging.basicConfig(level=logging.DEBUG)
+
 
 class ViscaUdpHandler(socketserver.BaseRequestHandler):
     def handle(self):
@@ -25,10 +26,12 @@ class ViscaUdpHandler(socketserver.BaseRequestHandler):
         logging.debug('recv: %s', recv)
         self.request[1].sendto(recv, self.client_address)
 
+
 class ViscaUdpServer(socketserver.UDPServer):
-    def __init__(self, server_address, RequestHandlerClass, crosslinkdev: CrosslinkSerial):
+    def __init__(self, server_address, RequestHandlerClass, crosslinkdev: LvdsSerial):
         super().__init__(server_address, RequestHandlerClass)
         self.crtvv = crosslinkdev
+
 
 class ViscaTcpHandler(socketserver.BaseRequestHandler):
     def handle(self):
@@ -37,8 +40,9 @@ class ViscaTcpHandler(socketserver.BaseRequestHandler):
         logging.debug('recv: %s', recv)
         self.request.sendall(recv)
 
+
 class ViscaTcpServer(socketserver.TCPServer):
-    def __init__(self, server_address, RequestHandlerClass, crosslinkdev: CrosslinkSerial):
+    def __init__(self, server_address, RequestHandlerClass, crosslinkdev: LvdsSerial):
         super().__init__(server_address, RequestHandlerClass)
         self.crtvv = crosslinkdev
 
@@ -54,7 +58,7 @@ def main():
         print('No crosslink devices found')
         sys.exit(1)
 
-    crtvv = CrosslinkSerial(crosslinks[0])
+    crtvv = LvdsSerial(crosslinks[0])
 
     with ViscaTcpServer(('', 52381), ViscaTcpHandler, crtvv) as server:
         ip, port = server.server_address

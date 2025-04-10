@@ -1,12 +1,12 @@
 #! /usr/bin/env python3
-import crosslink_visca
+from vdlg_lvds.serial import LvdsSerial
 import json
 
 #----------------------------------------------------------
 # CAMERACONTROL
 #----------------------------------------------------------
 
-async def gen_cameracontrol(ctv: crosslink_visca.CrosslinkSerial):
+async def gen_cameracontrol(ctv: LvdsSerial):
     if not ctv:
         yield 'data: {} \n\n'
     else:
