@@ -40,7 +40,6 @@ if os.path.exists(service_file_path):
     print("  sudo systemctl start webservice.service")
 else:
     print(f"Warning: webservice.service file not found at {service_file_path}")
-            print("Warning: webservice.service file not found in current directory")
 
 setup(
     name="scailx_python_webgui",
