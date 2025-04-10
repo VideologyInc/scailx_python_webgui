@@ -20,7 +20,7 @@ import pickle
 import glob
 import yaml
 
-from cameracontrol import gen_cameracontrol
+from scailx_python_webgui.cameracontrol import gen_cameracontrol
 #-----------------------------------------------------------------------------------
 
 from time import sleep, time_ns

@@ -53,7 +53,7 @@ def main():
     # parser.add_argument( 'server_port', type=int, help="server port", default=52381)
 
     # args = parser.parse_args()
-    crosslinks = glob.glob('/dev/links/crosslink_mipi*')
+    crosslinks = glob.glob('/dev/links/lvds2mipi_*')
     if len(crosslinks) == 0:
         print('No crosslink devices found')
         sys.exit(1)
