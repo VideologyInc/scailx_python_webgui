@@ -19,23 +19,25 @@ camera_dict = {
     "imx": "imx",
 }
 
-# Camera gst dict (high resolution and low resolution 2 settings tuples)
+# Camera gst dict (high resolution, low resolution and format multiple settings tuples with 4 items each)
 camera_gst_dict = {
     "ar0234": [
-        (1920, 1080, "video/x-raw,width=1920,height=1080,framerate=60/1"),
-        (1280, 720, "video/x-raw,width=1280,height=720,framerate=60/1"),
+        (1920, 1080, "default", "video/x-raw,width=1920,height=1080,framerate=60/1"),
+        (1280, 720, "default", "video/x-raw,width=1280,height=720,framerate=60/1"),
     ],
     "zoomblock": [
-        (1920, 1080, "video/x-raw,width=1920,height=1080,framerate=25/1"),
-        (1280, 720, "video/x-raw,width=1280,height=720,framerate=25/1"),
+        (1920, 1080, "default", "video/x-raw,width=1920,height=1080,framerate=25/1"),
+        (1280, 720, "default", "video/x-raw,width=1280,height=720,framerate=25/1"),
     ],
     "boson": [
-        (640, 512, "video/x-raw,width=640,height=512,framerate=60/1"),
-        (320, 256, "video/x-raw,width=320,height=256,framerate=60/1"),
+        (640, 512, "default", "video/x-raw,width=640,height=512,framerate=60/1"),
+        (320, 256, "default", "video/x-raw,width=320,height=256,framerate=60/1"),
+        (640, 512, "GRAY8", "video/x-raw,width=640,height=512,framerate=60/1,format=GRAY8 ! videoconvert ! video/x-raw,format=NV12"),
+        (320, 256, "GRAY8", "video/x-raw,width=320,height=256,framerate=60/1,format=GRAY8 ! videoconvert ! video/x-raw,format=NV12"),
     ],
     "imx": [
-        (1920, 1080, "video/x-raw,width=1920,height=1080,framerate=30/1"),
-        (1280, 720, "video/x-raw,width=1280,height=720,framerate=30/1"),
+        (1920, 1080, "default", "video/x-raw,width=1920,height=1080,framerate=30/1"),
+        (1280, 720, "default", "video/x-raw,width=1280,height=720,framerate=30/1"),
     ],
 }
 
@@ -54,14 +56,11 @@ def detect_camera_by_name(cam):
 # Or with a more complex way, get its format using v4l2-ctl --list-formats-ext and "translate" to gst strings ;-)
 def get_camera_gst(name):
 
-    info = (
+    info_list = (
         camera_gst_dict[name] if name in camera_gst_dict else camera_gst_dict["ar0234"]
     )
 
-    width_high, height_high, gst_high = info[0]
-    width_low, height_low, gst_low = info[1]
-
-    return width_high, height_high, gst_high, width_low, height_low, gst_low
+    return info_list
 
 
 with open("/tmp/cam_config.yaml", "w") as f:
@@ -76,16 +75,12 @@ with open("/tmp/cam_config.yaml", "w") as f:
         # Get camera name and matching gst info
         name = detect_camera_by_name(cam)
 
-        width_high, height_high, gst_high, width_low, height_low, gst_low = (
-            get_camera_gst(name)
-        )
+        info_list = get_camera_gst(name)
 
         # VPU quality settings: qp above35 gives a grainy image. Below 20 the bitrate starts getting excessive.
-        config["streams"][
-            f"{cam}_{width_high}x{height_high}"
-        ] = f"exec:gst-launch-1.0 -q v4l2src device={vdev} ! {gst_high} ! vpuenc_h264 qp-max=30 qp-min=20 ! fdsink"
-        config["streams"][
-            f"{cam}_{width_low}x{height_low}"
-        ] = f"exec:gst-launch-1.0 -q v4l2src device={vdev} ! {gst_low} ! vpuenc_h264 qp-max=30 qp-min=20 ! fdsink"
+        # Parse all resolutions and formats of the camera, may be >=2 ;-) 
+        for info in info_list:
+            width, height, format_str, gst_str = info
+            config["streams"][f"{cam}_{width}x{height}_{format_str}"] = f"exec:gst-launch-1.0 -q v4l2src device={vdev} ! {gst_str} ! vpuenc_h264 qp-max=30 qp-min=20 ! fdsink"
 
     yaml.dump(config, f)
