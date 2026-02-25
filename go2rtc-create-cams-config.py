@@ -4,6 +4,7 @@ import yaml
 import re
 import glob
 import tempfile
+import shutil
 
 # Currently supports 4 camera types:
 # global shutter = AR0234   => ar0234
@@ -16,7 +17,9 @@ camera_dict = {
     "AR0234": "ar0234",
     "lvds2mipi": "zoomblock",
     "flir": "boson",
-    "imx": "imx",
+    "imx900": "imx900",
+    "imx678": "imx678",
+    "imx662": "imx662",
 }
 
 # Camera gst dict (high resolution, low resolution and format multiple settings tuples with 4 items each)
@@ -35,9 +38,17 @@ camera_gst_dict = {
         (640, 512, "GRAY8", "video/x-raw,width=640,height=512,framerate=60/1,format=GRAY8 ! videoconvert ! video/x-raw,format=NV12"),
         (320, 256, "GRAY8", "video/x-raw,width=320,height=256,framerate=60/1,format=GRAY8 ! videoconvert ! video/x-raw,format=NV12"),
     ],
-    "imx": [
-        (1920, 1080, "default", "video/x-raw,width=1920,height=1080,framerate=30/1"),
-        (1280, 720, "default", "video/x-raw,width=1280,height=720,framerate=30/1"),
+    "imx900": [
+        (1920, 1080, "default", "video/x-raw,width=1920,height=1080,framerate=15/1,format=YUY2"),
+        (1280, 720, "default", "video/x-raw,width=1280,height=720,framerate=15/1,format=YUY2"),
+    ],
+    "imx678": [
+        (1920, 1080, "default", "video/x-raw,width=1920,height=1080,framerate=30/1,format=NV12"),
+        (1280, 720, "default", "video/x-raw,width=1280,height=720,framerate=30/1,format=NV12"),
+    ],
+    "imx662": [
+        (1920, 1080, "default", "video/x-raw,width=1920,height=1080,framerate=60/1,format=YUY2"),
+        (1280, 720, "default", "video/x-raw,width=1280,height=720,framerate=60/1,format=YUY2"),
     ],
 }
 
@@ -63,7 +74,7 @@ def get_camera_gst(name):
     return info_list
 
 
-with open("/tmp/cam_config.yaml", "w") as f:
+with open("/tmp/cam_config_new.yaml", "w") as f:
     # print(f'{f.name}')
     config = {"streams": {}}
     # itterate over cam overlays in /proc/device-tree/chosen/overlays/
@@ -83,4 +94,9 @@ with open("/tmp/cam_config.yaml", "w") as f:
             width, height, format_str, gst_str = info
             config["streams"][f"{cam}_{width}x{height}_{format_str}"] = f"exec:gst-launch-1.0 -q v4l2src device={vdev} ! {gst_str} ! vpuenc_h264 qp-max=30 qp-min=20 ! fdsink"
 
+    print(config)
+    
     yaml.dump(config, f)
+
+# Copy /tmp/cam_config_new.yaml to /tmp/cam_config.yaml
+shutil.copyfile("/tmp/cam_config_new.yaml", "/tmp/cam_config.yaml")
