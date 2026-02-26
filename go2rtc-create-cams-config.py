@@ -74,14 +74,20 @@ def get_camera_gst(name):
     return info_list
 
 
-with open("/tmp/cam_config_new.yaml", "w") as f:
-    # print(f'{f.name}')
+with open("/var/tmp/cam_config_new.yaml", "w") as f:
+    print(f'Start get camera config from device tree path to file {f.name}')
     config = {"streams": {}}
     # itterate over cam overlays in /proc/device-tree/chosen/overlays/
     for camfile in glob.iglob("/proc/device-tree/chosen/overlays/cam*"):
         cam = os.path.basename(camfile)
-        idn, typ = re.findall(r"cam(\d+)-(\w+)", cam)[0]
-        vdev = glob.glob(f"/dev/video*csi{idn}")[0]
+        camlist = re.findall(r"cam(\d+)-(\w+)", cam)
+        if len(camlist)==0:
+            continue
+        idn, typ = camlist[0]
+        devlist = glob.glob(f"/dev/video*csi{idn}")
+        if len(devlist)==0:
+            continue
+        vdev = devlist[0]
 
         # Get camera name and matching gst info
         name = detect_camera_by_name(cam)
@@ -98,5 +104,5 @@ with open("/tmp/cam_config_new.yaml", "w") as f:
     
     yaml.dump(config, f)
 
-# Copy /tmp/cam_config_new.yaml to /tmp/cam_config.yaml
-shutil.copyfile("/tmp/cam_config_new.yaml", "/tmp/cam_config.yaml")
+# Copy /var/tmp/cam_config_new.yaml to /var/tmp/cam_config.yaml
+shutil.copyfile("/var/tmp/cam_config_new.yaml", "/var/tmp/cam_config.yaml")
