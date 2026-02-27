@@ -14,6 +14,8 @@ import subprocess
 import re
 import json
 
+Format_Exclude_List = ["NM12", "YUV4", "YM24"]
+Desc_Exclude_List = ["Bayer", "JPEG", "10-bit", "12-bit", "5-6-5"]
 
 def parse_v4l2_formats(device="/dev/video0"):
     # Run the command
@@ -64,6 +66,21 @@ def parse_v4l2_formats(device="/dev/video0"):
 
     return formats
 
+# Given format list from above, filter out 3 big conditions:
+# empty sizes, some special formats, and description containing Bayer, JPEG, 10-bit or 12-bit.
+def formats_filter_out_unwanted(format_list):
+    format_list_filtered = []
+    for fdict in format_list:
+        if fdict["pixelformat"] in Format_Exclude_List:
+            continue
+        if len(fdict["sizes"])==0:
+            continue
+        if any(sub in fdict["description"] for sub in Desc_Exclude_List):
+            continue
+        format_list_filtered.append(fdict)
+    
+    return format_list_filtered
+
 
 # Example Usage
 if __name__ == "__main__":
@@ -78,5 +95,7 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    camera_formats = parse_v4l2_formats(args.device)
+    camera_formats = formats_filter_out_unwanted(parse_v4l2_formats(args.device))
     print(json.dumps(camera_formats, indent=2))
+#    print(camera_formats)
+	
