@@ -14,8 +14,14 @@ import subprocess
 import re
 import json
 
+
 Format_Exclude_List = ["NM12", "YUV4", "YM24"]
 Desc_Exclude_List = ["Bayer", "JPEG", "10-bit", "12-bit", "5-6-5"]
+Fourcc_Dict = {"YUYV" : "YUY2", "NV12" : "NV12",
+    "GREY" : "GRAY8", "Y16 " : "GRAY16_LE", "RGB3" : "RGB", 
+    "BGR3" : "BGR", "XR24" : "BGRx", "AR24" : "BGRA"
+    }
+
 
 def parse_v4l2_formats(device="/dev/video0"):
     # Run the command
@@ -82,6 +88,17 @@ def formats_filter_out_unwanted(format_list):
     return format_list_filtered
 
 
+def fourcc_to_gst(fourcc_str):
+    if fourcc_str in Fourcc_Dict:
+        return Fourcc_Dict[fourcc_str]
+    else:
+        return Fourcc_Dict["NV12"]
+
+def v4l2_format_mapto_gst(format_list):
+    for fdict in format_list:
+        print(fdict["pixelformat"], "=>", fourcc_to_gst(fdict["pixelformat"]))
+
+
 # Example Usage
 if __name__ == "__main__":
 
@@ -97,5 +114,6 @@ if __name__ == "__main__":
 
     camera_formats = formats_filter_out_unwanted(parse_v4l2_formats(args.device))
     print(json.dumps(camera_formats, indent=2))
-#    print(camera_formats)
-	
+
+    v4l2_format_mapto_gst(camera_formats)
+    
