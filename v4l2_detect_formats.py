@@ -14,6 +14,9 @@ import subprocess
 import re
 import json
 
+import glob
+
+
 # Camera key words in device tree and its regular names
 camera_dict = {
     "AR0234": "ar0234",
