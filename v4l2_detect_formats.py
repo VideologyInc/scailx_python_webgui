@@ -14,6 +14,15 @@ import subprocess
 import re
 import json
 
+# Camera key words in device tree and its regular names
+camera_dict = {
+    "AR0234": "ar0234",
+    "lvds2mipi": "zoomblock",
+    "flir": "boson",
+    "imx900": "imx900",
+    "imx678": "imx678",
+    "imx662": "imx662",
+}
 
 Format_Exclude_List = ["NM12", "YUV4", "YM24"]
 Desc_Exclude_List = ["Bayer", "JPEG", "10-bit", "12-bit", "5-6-5"]
@@ -21,6 +30,24 @@ Fourcc_Dict = {"YUYV" : "YUY2", "NV12" : "NV12",
     "GREY" : "GRAY8", "Y16 " : "GRAY16_LE", "RGB3" : "RGB", 
     "BGR3" : "BGR", "XR24" : "BGRx", "AR24" : "BGRA"
     }
+
+# Use system chosen device tree name to detect camera type:   ar0234, imx, boson, or ZoomBlock "lvds"
+def detect_camera_type(device="/dev/video0"):
+    if "/dev/video" in device:
+        # Extract camera id
+        dev_str_len = len("/dev/video")
+        id = int(device[dev_str_len:])
+        # Find matching device tree name id.
+        cam_list = glob.iglob("/proc/device-tree/chosen/overlays/cam*")
+        cam_name = "cam" + str(id)
+        for s in cam_list:
+            if cam_name in s:
+                for key, val in camera_dict.items():
+                    if key in s:
+                        return val
+
+    # Cannot find: return default
+    return "ar0234"    
 
 
 def parse_v4l2_formats(device="/dev/video0"):
@@ -111,6 +138,9 @@ if __name__ == "__main__":
     )
 
     args = parser.parse_args()
+
+    camera_type = detect_camera_type(args.device)
+    print(camera_type)
 
     camera_formats = formats_filter_out_unwanted(parse_v4l2_formats(args.device))
     print(json.dumps(camera_formats, indent=2))
