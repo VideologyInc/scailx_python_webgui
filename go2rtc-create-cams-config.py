@@ -84,7 +84,7 @@ def detect_camera_by_name(cam):
 def get_camera_gst(name, vdev):
 
     # For Zoom Block camera through LVDS board, use newly created info list (from Visca commands).
-    if name=="zoomblock":
+    if name=="zoomblock" or name=="boson":
         cam_real_path = Path(vdev).resolve()
         info_list = camera_to_gst_list(str(cam_real_path))
     else:
