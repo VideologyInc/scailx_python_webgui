@@ -4,19 +4,25 @@
 
 File:   check_fix_hostname.py
 
+By:			jye@videologyinc.com
+
 Check Scailx camera hostname conflict using "avahi".
 Optinal fix the conflict if it is detected.
 Reboot camera to make it effective.
 
+2026.0303.  Added new option '--mac 1' to change hostname using MAC address.
+
 Usage:
 
-    python3 check_fix_hostname.py -h    (see help)
+    python3 check_fix_hostname.py -h    (See help.)
 
-    python3 check_fix_hostname.py       (just show conflict and hosname)
+    python3 check_fix_hostname.py       (Just show conflict and hosname.)
 
-    python3 check_fix_hostname.py -i 1     (show conflict, hosname, and IP addres)
+    python3 check_fix_hostname.py -i 1     (Show conflict, hosname, IP addres and MAC address.)
 
-    python3 check_fix_hostname.py -i 1 -f 1   (show conflict and fix it. Reboot camera to be effective.)
+    python3 check_fix_hostname.py --mac 1    (Change hostname using MAC address last 6 chars such as scailx-0E9A92. Reboot to be effective.)
+
+    python3 check_fix_hostname.py -i 1 -f 1   (Show conflict and fix it by avahi. Reboot scailx to be effective.)
 
 """
 
