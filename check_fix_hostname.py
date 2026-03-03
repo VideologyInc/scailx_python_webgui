@@ -25,6 +25,33 @@ import time
 import subprocess
 import socket
 
+import uuid
+import re
+
+# Get MAC address from local device and return as 00:0C:C6:0E:9A:92.
+def get_mac_address():
+    # Get the MAC address as a 48-bit integer
+    mac_num = uuid.getnode()
+
+    # If getnode() fails to find an address, it might return a random number.
+    # It's generally reliable for local execution.
+    if mac_num == 0:
+        print("MAC address not found or error occurred")
+        return ""
+
+    # Format the integer into a standard hex string with colons
+    hex_mac = str(":".join(re.findall('..', '%012x' % mac_num)))
+    return hex_mac.upper()
+
+# Create mac based hostname like scalix-AABBCC
+def get_mac_hostname(prefix, mac):
+    if len(mac) !=17:
+        return ""
+    # Use last 6 chars 9:10 + 12:13 + 14:15
+    mac_hostname = prefix + "-" + mac[9:11] + mac[12:14] + mac[15:]
+    return mac_hostname
+
+
 # Run hostname command to get local stored hostname
 def run_hostname():
     result = subprocess.run(
@@ -111,13 +138,17 @@ if __name__ == "__main__":
         prog="check_fix_hostname",
     )
     parser.add_argument(
-        "-p", "--prefix", type=str, default="scailx-ai", help="hostname prefix"
+        "-p", "--prefix", type=str, default="scailx", help="hostname prefix"
     )
     parser.add_argument(
-        "-i", "--ipaddress", type=int, default=0, help="Show IP address"
+        "-i", "--ipaddress", type=int, default=1, help="Show IP address"
     )
     parser.add_argument(
         "-f", "--fix", type=int, default=0, help="Fix hostname conflict"
+    )
+
+    parser.add_argument(
+        "--mac", type=int, default=0, help="Change hostname using last 6 digits of MAC address"
     )
 
     parser.add_argument(
@@ -138,12 +169,24 @@ if __name__ == "__main__":
 
     print(f"Conflict = {conflict}, avahi hostname = {hostname}")
 
+    # Always show IP and MAC address ;-)
+    mac = get_mac_address()
     if args.ipaddress:
         ip = ip_address = socket.gethostbyname_ex(hostname)[2][0]
         print("IP address = ", ip)
+        print("MAC address = ", mac)
 
+    # Force change host name using mac to scailx-AABBCC
+    mac_hostname = ""
+    if args.mac and mac !="":
+        mac_hostname = get_mac_hostname(args.prefix, mac)
+
+    if len(mac_hostname) >= 12:
+        res = change_hostname(mac_hostname)
+        print("hostname of this device is changed. Please remember it and use it to access for ssh and on web / VLC player after reboot.")
+        print(res)
     # Force manual fix.
-    if args.fix and len(args.manualhostname) >= 10:
+    elif args.fix and len(args.manualhostname) >= 10:
         # Fix by user entered hostname
         res = change_hostname(args.manualhostname)
         print(res)
