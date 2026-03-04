@@ -144,7 +144,7 @@ if __name__ == "__main__":
         prog="check_fix_hostname",
     )
     parser.add_argument(
-        "-p", "--prefix", type=str, default="scailx", help="hostname prefix"
+        "-p", "--prefix", type=str, default="sca", help="hostname prefix"
     )
     parser.add_argument(
         "-i", "--ipaddress", type=int, default=1, help="Show IP address"
@@ -187,7 +187,8 @@ if __name__ == "__main__":
     if args.mac and mac !="":
         mac_hostname = get_mac_hostname(args.prefix, mac)
 
-    if len(mac_hostname) >= 12:
+    # New hostname format example = 	sca-0E9A92	(total 10 chars)
+    if len(mac_hostname) >= 10:
         res = change_hostname(mac_hostname)
         print("hostname of this device is changed. Please remember it and use it to access for ssh and on web / VLC player after reboot.")
         print(res)
