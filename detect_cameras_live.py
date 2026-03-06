@@ -1,0 +1,128 @@
+#!/usr/bin/env python3
+
+"""
+
+File:   detect_cameras_live.py
+
+2026.0306.  Detect camera live connection using device tree and camera path.
+
+By:			jye@videologyinc.com
+
+"""
+
+import argparse
+import time
+import subprocess
+import re
+import json
+import glob
+import copy
+import math
+import os
+from pathlib import Path
+
+# Maximum camera index with /dev/video* to detect.
+MAX_CAMERA_ID = 2
+
+# Camera key words in device tree and its regular names
+camera_dict = {
+    "AR0234": "ar0234",
+    "lvds2mipi": "zoomblock",
+    "flir": "boson",
+    "imx900": "imx900",
+    "imx678": "imx678",
+    "imx662": "imx662",
+}
+
+
+# Check whether camera path is available.
+def is_device_available(device="/dev/video0"):
+    if os.path.exists(device):
+        return True
+    else:
+        return False
+
+# Given camera name in device tree folder, find its real device path.
+def devicetree_cam_to_path(camfile):
+    cam = os.path.basename(camfile)
+    camlist = re.findall(r"cam(\d+)-(\w+)", cam)
+    if len(camlist)==0:
+        return ""
+    idn, typ = camlist[0]
+    devlist = glob.glob(f"/dev/video*csi{idn}")
+    if len(devlist)==0:
+        return ""
+    vdev = devlist[0]
+    cam_real_path = Path(vdev).resolve()
+    return str(cam_real_path)
+    
+
+# Use system chosen device tree name to detect camera type:   ar0234, imx, boson, or ZoomBlock "lvds".
+# Return camera name, "unknown" or "".
+def detect_camera_type(device="/dev/video0"):
+    if is_device_available(device) and ("/dev/video" in device):
+        # Extract camera id
+        # dev_str_len = len("/dev/video")
+        # id = int(device[dev_str_len:])
+        # Find matching device tree name id.
+        cam_list = glob.iglob("/proc/device-tree/chosen/overlays/cam*")
+        for s in cam_list:
+            cam_real_path = devicetree_cam_to_path(s)
+            if cam_real_path == device:
+                # print(s, " => ", cam_real_path)
+                for key, val in camera_dict.items():
+                    if key in s:
+                        return val
+
+        # Device is available nut cannot find: return unknown
+        return "unknown"
+    else:
+        return ""
+
+
+# Detect cameras with /dev/video* and return dict with camera_path : camera_name.
+def detect_cameras():
+    camera_status = {}
+    prefix = "/dev/video"
+    for id in range(0, MAX_CAMERA_ID):
+        camera_path = prefix + str(id)
+        camera_name = detect_camera_type(camera_path)
+        if camera_name != "":
+            camera_status[camera_path] = camera_name
+
+    return camera_status
+
+
+# Given initial camera status dict, use infinite loopt to check camera status every few seconds.
+def monitor_cameras_loop(camera_status, interval):
+    while True:
+        current_camera_status = detect_cameras()
+        if current_camera_status == camera_status:
+            print("Camera status unchanged")
+        else:
+            print("Camera status changed: ", current_camera_status)
+            camera_status = current_camera_status
+        time.sleep(interval)
+
+
+if __name__ == "__main__":
+
+    parser = argparse.ArgumentParser(
+        description="Detect cameras live",
+        prog="detect_cameras_live",
+    )
+    parser.add_argument(
+        "-i",
+        "--interval",
+        type=int,
+        default="5",
+        help="Interval in seconds to check cameras",
+    )
+
+    args = parser.parse_args()
+
+    # Get current camera status
+    camera_status = detect_cameras()
+    print(camera_status)
+
+    monitor_cameras_loop(camera_status, args.interval)
