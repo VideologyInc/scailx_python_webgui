@@ -20,6 +20,14 @@ import copy
 import math
 import os
 from pathlib import Path
+import io
+import warnings
+
+warnings.filterwarnings('ignore')
+os.environ['OPENCV_LOG_LEVEL'] = 'OFF'
+os.environ['GST_DEBUG'] = '*:0' 
+
+import cv2
 
 # Maximum camera index with /dev/video* to detect.
 MAX_CAMERA_ID = 3
@@ -34,6 +42,21 @@ camera_dict = {
     "imx662": "imx662",
 }
 
+# Check camera on/off using OpenCV VideoCapture().
+def check_camera(device_path="/dev/video0"):
+    cap = cv2.VideoCapture(device_path)
+    
+    # Check if the camera is opened successfully
+    if cap.isOpened():
+        ret, frame = cap.read()
+        cap.release()
+        if ret:
+            return True
+        else:
+            return False
+    else:
+    # print("Camera is OFF or not accessible.")
+        return False
 
 # Check whether camera path is available.
 def is_device_available(device="/dev/video0"):
@@ -80,7 +103,7 @@ def detect_camera_type(device="/dev/video0"):
         return "", ""
 
 
-# Detect cameras with /dev/video* and return dict with camera_path : (camera_name, devicetree_name).
+# Detect cameras with /dev/video* and return dict with camera_path : (camera_name, devicetree_name, on/off).
 def detect_cameras():
     camera_status = {}
     prefix = "/dev/video"
@@ -88,7 +111,9 @@ def detect_cameras():
         camera_path = prefix + str(id)
         camera_name, devicetree_name = detect_camera_type(camera_path)
         if camera_name != "":
-            camera_status[camera_path] = (camera_name, devicetree_name)
+            # Check camera on/off using OpenCV.
+            is_on = check_camera(camera_path)
+            camera_status[camera_path] = (camera_name, devicetree_name, is_on)
 
     return camera_status
 
