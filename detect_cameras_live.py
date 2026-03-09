@@ -22,7 +22,7 @@ import os
 from pathlib import Path
 
 # Maximum camera index with /dev/video* to detect.
-MAX_CAMERA_ID = 2
+MAX_CAMERA_ID = 3
 
 # Camera key words in device tree and its regular names
 camera_dict = {
@@ -58,7 +58,7 @@ def devicetree_cam_to_path(camfile):
     
 
 # Use system chosen device tree name to detect camera type:   ar0234, imx, boson, or ZoomBlock "lvds".
-# Return camera name, "unknown" or "".
+# Return tuple of (camera name, device tree name), ("unknown", "unknown") or ("", "").
 def detect_camera_type(device="/dev/video0"):
     if is_device_available(device) and ("/dev/video" in device):
         # Extract camera id
@@ -72,23 +72,23 @@ def detect_camera_type(device="/dev/video0"):
                 # print(s, " => ", cam_real_path)
                 for key, val in camera_dict.items():
                     if key in s:
-                        return val
+                        return val, s
 
         # Device is available nut cannot find: return unknown
-        return "unknown"
+        return "unknown", "unknown"
     else:
-        return ""
+        return "", ""
 
 
-# Detect cameras with /dev/video* and return dict with camera_path : camera_name.
+# Detect cameras with /dev/video* and return dict with camera_path : (camera_name, devicetree_name).
 def detect_cameras():
     camera_status = {}
     prefix = "/dev/video"
     for id in range(0, MAX_CAMERA_ID):
         camera_path = prefix + str(id)
-        camera_name = detect_camera_type(camera_path)
+        camera_name, devicetree_name = detect_camera_type(camera_path)
         if camera_name != "":
-            camera_status[camera_path] = camera_name
+            camera_status[camera_path] = (camera_name, devicetree_name)
 
     return camera_status
 
