@@ -59,7 +59,7 @@ camera_gst_dict = {
     "imx900": [
         (1920, 1080, "default", "video/x-raw,width=1920,height=1080,framerate=15/1,format=YUY2"),
         (1280, 720, "default", "video/x-raw,width=1280,height=720,framerate=15/1,format=YUY2"),
-        (2048, 1536, "default", "video/x-raw,width=2048,height=1536,framerate=15/1,format=YUY2"),
+        # Not supported by vpuenc_h264 (2048, 1536, "default", "video/x-raw,width=2048,height=1536,framerate=15/1,format=YUY2"),
         (1024, 768, "default", "video/x-raw,width=1024,height=768,framerate=15/1,format=YUY2"),
         (1008, 704, "default", "video/x-raw,width=1008,height=704,framerate=15/1,format=YUY2"),
     ],
