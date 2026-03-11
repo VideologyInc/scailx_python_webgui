@@ -40,6 +40,7 @@ camera_dict = {
     "imx900": "imx900",
     "imx678": "imx678",
     "imx662": "imx662",
+    "usb" : "usb",
 }
 
 # Check camera on/off using OpenCV VideoCapture().
@@ -84,9 +85,6 @@ def devicetree_cam_to_path(camfile):
 # Return tuple of (camera name, device tree name), ("unknown", "unknown") or ("", "").
 def detect_camera_type(device="/dev/video0"):
     if is_device_available(device) and ("/dev/video" in device):
-        # Extract camera id
-        # dev_str_len = len("/dev/video")
-        # id = int(device[dev_str_len:])
         # Find matching device tree name id.
         cam_list = glob.iglob("/proc/device-tree/chosen/overlays/cam*")
         for s in cam_list:
@@ -97,7 +95,17 @@ def detect_camera_type(device="/dev/video0"):
                     if key in s:
                         return val, s
 
-        # Device is available nut cannot find: return unknown
+        # Cannot find in device tree, try usb device path in "/dev/v4l/by-id/"
+        usb_list = glob.iglob("/dev/v4l/by-id/*")
+        for s in usb_list:
+            cam_real_path = str(Path(s).resolve())
+            if cam_real_path == device:
+                # Found in usb device path
+                for key, val in camera_dict.items():
+                    if key in s:
+                        return val, s
+
+        # Device is available but cannot find: return unknown
         return "unknown", "unknown"
     else:
         return "", ""
