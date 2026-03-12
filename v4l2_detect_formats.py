@@ -171,7 +171,7 @@ def camera_to_gst_list(device):
 
     camera_formats = formats_filter_out_unwanted(parse_v4l2_formats(device))
     # Add full resolution and framerate support for ZoomBlock (from visca commands)
-    print(camera_type)
+    # print(camera_type)
     if "zoomblock"==camera_type:
         print("Create new format list for ZoomBlock cameras.")
         camera_formats = add_formats_lvds(camera_formats)

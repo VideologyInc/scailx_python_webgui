@@ -1,0 +1,16 @@
+# go2rtc.service timer
+[Unit]
+Description=go2rtc timer to run go2rtc.service every few seconds.
+
+[Timer]
+# Every minute
+# OnCalendar=*:*:*/1
+# Every 20 seconds.
+OnCalendar=*:*:0/20
+AccuracySec=1s
+
+Unit=go2rtc.service
+Persistent=true
+
+[Install]
+WantedBy=timers.target

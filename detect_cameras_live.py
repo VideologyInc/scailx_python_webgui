@@ -95,9 +95,12 @@ def detect_camera_type(device="/dev/video0"):
                     if key in s:
                         return val, s
 
-        # Cannot find in device tree, try usb device path in "/dev/v4l/by-id/"
-        usb_list = glob.iglob("/dev/v4l/by-id/*")
+        # Cannot find in device tree, try usb device path in "/dev/v4l/by-path/"
+        usb_list = glob.glob("/dev/v4l/by-path/*")
         for s in usb_list:
+            # Only check usb camera path
+            if "usb" not in s:
+                continue
             cam_real_path = str(Path(s).resolve())
             if cam_real_path == device:
                 # Found in usb device path
@@ -126,8 +129,17 @@ def detect_cameras():
     return camera_status
 
 
+def restart_go2rtc():
+    try:
+        result = subprocess.run(["systemctl", "restart", "go2rtc.service"], capture_output=True, text=True, check=True)
+        print("Restart go2rtc: ", result.stdout)
+    except Exception as e:
+        print(f"Restart go2rtc failed: {e}")
+
+
 # Given initial camera status dict, use infinite loopt to check camera status every few seconds.
 def monitor_cameras_loop(camera_status, interval):
+    nitems = len(camera_status)
     while True:
         current_camera_status = detect_cameras()
         if current_camera_status == camera_status:
@@ -135,6 +147,12 @@ def monitor_cameras_loop(camera_status, interval):
         else:
             print("Camera status changed: ", current_camera_status)
             camera_status = current_camera_status
+            new_items = len(camera_status)
+            if nitems != new_items:
+                # Camera connection changed: restart go2rtc service.
+                nitems = new_items
+                restart_go2rtc()
+
         time.sleep(interval)
 
 
