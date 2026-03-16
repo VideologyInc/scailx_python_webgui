@@ -32,7 +32,7 @@ Run following program.
 It will loop to check camera connection every 5 seconds. 
 With camera connection status changed, it will restart go2rtc service to make it effective on webrtc port1984.
 
-python3 /usr/lib/python3.12/site-packages/vdlg_lvds/detect_camera_live.py
+python3 /usr/lib/python3.12/site-packages/vdlg_lvds/detect_cameras_live.py
 
 
 
