@@ -17,4 +17,4 @@ def xml_to_json(xml_name, json_name):
 
 
 
-xml_to_json("IMX900_Basic_1920x1080.xml", "IMX900_Basic_1920x1080.json")
+xml_to_json("IMX662_Basic_1920x1080.xml", "IMX662_Basic_1920x1080.json")

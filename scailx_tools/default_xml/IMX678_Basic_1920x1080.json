@@ -1,0 +1,2314 @@
+{
+    "matfile": {
+        "header": {
+            "@type": "struct",
+            "@size": "[1 1]",
+            "creation_date": {
+                "@index": "1",
+                "@type": "char",
+                "@size": "[1 11]",
+                "#text": "18-Jan-2024"
+            },
+            "creator": {
+                "@index": "1",
+                "@type": "char",
+                "@size": "[1 6]",
+                "#text": "Framos"
+            },
+            "sensor_name": {
+                "@index": "1",
+                "@type": "char",
+                "@size": "[1 6]",
+                "#text": "IMX678"
+            },
+            "sample_name": {
+                "@index": "1",
+                "@type": "char",
+                "@size": "[1 37]",
+                "#text": "Basic_1920x1080"
+            },
+            "generator_version": {
+                "@index": "1",
+                "@type": "char",
+                "@size": "[1 7]",
+                "#text": "v2.0.19"
+            },
+            "resolution": {
+                "@index": "1",
+                "@type": "cell",
+                "@size": "[1 1]",
+                "cell": {
+                    "@index": "1",
+                    "@type": "struct",
+                    "@size": "[1 1]",
+                    "name": {
+                        "@index": "1",
+                        "@type": "char",
+                        "@size": "[1 9]",
+                        "#text": "1920x1080"
+                    },
+                    "id": {
+                        "@index": "1",
+                        "@type": "char",
+                        "@size": "[1 10]",
+                        "#text": "0x00000001"
+                    },
+                    "width": {
+                        "@index": "1",
+                        "@type": "double",
+                        "@size": "[1 1]",
+                        "#text": "[ 1920]"
+                    },
+                    "height": {
+                        "@index": "1",
+                        "@type": "double",
+                        "@size": "[1 1]",
+                        "#text": "[ 1080]"
+                    },
+                    "framerate": {
+                        "@index": "1",
+                        "@type": "cell",
+                        "@size": "[1 3]",
+                        "cell": [
+                            {
+                                "@index": "1",
+                                "@type": "struct",
+                                "@size": "[1 1]",
+                                "name": {
+                                    "@index": "1",
+                                    "@type": "char",
+                                    "@size": "[1 6]",
+                                    "#text": "FPS_15"
+                                },
+                                "fps": {
+                                    "@index": "1",
+                                    "@type": "double",
+                                    "@size": "[1 1]",
+                                    "#text": "[ 14.9916]"
+                                }
+                            },
+                            {
+                                "@index": "2",
+                                "@type": "struct",
+                                "@size": "[1 1]",
+                                "name": {
+                                    "@index": "1",
+                                    "@type": "char",
+                                    "@size": "[1 6]",
+                                    "#text": "FPS_10"
+                                },
+                                "fps": {
+                                    "@index": "1",
+                                    "@type": "double",
+                                    "@size": "[1 1]",
+                                    "#text": "[ 9.9944]"
+                                }
+                            },
+                            {
+                                "@index": "3",
+                                "@type": "struct",
+                                "@size": "[1 1]",
+                                "name": {
+                                    "@index": "1",
+                                    "@type": "char",
+                                    "@size": "[1 6]",
+                                    "#text": "FPS_05"
+                                },
+                                "fps": {
+                                    "@index": "1",
+                                    "@type": "double",
+                                    "@size": "[1 1]",
+                                    "#text": "[ 4.9972]"
+                                }
+                            }
+                        ]
+                    }
+                }
+            }
+        },
+        "sensor": {
+            "@type": "struct",
+            "@size": "[1 1]",
+            "AWB": {
+                "@index": "1",
+                "@type": "struct",
+                "@size": "[1 1]",
+                "globals": {
+                    "@index": "1",
+                    "@type": "cell",
+                    "@size": "[1 1]",
+                    "cell": {
+                        "@index": "1",
+                        "@type": "struct",
+                        "@size": "[1 1]",
+                        "name": {
+                            "@index": "1",
+                            "@type": "char",
+                            "@size": "[1 9]",
+                            "#text": "1920x1080"
+                        },
+                        "resolution": {
+                            "@index": "1",
+                            "@type": "char",
+                            "@size": "[1 9]",
+                            "#text": "1920x1080"
+                        },
+                        "SVDMeanValue": {
+                            "@index": "1",
+                            "@type": "double",
+                            "@size": "[1 3]",
+                            "#text": "[0.350821 0.461451 0.18773]"
+                        },
+                        "PCAMatrix": {
+                            "@index": "1",
+                            "@type": "double",
+                            "@size": "[3 2]",
+                            "#text": "[-0.747621 0.0895615 0.658059 0.328222 -0.81157 0.48335]"
+                        },
+                        "CenterLine": {
+                            "@index": "1",
+                            "@type": "double",
+                            "@size": "[1 3]",
+                            "#text": "[-0.840503 -0.541807 -2.5476]"
+                        },
+                        "afRg2": {
+                            "@index": "1",
+                            "@type": "double",
+                            "@size": "[1 16]",
+                            "#text": "[1.20944 1.25673 1.30402 1.35132 1.39861 1.4459 1.4932 1.54049 1.58778 1.63508 1.68237 1.72966 1.77696 1.82425 1.87154 1.9188]"
+                        },
+                        "afMaxDist2": {
+                            "@index": "1",
+                            "@type": "double",
+                            "@size": "[1 16]",
+                            "#text": "[0.01049 0.0067139 0.00344454 0.000598565 -0.0017099 -0.00358594 -0.00493888 -0.00576626 -0.0060659 -0.00582415 -0.00500751 -0.00359477 -0.00162514 0.000989081 0.00422767 0.010466]"
+                        },
+                        "afRg1": {
+                            "@index": "1",
+                            "@type": "double",
+                            "@size": "[1 16]",
+                            "#text": "[1.20944 1.25673 1.30402 1.35132 1.39861 1.4459 1.4932 1.54049 1.58778 1.63508 1.68237 1.72966 1.77696 1.82425 1.87154 1.9188]"
+                        },
+                        "afMaxDist1": {
+                            "@index": "1",
+                            "@type": "double",
+                            "@size": "[1 16]",
+                            "#text": "[-0.000490041 0.0032861 0.00655546 0.00940144 0.0117099 0.0135859 0.0149389 0.0157663 0.0160659 0.0158242 0.0150075 0.0135948 0.0116251 0.00901092 0.00577233 -0.00046563]"
+                        },
+                        "afGlobalFade2": {
+                            "@index": "1",
+                            "@type": "double",
+                            "@size": "[1 16]",
+                            "#text": "[0.8 0.877256 0.954511 1.03177 1.10902 1.18628 1.26353 1.34079 1.41805 1.4953 1.57256 1.64981 1.72707 1.80432 1.88158 1.9588]"
+                        },
+                        "afGlobalGainDistance2": {
+                            "@index": "1",
+                            "@type": "double",
+                            "@size": "[1 16]",
+                            "#text": "[0.155026 0.143403 0.132925 0.123335 0.114897 0.107527 0.101224 0.0961947 0.09238 0.0900132 0.0889725 0.0893575 0.091282 0.0947975 0.100008 0.11196]"
+                        },
+                        "afGlobalFade1": {
+                            "@index": "1",
+                            "@type": "double",
+                            "@size": "[1 16]",
+                            "#text": "[0.8 0.877256 0.954511 1.03177 1.10902 1.18628 1.26353 1.34079 1.41805 1.4953 1.57256 1.64981 1.72707 1.80432 1.88158 1.9588]"
+                        },
+                        "afGlobalGainDistance1": {
+                            "@index": "1",
+                            "@type": "double",
+                            "@size": "[1 16]",
+                            "#text": "[0.0449741 0.0565967 0.0670752 0.0766648 0.0851034 0.0924732 0.0987762 0.103805 0.10762 0.109987 0.111027 0.110643 0.108718 0.105203 0.099992 0.088042]"
+                        },
+                        "fRgProjIndoorMin": {
+                            "@index": "1",
+                            "@type": "double",
+                            "@size": "[1 1]",
+                            "#text": "[ 1.2094]"
+                        },
+                        "fRgProjMax": {
+                            "@index": "1",
+                            "@type": "double",
+                            "@size": "[1 1]",
+                            "#text": "[ 1.9188]"
+                        },
+                        "fRgProjMaxSky": {
+                            "@index": "1",
+                            "@type": "double",
+                            "@size": "[1 1]",
+                            "#text": "[ 1.9588]"
+                        },
+                        "fRgProjOutdoorMin": {
+                            "@index": "1",
+                            "@type": "double",
+                            "@size": "[1 1]",
+                            "#text": "[ 1.6351]"
+                        },
+                        "awb_clip_outdoor": {
+                            "@index": "1",
+                            "@type": "char",
+                            "@size": "[1 3]",
+                            "#text": "D65"
+                        },
+                        "K_Factor": {
+                            "@index": "1",
+                            "@type": "double",
+                            "@size": "[1 1]",
+                            "#text": "[ 4.5676]"
+                        },
+                        "afFade2": {
+                            "@index": "1",
+                            "@type": "double",
+                            "@size": "[1 6]",
+                            "#text": "[0.75 1.28836 1.77672 2.164 2.6 3.0618]"
+                        },
+                        "afCbMinRegionMax": {
+                            "@index": "1",
+                            "@type": "double",
+                            "@size": "[1 6]",
+                            "#text": "[114 114 105 95 95 90]"
+                        },
+                        "afCrMinRegionMax": {
+                            "@index": "1",
+                            "@type": "double",
+                            "@size": "[1 6]",
+                            "#text": "[83 83 110 120 122 128]"
+                        },
+                        "afMaxCSumRegionMax": {
+                            "@index": "1",
+                            "@type": "double",
+                            "@size": "[1 6]",
+                            "#text": "[28 27 18 16 9 9]"
+                        },
+                        "afCbMinRegionMin": {
+                            "@index": "1",
+                            "@type": "double",
+                            "@size": "[1 6]",
+                            "#text": "[123 123 123 123 123 120]"
+                        },
+                        "afCrMinRegionMin": {
+                            "@index": "1",
+                            "@type": "double",
+                            "@size": "[1 6]",
+                            "#text": "[123 123 123 123 123 126]"
+                        },
+                        "afMaxCSumRegionMin": {
+                            "@index": "1",
+                            "@type": "double",
+                            "@size": "[1 6]",
+                            "#text": "[5 5 5 5 5 5]"
+                        },
+                        "RegionSize": {
+                            "@index": "1",
+                            "@type": "double",
+                            "@size": "[1 1]",
+                            "#text": "[ 1]"
+                        },
+                        "RegionSizeInc": {
+                            "@index": "1",
+                            "@type": "double",
+                            "@size": "[1 1]",
+                            "#text": "[ 0.8]"
+                        },
+                        "RegionSizeDec": {
+                            "@index": "1",
+                            "@type": "double",
+                            "@size": "[1 1]",
+                            "#text": "[ 0.05]"
+                        },
+                        "IIR": {
+                            "@index": "1",
+                            "@type": "struct",
+                            "@size": "[1 1]",
+                            "DampCoefAdd": {
+                                "@index": "1",
+                                "@type": "double",
+                                "@size": "[1 1]",
+                                "#text": "[ 0.05]"
+                            },
+                            "DampCoefSub": {
+                                "@index": "1",
+                                "@type": "double",
+                                "@size": "[1 1]",
+                                "#text": "[ 0.05]"
+                            },
+                            "DampFilterThreshold": {
+                                "@index": "1",
+                                "@type": "double",
+                                "@size": "[1 1]",
+                                "#text": "[ 0.4]"
+                            },
+                            "DampingCoefMin": {
+                                "@index": "1",
+                                "@type": "double",
+                                "@size": "[1 1]",
+                                "#text": "[ 0.5]"
+                            },
+                            "DampingCoefMax": {
+                                "@index": "1",
+                                "@type": "double",
+                                "@size": "[1 1]",
+                                "#text": "[ 0.9]"
+                            },
+                            "DampingCoefInit": {
+                                "@index": "1",
+                                "@type": "double",
+                                "@size": "[1 1]",
+                                "#text": "[ 0.5]"
+                            },
+                            "ExpPriorFilterSizeMax": {
+                                "@index": "1",
+                                "@type": "double",
+                                "@size": "[1 1]",
+                                "#text": "[ 50]"
+                            },
+                            "ExpPriorFilterSizeMin": {
+                                "@index": "1",
+                                "@type": "double",
+                                "@size": "[1 1]",
+                                "#text": "[ 1]"
+                            },
+                            "ExpPriorMiddle": {
+                                "@index": "1",
+                                "@type": "double",
+                                "@size": "[1 1]",
+                                "#text": "[ 0.5]"
+                            }
+                        }
+                    }
+                },
+                "illumination": {
+                    "@index": "1",
+                    "@type": "cell",
+                    "@size": "[1 3]",
+                    "cell": [
+                        {
+                            "@index": "1",
+                            "@type": "struct",
+                            "@size": "[1 1]",
+                            "name": {
+                                "@index": "1",
+                                "@type": "char",
+                                "@size": "[1 1]",
+                                "#text": "A"
+                            },
+                            "doorType": {
+                                "@index": "1",
+                                "@type": "char",
+                                "@size": "[1 6]",
+                                "#text": "Indoor"
+                            },
+                            "GMM": {
+                                "@index": "1",
+                                "@type": "struct",
+                                "@size": "[1 1]",
+                                "invCovMatrix": {
+                                    "@index": "1",
+                                    "@type": "double",
+                                    "@size": "[2 2]",
+                                    "#text": "[2651.53 3387.15 3387.15 7258.5713]"
+                                },
+                                "GaussianScalingFactor": {
+                                    "@index": "1",
+                                    "@type": "double",
+                                    "@size": "[1 1]",
+                                    "#text": "[ 443.7393]"
+                                },
+                                "tau": {
+                                    "@index": "1",
+                                    "@type": "double",
+                                    "@size": "[1 2]",
+                                    "#text": "[0.75 0.9]"
+                                },
+                                "GaussianMeanValue": {
+                                    "@index": "1",
+                                    "@type": "double",
+                                    "@size": "[1 2]",
+                                    "#text": "[-0.0306101 -0.0036106]"
+                                }
+                            },
+                            "aLSC": {
+                                "@index": "1",
+                                "@type": "cell",
+                                "@size": "[1 1]",
+                                "cell": {
+                                    "@index": "1",
+                                    "@type": "struct",
+                                    "@size": "[1 1]",
+                                    "resolution": {
+                                        "@index": "1",
+                                        "@type": "char",
+                                        "@size": "[1 9]",
+                                        "#text": "1920x1080"
+                                    },
+                                    "LSC_PROFILE_LIST": {
+                                        "@index": "1",
+                                        "@type": "char",
+                                        "@size": "[1 15]",
+                                        "#text": "1920x1080_A_100"
+                                    }
+                                }
+                            },
+                            "manualWB": {
+                                "@index": "1",
+                                "@type": "double",
+                                "@size": "[1 4]",
+                                "#text": "[1.23923 1 1 2.7836]"
+                            },
+                            "manualccMatrix": {
+                                "@index": "1",
+                                "@type": "double",
+                                "@size": "[3 3]",
+                                "#text": "[1.58915 0.0377625 -0.616429 -0.945174 2.52794 -0.537235 -0.217771 -1.76346 2.9884]"
+                            },
+                            "manualccOffsets": {
+                                "@index": "1",
+                                "@type": "double",
+                                "@size": "[1 3]",
+                                "#text": "[-36.4461 -38.1612 -29.3263]"
+                            },
+                            "awbType": {
+                                "@index": "1",
+                                "@type": "char",
+                                "@size": "[1 4]",
+                                "#text": "AUTO"
+                            },
+                            "sat_CT": {
+                                "@index": "1",
+                                "@type": "struct",
+                                "@size": "[1 1]",
+                                "gains": {
+                                    "@index": "1",
+                                    "@type": "double",
+                                    "@size": "[1 4]",
+                                    "#text": "[1 2 4 8]"
+                                },
+                                "sat": {
+                                    "@index": "1",
+                                    "@type": "double",
+                                    "@size": "[1 4]",
+                                    "#text": "[100 95 90 74]"
+                                }
+                            },
+                            "vig_CT": {
+                                "@index": "1",
+                                "@type": "struct",
+                                "@size": "[1 1]",
+                                "gains": {
+                                    "@index": "1",
+                                    "@type": "double",
+                                    "@size": "[1 4]",
+                                    "#text": "[1 2 4 8]"
+                                },
+                                "vig": {
+                                    "@index": "1",
+                                    "@type": "double",
+                                    "@size": "[1 4]",
+                                    "#text": "[100 95 90 70]"
+                                }
+                            },
+                            "aCC": {
+                                "@index": "1",
+                                "@type": "struct",
+                                "@size": "[1 1]",
+                                "CC_PROFILE_LIST": {
+                                    "@index": "1",
+                                    "@type": "char",
+                                    "@size": "[1 5]",
+                                    "#text": "A_104"
+                                }
+                            }
+                        },
+                        {
+                            "@index": "2",
+                            "@type": "struct",
+                            "@size": "[1 1]",
+                            "name": {
+                                "@index": "1",
+                                "@type": "char",
+                                "@size": "[1 3]",
+                                "#text": "D65"
+                            },
+                            "doorType": {
+                                "@index": "1",
+                                "@type": "char",
+                                "@size": "[1 7]",
+                                "#text": "Outdoor"
+                            },
+                            "GMM": {
+                                "@index": "1",
+                                "@type": "struct",
+                                "@size": "[1 1]",
+                                "invCovMatrix": {
+                                    "@index": "1",
+                                    "@type": "double",
+                                    "@size": "[2 2]",
+                                    "#text": "[533.326 -38.9322 -38.9322 2476.1192]"
+                                },
+                                "GaussianScalingFactor": {
+                                    "@index": "1",
+                                    "@type": "double",
+                                    "@size": "[1 1]",
+                                    "#text": "[ 182.7902]"
+                                },
+                                "tau": {
+                                    "@index": "1",
+                                    "@type": "double",
+                                    "@size": "[1 2]",
+                                    "#text": "[1 1]"
+                                },
+                                "GaussianMeanValue": {
+                                    "@index": "1",
+                                    "@type": "double",
+                                    "@size": "[1 2]",
+                                    "#text": "[0.145974 -0.0036106]"
+                                }
+                            },
+                            "aLSC": {
+                                "@index": "1",
+                                "@type": "cell",
+                                "@size": "[1 1]",
+                                "cell": {
+                                    "@index": "1",
+                                    "@type": "struct",
+                                    "@size": "[1 1]",
+                                    "resolution": {
+                                        "@index": "1",
+                                        "@type": "char",
+                                        "@size": "[1 9]",
+                                        "#text": "1920x1080"
+                                    },
+                                    "LSC_PROFILE_LIST": {
+                                        "@index": "1",
+                                        "@type": "char",
+                                        "@size": "[1 16]",
+                                        "#text": "1920x1080_D65_90"
+                                    }
+                                }
+                            },
+                            "manualWB": {
+                                "@index": "1",
+                                "@type": "double",
+                                "@size": "[1 4]",
+                                "#text": "[1.98523 1 1 1.6928]"
+                            },
+                            "manualccMatrix": {
+                                "@index": "1",
+                                "@type": "double",
+                                "@size": "[3 3]",
+                                "#text": "[2.1243 -0.955239 -0.160056 -0.585798 2.27098 -0.616837 -0.0192654 -0.974804 2.036]"
+                            },
+                            "manualccOffsets": {
+                                "@index": "1",
+                                "@type": "double",
+                                "@size": "[1 3]",
+                                "#text": "[-36.8576 -44.6401 -45.1663]"
+                            },
+                            "awbType": {
+                                "@index": "1",
+                                "@type": "char",
+                                "@size": "[1 4]",
+                                "#text": "AUTO"
+                            },
+                            "sat_CT": {
+                                "@index": "1",
+                                "@type": "struct",
+                                "@size": "[1 1]",
+                                "gains": {
+                                    "@index": "1",
+                                    "@type": "double",
+                                    "@size": "[1 4]",
+                                    "#text": "[1 2 4 8]"
+                                },
+                                "sat": {
+                                    "@index": "1",
+                                    "@type": "double",
+                                    "@size": "[1 4]",
+                                    "#text": "[100 95 90 74]"
+                                }
+                            },
+                            "vig_CT": {
+                                "@index": "1",
+                                "@type": "struct",
+                                "@size": "[1 1]",
+                                "gains": {
+                                    "@index": "1",
+                                    "@type": "double",
+                                    "@size": "[1 4]",
+                                    "#text": "[1 2 4 8]"
+                                },
+                                "vig": {
+                                    "@index": "1",
+                                    "@type": "double",
+                                    "@size": "[1 4]",
+                                    "#text": "[100 95 90 70]"
+                                }
+                            },
+                            "aCC": {
+                                "@index": "1",
+                                "@type": "struct",
+                                "@size": "[1 1]",
+                                "CC_PROFILE_LIST": {
+                                    "@index": "1",
+                                    "@type": "char",
+                                    "@size": "[1 7]",
+                                    "#text": "D65_109"
+                                }
+                            }
+                        },
+                        {
+                            "@index": "3",
+                            "@type": "struct",
+                            "@size": "[1 1]",
+                            "name": {
+                                "@index": "1",
+                                "@type": "char",
+                                "@size": "[1 10]",
+                                "#text": "F11 (TL84)"
+                            },
+                            "doorType": {
+                                "@index": "1",
+                                "@type": "char",
+                                "@size": "[1 6]",
+                                "#text": "Indoor"
+                            },
+                            "GMM": {
+                                "@index": "1",
+                                "@type": "struct",
+                                "@size": "[1 1]",
+                                "invCovMatrix": {
+                                    "@index": "1",
+                                    "@type": "double",
+                                    "@size": "[2 2]",
+                                    "#text": "[797.808 508.94 508.94 2977.8141]"
+                                },
+                                "GaussianScalingFactor": {
+                                    "@index": "1",
+                                    "@type": "double",
+                                    "@size": "[1 1]",
+                                    "#text": "[ 231.5529]"
+                                },
+                                "tau": {
+                                    "@index": "1",
+                                    "@type": "double",
+                                    "@size": "[1 2]",
+                                    "#text": "[0.75 0.9]"
+                                },
+                                "GaussianMeanValue": {
+                                    "@index": "1",
+                                    "@type": "double",
+                                    "@size": "[1 2]",
+                                    "#text": "[0.0300834 -0.019091]"
+                                }
+                            },
+                            "aLSC": {
+                                "@index": "1",
+                                "@type": "cell",
+                                "@size": "[1 1]",
+                                "cell": {
+                                    "@index": "1",
+                                    "@type": "struct",
+                                    "@size": "[1 1]",
+                                    "resolution": {
+                                        "@index": "1",
+                                        "@type": "char",
+                                        "@size": "[1 9]",
+                                        "#text": "1920x1080"
+                                    },
+                                    "LSC_PROFILE_LIST": {
+                                        "@index": "1",
+                                        "@type": "char",
+                                        "@size": "[1 16]",
+                                        "#text": "1920x1080_F11_90"
+                                    }
+                                }
+                            },
+                            "manualWB": {
+                                "@index": "1",
+                                "@type": "double",
+                                "@size": "[1 4]",
+                                "#text": "[1.48927 1 1 2.4188]"
+                            },
+                            "manualccMatrix": {
+                                "@index": "1",
+                                "@type": "double",
+                                "@size": "[3 3]",
+                                "#text": "[2.05797 -0.842641 -0.197003 -0.842204 2.361 -0.441285 -0.076882 -1.19612 2.2813]"
+                            },
+                            "manualccOffsets": {
+                                "@index": "1",
+                                "@type": "double",
+                                "@size": "[1 3]",
+                                "#text": "[-32.4424 -44.2278 -33.9074]"
+                            },
+                            "awbType": {
+                                "@index": "1",
+                                "@type": "char",
+                                "@size": "[1 4]",
+                                "#text": "AUTO"
+                            },
+                            "sat_CT": {
+                                "@index": "1",
+                                "@type": "struct",
+                                "@size": "[1 1]",
+                                "gains": {
+                                    "@index": "1",
+                                    "@type": "double",
+                                    "@size": "[1 4]",
+                                    "#text": "[1 2 4 8]"
+                                },
+                                "sat": {
+                                    "@index": "1",
+                                    "@type": "double",
+                                    "@size": "[1 4]",
+                                    "#text": "[100 95 90 74]"
+                                }
+                            },
+                            "vig_CT": {
+                                "@index": "1",
+                                "@type": "struct",
+                                "@size": "[1 1]",
+                                "gains": {
+                                    "@index": "1",
+                                    "@type": "double",
+                                    "@size": "[1 4]",
+                                    "#text": "[1 2 4 8]"
+                                },
+                                "vig": {
+                                    "@index": "1",
+                                    "@type": "double",
+                                    "@size": "[1 4]",
+                                    "#text": "[100 95 90 70]"
+                                }
+                            },
+                            "aCC": {
+                                "@index": "1",
+                                "@type": "struct",
+                                "@size": "[1 1]",
+                                "CC_PROFILE_LIST": {
+                                    "@index": "1",
+                                    "@type": "char",
+                                    "@size": "[1 7]",
+                                    "#text": "F11_108"
+                                }
+                            }
+                        }
+                    ]
+                }
+            },
+            "LSC": {
+                "@index": "1",
+                "@type": "cell",
+                "@size": "[1 4]",
+                "cell": [
+                    {
+                        "@index": "1",
+                        "@type": "struct",
+                        "@size": "[1 1]",
+                        "name": {
+                            "@index": "1",
+                            "@type": "char",
+                            "@size": "[1 15]",
+                            "#text": "1920x1080_A_100"
+                        },
+                        "resolution": {
+                            "@index": "1",
+                            "@type": "char",
+                            "@size": "[1 9]",
+                            "#text": "1920x1080"
+                        },
+                        "illumination": {
+                            "@index": "1",
+                            "@type": "char",
+                            "@size": "[1 1]",
+                            "#text": "A"
+                        },
+                        "LSC_sectors": {
+                            "@index": "1",
+                            "@type": "double",
+                            "@size": "[1 1]",
+                            "#text": "[ 16]"
+                        },
+                        "LSC_No": {
+                            "@index": "1",
+                            "@type": "double",
+                            "@size": "[1 1]",
+                            "#text": "[ 10]"
+                        },
+                        "LSC_Xo": {
+                            "@index": "1",
+                            "@type": "double",
+                            "@size": "[1 1]",
+                            "#text": "[ 15]"
+                        },
+                        "LSC_Yo": {
+                            "@index": "1",
+                            "@type": "double",
+                            "@size": "[1 1]",
+                            "#text": "[ 15]"
+                        },
+                        "LSC_SECT_SIZE_X": {
+                            "@index": "1",
+                            "@type": "double",
+                            "@size": "[1 8]",
+                            "#text": "[120 120 120 120 120 120 120 120]"
+                        },
+                        "LSC_SECT_SIZE_Y": {
+                            "@index": "1",
+                            "@type": "double",
+                            "@size": "[1 8]",
+                            "#text": "[67 67 67 67 68 68 68 68]"
+                        },
+                        "vignetting": {
+                            "@index": "1",
+                            "@type": "double",
+                            "@size": "[1 1]",
+                            "#text": "[ 100]"
+                        },
+                        "LSC_SAMPLES_red": {
+                            "@index": "1",
+                            "@type": "double",
+                            "@size": "[17 17]",
+                            "#text": "[1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024]"
+                        },
+                        "LSC_SAMPLES_greenR": {
+                            "@index": "1",
+                            "@type": "double",
+                            "@size": "[17 17]",
+                            "#text": "[1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024]"
+                        },
+                        "LSC_SAMPLES_greenB": {
+                            "@index": "1",
+                            "@type": "double",
+                            "@size": "[17 17]",
+                            "#text": "[1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024]"
+                        },
+                        "LSC_SAMPLES_blue": {
+                            "@index": "1",
+                            "@type": "double",
+                            "@size": "[17 17]",
+                            "#text": "[1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024]"
+                        }
+                    },
+                    {
+                        "@index": "2",
+                        "@type": "struct",
+                        "@size": "[1 1]",
+                        "name": {
+                            "@index": "1",
+                            "@type": "char",
+                            "@size": "[1 16]",
+                            "#text": "1920x1080_D65_90"
+                        },
+                        "resolution": {
+                            "@index": "1",
+                            "@type": "char",
+                            "@size": "[1 9]",
+                            "#text": "1920x1080"
+                        },
+                        "illumination": {
+                            "@index": "1",
+                            "@type": "char",
+                            "@size": "[1 3]",
+                            "#text": "D65"
+                        },
+                        "LSC_sectors": {
+                            "@index": "1",
+                            "@type": "double",
+                            "@size": "[1 1]",
+                            "#text": "[ 16]"
+                        },
+                        "LSC_No": {
+                            "@index": "1",
+                            "@type": "double",
+                            "@size": "[1 1]",
+                            "#text": "[ 10]"
+                        },
+                        "LSC_Xo": {
+                            "@index": "1",
+                            "@type": "double",
+                            "@size": "[1 1]",
+                            "#text": "[ 15]"
+                        },
+                        "LSC_Yo": {
+                            "@index": "1",
+                            "@type": "double",
+                            "@size": "[1 1]",
+                            "#text": "[ 15]"
+                        },
+                        "LSC_SECT_SIZE_X": {
+                            "@index": "1",
+                            "@type": "double",
+                            "@size": "[1 8]",
+                            "#text": "[120 120 120 120 120 120 120 120]"
+                        },
+                        "LSC_SECT_SIZE_Y": {
+                            "@index": "1",
+                            "@type": "double",
+                            "@size": "[1 8]",
+                            "#text": "[67 67 67 67 68 68 68 68]"
+                        },
+                        "vignetting": {
+                            "@index": "1",
+                            "@type": "double",
+                            "@size": "[1 1]",
+                            "#text": "[ 90]"
+                        },
+                        "LSC_SAMPLES_red": {
+                            "@index": "1",
+                            "@type": "double",
+                            "@size": "[17 17]",
+                            "#text": "[1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024]"
+                        },
+                        "LSC_SAMPLES_greenR": {
+                            "@index": "1",
+                            "@type": "double",
+                            "@size": "[17 17]",
+                            "#text": "[1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024]"
+                        },
+                        "LSC_SAMPLES_greenB": {
+                            "@index": "1",
+                            "@type": "double",
+                            "@size": "[17 17]",
+                            "#text": "[1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024]"
+                        },
+                        "LSC_SAMPLES_blue": {
+                            "@index": "1",
+                            "@type": "double",
+                            "@size": "[17 17]",
+                            "#text": "[1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024]"
+                        }
+                    },
+                    {
+                        "@index": "3",
+                        "@type": "struct",
+                        "@size": "[1 1]",
+                        "name": {
+                            "@index": "1",
+                            "@type": "char",
+                            "@size": "[1 16]",
+                            "#text": "1920x1080_F11_90"
+                        },
+                        "resolution": {
+                            "@index": "1",
+                            "@type": "char",
+                            "@size": "[1 9]",
+                            "#text": "1920x1080"
+                        },
+                        "illumination": {
+                            "@index": "1",
+                            "@type": "char",
+                            "@size": "[1 3]",
+                            "#text": "F11"
+                        },
+                        "LSC_sectors": {
+                            "@index": "1",
+                            "@type": "double",
+                            "@size": "[1 1]",
+                            "#text": "[ 16]"
+                        },
+                        "LSC_No": {
+                            "@index": "1",
+                            "@type": "double",
+                            "@size": "[1 1]",
+                            "#text": "[ 10]"
+                        },
+                        "LSC_Xo": {
+                            "@index": "1",
+                            "@type": "double",
+                            "@size": "[1 1]",
+                            "#text": "[ 15]"
+                        },
+                        "LSC_Yo": {
+                            "@index": "1",
+                            "@type": "double",
+                            "@size": "[1 1]",
+                            "#text": "[ 15]"
+                        },
+                        "LSC_SECT_SIZE_X": {
+                            "@index": "1",
+                            "@type": "double",
+                            "@size": "[1 8]",
+                            "#text": "[120 120 120 120 120 120 120 120]"
+                        },
+                        "LSC_SECT_SIZE_Y": {
+                            "@index": "1",
+                            "@type": "double",
+                            "@size": "[1 8]",
+                            "#text": "[67 67 67 67 68 68 68 68]"
+                        },
+                        "vignetting": {
+                            "@index": "1",
+                            "@type": "double",
+                            "@size": "[1 1]",
+                            "#text": "[ 90]"
+                        },
+                        "LSC_SAMPLES_red": {
+                            "@index": "1",
+                            "@type": "double",
+                            "@size": "[17 17]",
+                            "#text": "[1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024]"
+                        },
+                        "LSC_SAMPLES_greenR": {
+                            "@index": "1",
+                            "@type": "double",
+                            "@size": "[17 17]",
+                            "#text": "[1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024]"
+                        },
+                        "LSC_SAMPLES_greenB": {
+                            "@index": "1",
+                            "@type": "double",
+                            "@size": "[17 17]",
+                            "#text": "[1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024]"
+                        },
+                        "LSC_SAMPLES_blue": {
+                            "@index": "1",
+                            "@type": "double",
+                            "@size": "[17 17]",
+                            "#text": "[1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024]"
+                        }
+                    },
+                    {
+                        "@index": "4",
+                        "@type": "struct",
+                        "@size": "[1 1]",
+                        "name": {
+                            "@index": "1",
+                            "@type": "char",
+                            "@size": "[1 15]",
+                            "#text": "1920x1080_F2_90"
+                        },
+                        "resolution": {
+                            "@index": "1",
+                            "@type": "char",
+                            "@size": "[1 9]",
+                            "#text": "1920x1080"
+                        },
+                        "illumination": {
+                            "@index": "1",
+                            "@type": "char",
+                            "@size": "[1 2]",
+                            "#text": "F2"
+                        },
+                        "LSC_sectors": {
+                            "@index": "1",
+                            "@type": "double",
+                            "@size": "[1 1]",
+                            "#text": "[ 16]"
+                        },
+                        "LSC_No": {
+                            "@index": "1",
+                            "@type": "double",
+                            "@size": "[1 1]",
+                            "#text": "[ 10]"
+                        },
+                        "LSC_Xo": {
+                            "@index": "1",
+                            "@type": "double",
+                            "@size": "[1 1]",
+                            "#text": "[ 15]"
+                        },
+                        "LSC_Yo": {
+                            "@index": "1",
+                            "@type": "double",
+                            "@size": "[1 1]",
+                            "#text": "[ 15]"
+                        },
+                        "LSC_SECT_SIZE_X": {
+                            "@index": "1",
+                            "@type": "double",
+                            "@size": "[1 8]",
+                            "#text": "[120 120 120 120 120 120 120 120]"
+                        },
+                        "LSC_SECT_SIZE_Y": {
+                            "@index": "1",
+                            "@type": "double",
+                            "@size": "[1 8]",
+                            "#text": "[67 67 67 67 68 68 68 68]"
+                        },
+                        "vignetting": {
+                            "@index": "1",
+                            "@type": "double",
+                            "@size": "[1 1]",
+                            "#text": "[ 90]"
+                        },
+                        "LSC_SAMPLES_red": {
+                            "@index": "1",
+                            "@type": "double",
+                            "@size": "[17 17]",
+                            "#text": "[1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024]"
+                        },
+                        "LSC_SAMPLES_greenR": {
+                            "@index": "1",
+                            "@type": "double",
+                            "@size": "[17 17]",
+                            "#text": "[1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024]"
+                        },
+                        "LSC_SAMPLES_greenB": {
+                            "@index": "1",
+                            "@type": "double",
+                            "@size": "[17 17]",
+                            "#text": "[1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024]"
+                        },
+                        "LSC_SAMPLES_blue": {
+                            "@index": "1",
+                            "@type": "double",
+                            "@size": "[17 17]",
+                            "#text": "[1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024 1024]"
+                        }
+                    }
+                ]
+            },
+            "CC": {
+                "@index": "1",
+                "@type": "cell",
+                "@size": "[1 4]",
+                "cell": [
+                    {
+                        "@index": "1",
+                        "@type": "struct",
+                        "@size": "[1 1]",
+                        "name": {
+                            "@index": "1",
+                            "@type": "char",
+                            "@size": "[1 5]",
+                            "#text": "A_104"
+                        },
+                        "saturation": {
+                            "@index": "1",
+                            "@type": "double",
+                            "@size": "[1 1]",
+                            "#text": "[ 104]"
+                        },
+                        "ccMatrix": {
+                            "@index": "1",
+                            "@type": "double",
+                            "@size": "[3 3]",
+                            "#text": "[1.58915 0.0377625 -0.616429 -0.945174 2.52794 -0.537235 -0.217771 -1.76346 2.9884]"
+                        },
+                        "ccOffsets": {
+                            "@index": "1",
+                            "@type": "double",
+                            "@size": "[1 3]",
+                            "#text": "[-36.4461 -38.1612 -29.3263]"
+                        },
+                        "wb": {
+                            "@index": "1",
+                            "@type": "double",
+                            "@size": "[1 4]",
+                            "#text": "[1.23923 1 1 2.7836]"
+                        }
+                    },
+                    {
+                        "@index": "2",
+                        "@type": "struct",
+                        "@size": "[1 1]",
+                        "name": {
+                            "@index": "1",
+                            "@type": "char",
+                            "@size": "[1 7]",
+                            "#text": "D65_109"
+                        },
+                        "saturation": {
+                            "@index": "1",
+                            "@type": "double",
+                            "@size": "[1 1]",
+                            "#text": "[ 109]"
+                        },
+                        "ccMatrix": {
+                            "@index": "1",
+                            "@type": "double",
+                            "@size": "[3 3]",
+                            "#text": "[2.1243 -0.955239 -0.160056 -0.585798 2.27098 -0.616837 -0.0192654 -0.974804 2.036]"
+                        },
+                        "ccOffsets": {
+                            "@index": "1",
+                            "@type": "double",
+                            "@size": "[1 3]",
+                            "#text": "[-36.8576 -44.6401 -45.1663]"
+                        },
+                        "wb": {
+                            "@index": "1",
+                            "@type": "double",
+                            "@size": "[1 4]",
+                            "#text": "[1.98523 1 1 1.6928]"
+                        }
+                    },
+                    {
+                        "@index": "3",
+                        "@type": "struct",
+                        "@size": "[1 1]",
+                        "name": {
+                            "@index": "1",
+                            "@type": "char",
+                            "@size": "[1 7]",
+                            "#text": "F11_108"
+                        },
+                        "saturation": {
+                            "@index": "1",
+                            "@type": "double",
+                            "@size": "[1 1]",
+                            "#text": "[ 108]"
+                        },
+                        "ccMatrix": {
+                            "@index": "1",
+                            "@type": "double",
+                            "@size": "[3 3]",
+                            "#text": "[2.05797 -0.842641 -0.197003 -0.842204 2.361 -0.441285 -0.076882 -1.19612 2.2813]"
+                        },
+                        "ccOffsets": {
+                            "@index": "1",
+                            "@type": "double",
+                            "@size": "[1 3]",
+                            "#text": "[-32.4424 -44.2278 -33.9074]"
+                        },
+                        "wb": {
+                            "@index": "1",
+                            "@type": "double",
+                            "@size": "[1 4]",
+                            "#text": "[1.48927 1 1 2.4188]"
+                        }
+                    },
+                    {
+                        "@index": "4",
+                        "@type": "struct",
+                        "@size": "[1 1]",
+                        "name": {
+                            "@index": "1",
+                            "@type": "char",
+                            "@size": "[1 6]",
+                            "#text": "F2_108"
+                        },
+                        "saturation": {
+                            "@index": "1",
+                            "@type": "double",
+                            "@size": "[1 1]",
+                            "#text": "[ 108]"
+                        },
+                        "ccMatrix": {
+                            "@index": "1",
+                            "@type": "double",
+                            "@size": "[3 3]",
+                            "#text": "[2.64855 -1.46973 -0.171784 -0.746979 2.12541 -0.309928 -0.0672896 -1.22039 2.3223]"
+                        },
+                        "ccOffsets": {
+                            "@index": "1",
+                            "@type": "double",
+                            "@size": "[1 3]",
+                            "#text": "[-28.8121 -42.8676 -35.6405]"
+                        },
+                        "wb": {
+                            "@index": "1",
+                            "@type": "double",
+                            "@size": "[1 4]",
+                            "#text": "[1.67897 1 1 2.4837]"
+                        }
+                    }
+                ]
+            },
+            "AF": {
+                "@index": "1",
+                "@type": "struct",
+                "@size": "[1 1]",
+                "tbd": {
+                    "@index": "1",
+                    "@type": "double",
+                    "@size": "[1 1]",
+                    "#text": "[ -1]"
+                }
+            },
+            "AEC": {
+                "@index": "1",
+                "@type": "struct",
+                "@size": "[1 1]",
+                "SetPoint": {
+                    "@index": "1",
+                    "@type": "double",
+                    "@size": "[1 1]",
+                    "#text": "[ 80]"
+                },
+                "ClmTolerance": {
+                    "@index": "1",
+                    "@type": "double",
+                    "@size": "[1 1]",
+                    "#text": "[ 20]"
+                },
+                "DampOver": {
+                    "@index": "1",
+                    "@type": "double",
+                    "@size": "[1 1]",
+                    "#text": "[ 0.2]"
+                },
+                "DampUnder": {
+                    "@index": "1",
+                    "@type": "double",
+                    "@size": "[1 1]",
+                    "#text": "[ 0.3]"
+                },
+                "DampOverVideo": {
+                    "@index": "1",
+                    "@type": "double",
+                    "@size": "[1 1]",
+                    "#text": "[ 0.7]"
+                },
+                "DampUnderVideo": {
+                    "@index": "1",
+                    "@type": "double",
+                    "@size": "[1 1]",
+                    "#text": "[ 0.9]"
+                },
+                "ECM": {
+                    "@index": "1",
+                    "@type": "cell",
+                    "@size": "[1 3]",
+                    "cell": [
+                        {
+                            "@index": "1",
+                            "@type": "struct",
+                            "@size": "[1 1]",
+                            "name": {
+                                "@index": "1",
+                                "@type": "char",
+                                "@size": "[1 16]",
+                                "#text": "1920x1080_FPS_15"
+                            },
+                            "PrioritySchemes": {
+                                "@index": "1",
+                                "@type": "cell",
+                                "@size": "[1 3]",
+                                "cell": [
+                                    {
+                                        "@index": "1",
+                                        "@type": "struct",
+                                        "@size": "[1 1]",
+                                        "name": {
+                                            "@index": "1",
+                                            "@type": "char",
+                                            "@size": "[1 4]",
+                                            "#text": "fast"
+                                        },
+                                        "OffsetT0Fac": {
+                                            "@index": "1",
+                                            "@type": "double",
+                                            "@size": "[1 1]",
+                                            "#text": "[ 1]"
+                                        },
+                                        "SlopeA0": {
+                                            "@index": "1",
+                                            "@type": "double",
+                                            "@size": "[1 1]",
+                                            "#text": "[ 2]"
+                                        }
+                                    },
+                                    {
+                                        "@index": "2",
+                                        "@type": "struct",
+                                        "@size": "[1 1]",
+                                        "name": {
+                                            "@index": "1",
+                                            "@type": "char",
+                                            "@size": "[1 6]",
+                                            "#text": "normal"
+                                        },
+                                        "OffsetT0Fac": {
+                                            "@index": "1",
+                                            "@type": "double",
+                                            "@size": "[1 1]",
+                                            "#text": "[ 1]"
+                                        },
+                                        "SlopeA0": {
+                                            "@index": "1",
+                                            "@type": "double",
+                                            "@size": "[1 1]",
+                                            "#text": "[ 1]"
+                                        }
+                                    },
+                                    {
+                                        "@index": "3",
+                                        "@type": "struct",
+                                        "@size": "[1 1]",
+                                        "name": {
+                                            "@index": "1",
+                                            "@type": "char",
+                                            "@size": "[1 4]",
+                                            "#text": "slow"
+                                        },
+                                        "OffsetT0Fac": {
+                                            "@index": "1",
+                                            "@type": "double",
+                                            "@size": "[1 1]",
+                                            "#text": "[ 2]"
+                                        },
+                                        "SlopeA0": {
+                                            "@index": "1",
+                                            "@type": "double",
+                                            "@size": "[1 1]",
+                                            "#text": "[ 1]"
+                                        }
+                                    }
+                                ]
+                            }
+                        },
+                        {
+                            "@index": "2",
+                            "@type": "struct",
+                            "@size": "[1 1]",
+                            "name": {
+                                "@index": "1",
+                                "@type": "char",
+                                "@size": "[1 16]",
+                                "#text": "1920x1080_FPS_10"
+                            },
+                            "PrioritySchemes": {
+                                "@index": "1",
+                                "@type": "cell",
+                                "@size": "[1 3]",
+                                "cell": [
+                                    {
+                                        "@index": "1",
+                                        "@type": "struct",
+                                        "@size": "[1 1]",
+                                        "name": {
+                                            "@index": "1",
+                                            "@type": "char",
+                                            "@size": "[1 4]",
+                                            "#text": "fast"
+                                        },
+                                        "OffsetT0Fac": {
+                                            "@index": "1",
+                                            "@type": "double",
+                                            "@size": "[1 1]",
+                                            "#text": "[ 1]"
+                                        },
+                                        "SlopeA0": {
+                                            "@index": "1",
+                                            "@type": "double",
+                                            "@size": "[1 1]",
+                                            "#text": "[ 2]"
+                                        }
+                                    },
+                                    {
+                                        "@index": "2",
+                                        "@type": "struct",
+                                        "@size": "[1 1]",
+                                        "name": {
+                                            "@index": "1",
+                                            "@type": "char",
+                                            "@size": "[1 6]",
+                                            "#text": "normal"
+                                        },
+                                        "OffsetT0Fac": {
+                                            "@index": "1",
+                                            "@type": "double",
+                                            "@size": "[1 1]",
+                                            "#text": "[ 1]"
+                                        },
+                                        "SlopeA0": {
+                                            "@index": "1",
+                                            "@type": "double",
+                                            "@size": "[1 1]",
+                                            "#text": "[ 1]"
+                                        }
+                                    },
+                                    {
+                                        "@index": "3",
+                                        "@type": "struct",
+                                        "@size": "[1 1]",
+                                        "name": {
+                                            "@index": "1",
+                                            "@type": "char",
+                                            "@size": "[1 4]",
+                                            "#text": "slow"
+                                        },
+                                        "OffsetT0Fac": {
+                                            "@index": "1",
+                                            "@type": "double",
+                                            "@size": "[1 1]",
+                                            "#text": "[ 2]"
+                                        },
+                                        "SlopeA0": {
+                                            "@index": "1",
+                                            "@type": "double",
+                                            "@size": "[1 1]",
+                                            "#text": "[ 1]"
+                                        }
+                                    }
+                                ]
+                            }
+                        },
+                        {
+                            "@index": "3",
+                            "@type": "struct",
+                            "@size": "[1 1]",
+                            "name": {
+                                "@index": "1",
+                                "@type": "char",
+                                "@size": "[1 16]",
+                                "#text": "1920x1080_FPS_05"
+                            },
+                            "PrioritySchemes": {
+                                "@index": "1",
+                                "@type": "cell",
+                                "@size": "[1 3]",
+                                "cell": [
+                                    {
+                                        "@index": "1",
+                                        "@type": "struct",
+                                        "@size": "[1 1]",
+                                        "name": {
+                                            "@index": "1",
+                                            "@type": "char",
+                                            "@size": "[1 4]",
+                                            "#text": "fast"
+                                        },
+                                        "OffsetT0Fac": {
+                                            "@index": "1",
+                                            "@type": "double",
+                                            "@size": "[1 1]",
+                                            "#text": "[ 1]"
+                                        },
+                                        "SlopeA0": {
+                                            "@index": "1",
+                                            "@type": "double",
+                                            "@size": "[1 1]",
+                                            "#text": "[ 1]"
+                                        }
+                                    },
+                                    {
+                                        "@index": "2",
+                                        "@type": "struct",
+                                        "@size": "[1 1]",
+                                        "name": {
+                                            "@index": "1",
+                                            "@type": "char",
+                                            "@size": "[1 6]",
+                                            "#text": "normal"
+                                        },
+                                        "OffsetT0Fac": {
+                                            "@index": "1",
+                                            "@type": "double",
+                                            "@size": "[1 1]",
+                                            "#text": "[ 2]"
+                                        },
+                                        "SlopeA0": {
+                                            "@index": "1",
+                                            "@type": "double",
+                                            "@size": "[1 1]",
+                                            "#text": "[ 0.9]"
+                                        }
+                                    },
+                                    {
+                                        "@index": "3",
+                                        "@type": "struct",
+                                        "@size": "[1 1]",
+                                        "name": {
+                                            "@index": "1",
+                                            "@type": "char",
+                                            "@size": "[1 4]",
+                                            "#text": "slow"
+                                        },
+                                        "OffsetT0Fac": {
+                                            "@index": "1",
+                                            "@type": "double",
+                                            "@size": "[1 1]",
+                                            "#text": "[ 4]"
+                                        },
+                                        "SlopeA0": {
+                                            "@index": "1",
+                                            "@type": "double",
+                                            "@size": "[1 1]",
+                                            "#text": "[ 0.9]"
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    ]
+                },
+                "aFpsMaxGain": {
+                    "@index": "1",
+                    "@type": "double",
+                    "@size": "[1 1]",
+                    "#text": "[ 8]"
+                }
+            },
+            "BLS": {
+                "@index": "1",
+                "@type": "cell",
+                "@size": "[1 1]",
+                "cell": {
+                    "@index": "1",
+                    "@type": "struct",
+                    "@size": "[1 1]",
+                    "name": {
+                        "@index": "1",
+                        "@type": "char",
+                        "@size": "[1 9]",
+                        "#text": "1920x1080"
+                    },
+                    "resolution": {
+                        "@index": "1",
+                        "@type": "char",
+                        "@size": "[1 9]",
+                        "#text": "1920x1080"
+                    },
+                    "blsData": {
+                        "@index": "1",
+                        "@type": "double",
+                        "@size": "[1 4]",
+                        "#text": "[200 200 200 200]"
+                    }
+                }
+            },
+            "DEGAMMA": {
+                "@index": "1",
+                "@type": "cell",
+                "@size": "[1 1]",
+                "cell": {
+                    "@index": "1",
+                    "@type": "struct",
+                    "@size": "[1 1]",
+                    "name": {
+                        "@index": "1",
+                        "@type": "char",
+                        "@size": "[1 6]",
+                        "#text": "linear"
+                    },
+                    "degamma_dx": {
+                        "@index": "1",
+                        "@type": "double",
+                        "@size": "[1 16]",
+                        "#text": "[256 512 768 1024 1280 1536 1792 2048 2304 2560 2816 3072 3328 3584 3840 4096]"
+                    },
+                    "degamma_y": {
+                        "@index": "1",
+                        "@type": "double",
+                        "@size": "[1 17]",
+                        "#text": "[0 256 512 768 1024 1280 1536 1792 2048 2304 2560 2816 3072 3328 3584 3840 4095]"
+                    }
+                }
+            },
+            "WDR": {
+                "@index": "1",
+                "@type": "struct",
+                "@size": "[1 1]",
+                "tbd": {
+                    "@index": "1",
+                    "@type": "double",
+                    "@size": "[1 1]",
+                    "#text": "[ -1]"
+                },
+                "curve1": {
+                    "@index": "1",
+                    "@type": "struct",
+                    "@size": "[1 1]",
+                    "xval": {
+                        "@index": "1",
+                        "@type": "double",
+                        "@size": "[1 33]",
+                        "#text": "[-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1]"
+                    },
+                    "yval": {
+                        "@index": "1",
+                        "@type": "double",
+                        "@size": "[1 33]",
+                        "#text": "[-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1]"
+                    }
+                },
+                "curve2": {
+                    "@index": "1",
+                    "@type": "struct",
+                    "@size": "[1 1]",
+                    "xval": {
+                        "@index": "1",
+                        "@type": "double",
+                        "@size": "[1 33]",
+                        "#text": "[-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1]"
+                    },
+                    "yval": {
+                        "@index": "1",
+                        "@type": "double",
+                        "@size": "[1 33]",
+                        "#text": "[-1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1]"
+                    }
+                }
+            },
+            "CAC": {
+                "@index": "1",
+                "@type": "cell",
+                "@size": "[1 1]",
+                "cell": {
+                    "@index": "1",
+                    "@type": "struct",
+                    "@size": "[1 1]",
+                    "name": {
+                        "@index": "1",
+                        "@type": "char",
+                        "@size": "[1 9]",
+                        "#text": "1920x1080"
+                    },
+                    "resolution": {
+                        "@index": "1",
+                        "@type": "char",
+                        "@size": "[1 9]",
+                        "#text": "1920x1080"
+                    },
+                    "x_normshift": {
+                        "@index": "1",
+                        "@type": "double",
+                        "@size": "[1 1]",
+                        "#text": "[ 0]"
+                    },
+                    "x_normfactor": {
+                        "@index": "1",
+                        "@type": "double",
+                        "@size": "[1 1]",
+                        "#text": "[ 0]"
+                    },
+                    "y_normshift": {
+                        "@index": "1",
+                        "@type": "double",
+                        "@size": "[1 1]",
+                        "#text": "[ 0]"
+                    },
+                    "y_normfactor": {
+                        "@index": "1",
+                        "@type": "double",
+                        "@size": "[1 1]",
+                        "#text": "[ 0]"
+                    },
+                    "x_offset": {
+                        "@index": "1",
+                        "@type": "double",
+                        "@size": "[1 1]",
+                        "#text": "[ 0]"
+                    },
+                    "y_offset": {
+                        "@index": "1",
+                        "@type": "double",
+                        "@size": "[1 1]",
+                        "#text": "[ 0]"
+                    },
+                    "red_parameters": {
+                        "@index": "1",
+                        "@type": "double",
+                        "@size": "[1 3]",
+                        "#text": "[0 0 0]"
+                    },
+                    "blue_parameters": {
+                        "@index": "1",
+                        "@type": "double",
+                        "@size": "[1 3]",
+                        "#text": "[0 0 0]"
+                    }
+                }
+            },
+            "DPF": {
+                "@index": "1",
+                "@type": "cell",
+                "@size": "[1 1]",
+                "cell": {
+                    "@index": "1",
+                    "@type": "struct",
+                    "@size": "[1 1]",
+                    "name": {
+                        "@index": "1",
+                        "@type": "char",
+                        "@size": "[1 9]",
+                        "#text": "1920x1080"
+                    },
+                    "resolution": {
+                        "@index": "1",
+                        "@type": "char",
+                        "@size": "[1 9]",
+                        "#text": "1920x1080"
+                    },
+                    "NLL_SEGMENTATION": {
+                        "@index": "1",
+                        "@type": "double",
+                        "@size": "[1 1]",
+                        "#text": "[ 1]"
+                    },
+                    "nll_coeff_n": {
+                        "@index": "1",
+                        "@type": "double",
+                        "@size": "[1 17]",
+                        "#text": "[1023 859 589 476 410 334 288 258 235 203 182 166 143 128 117 108 101]"
+                    },
+                    "SigmaGreen": {
+                        "@index": "1",
+                        "@type": "double",
+                        "@size": "[1 1]",
+                        "#text": "[ 4]"
+                    },
+                    "SigmaRedBlue": {
+                        "@index": "1",
+                        "@type": "double",
+                        "@size": "[1 1]",
+                        "#text": "[ 4]"
+                    },
+                    "Gradient": {
+                        "@index": "1",
+                        "@type": "double",
+                        "@size": "[1 1]",
+                        "#text": "[ 0.15]"
+                    },
+                    "Offset": {
+                        "@index": "1",
+                        "@type": "double",
+                        "@size": "[1 1]",
+                        "#text": "[ 0]"
+                    },
+                    "NlGains": {
+                        "@index": "1",
+                        "@type": "double",
+                        "@size": "[1 4]",
+                        "#text": "[1 1 1 1]"
+                    }
+                }
+            },
+            "DPCC": {
+                "@index": "1",
+                "@type": "cell",
+                "@size": "[1 1]",
+                "cell": {
+                    "@index": "1",
+                    "@type": "struct",
+                    "@size": "[1 1]",
+                    "name": {
+                        "@index": "1",
+                        "@type": "char",
+                        "@size": "[1 9]",
+                        "#text": "1920x1080"
+                    },
+                    "resolution": {
+                        "@index": "1",
+                        "@type": "char",
+                        "@size": "[1 9]",
+                        "#text": "1920x1080"
+                    },
+                    "register": {
+                        "@index": "1",
+                        "@type": "cell",
+                        "@size": "[1 23]",
+                        "cell": [
+                            {
+                                "@index": "1",
+                                "@type": "struct",
+                                "@size": "[1 1]",
+                                "name": {
+                                    "@index": "1",
+                                    "@type": "char",
+                                    "@size": "[1 13]",
+                                    "#text": "ISP_DPCC_MODE"
+                                },
+                                "value": {
+                                    "@index": "1",
+                                    "@type": "char",
+                                    "@size": "[1 6]",
+                                    "#text": "0x0004"
+                                }
+                            },
+                            {
+                                "@index": "2",
+                                "@type": "struct",
+                                "@size": "[1 1]",
+                                "name": {
+                                    "@index": "1",
+                                    "@type": "char",
+                                    "@size": "[1 17]",
+                                    "#text": "ISP_DPCC_OUT_MODE"
+                                },
+                                "value": {
+                                    "@index": "1",
+                                    "@type": "char",
+                                    "@size": "[1 6]",
+                                    "#text": "0x0003"
+                                }
+                            },
+                            {
+                                "@index": "3",
+                                "@type": "struct",
+                                "@size": "[1 1]",
+                                "name": {
+                                    "@index": "1",
+                                    "@type": "char",
+                                    "@size": "[1 16]",
+                                    "#text": "ISP_DPCC_SET_USE"
+                                },
+                                "value": {
+                                    "@index": "1",
+                                    "@type": "char",
+                                    "@size": "[1 6]",
+                                    "#text": "0x0007"
+                                }
+                            },
+                            {
+                                "@index": "4",
+                                "@type": "struct",
+                                "@size": "[1 1]",
+                                "name": {
+                                    "@index": "1",
+                                    "@type": "char",
+                                    "@size": "[1 21]",
+                                    "#text": "ISP_DPCC_METHODS_SET1"
+                                },
+                                "value": {
+                                    "@index": "1",
+                                    "@type": "char",
+                                    "@size": "[1 6]",
+                                    "#text": "0x1D1D"
+                                }
+                            },
+                            {
+                                "@index": "5",
+                                "@type": "struct",
+                                "@size": "[1 1]",
+                                "name": {
+                                    "@index": "1",
+                                    "@type": "char",
+                                    "@size": "[1 21]",
+                                    "#text": "ISP_DPCC_METHODS_SET2"
+                                },
+                                "value": {
+                                    "@index": "1",
+                                    "@type": "char",
+                                    "@size": "[1 6]",
+                                    "#text": "0x0707"
+                                }
+                            },
+                            {
+                                "@index": "6",
+                                "@type": "struct",
+                                "@size": "[1 1]",
+                                "name": {
+                                    "@index": "1",
+                                    "@type": "char",
+                                    "@size": "[1 21]",
+                                    "#text": "ISP_DPCC_METHODS_SET3"
+                                },
+                                "value": {
+                                    "@index": "1",
+                                    "@type": "char",
+                                    "@size": "[1 6]",
+                                    "#text": "0x1F1F"
+                                }
+                            },
+                            {
+                                "@index": "7",
+                                "@type": "struct",
+                                "@size": "[1 1]",
+                                "name": {
+                                    "@index": "1",
+                                    "@type": "char",
+                                    "@size": "[1 22]",
+                                    "#text": "ISP_DPCC_LINE_THRESH_1"
+                                },
+                                "value": {
+                                    "@index": "1",
+                                    "@type": "char",
+                                    "@size": "[1 6]",
+                                    "#text": "0x0808"
+                                }
+                            },
+                            {
+                                "@index": "8",
+                                "@type": "struct",
+                                "@size": "[1 1]",
+                                "name": {
+                                    "@index": "1",
+                                    "@type": "char",
+                                    "@size": "[1 23]",
+                                    "#text": "ISP_DPCC_LINE_MAD_FAC_1"
+                                },
+                                "value": {
+                                    "@index": "1",
+                                    "@type": "char",
+                                    "@size": "[1 6]",
+                                    "#text": "0x0404"
+                                }
+                            },
+                            {
+                                "@index": "9",
+                                "@type": "struct",
+                                "@size": "[1 1]",
+                                "name": {
+                                    "@index": "1",
+                                    "@type": "char",
+                                    "@size": "[1 17]",
+                                    "#text": "ISP_DPCC_PG_FAC_1"
+                                },
+                                "value": {
+                                    "@index": "1",
+                                    "@type": "char",
+                                    "@size": "[1 6]",
+                                    "#text": "0x0403"
+                                }
+                            },
+                            {
+                                "@index": "10",
+                                "@type": "struct",
+                                "@size": "[1 1]",
+                                "name": {
+                                    "@index": "1",
+                                    "@type": "char",
+                                    "@size": "[1 21]",
+                                    "#text": "ISP_DPCC_RND_THRESH_1"
+                                },
+                                "value": {
+                                    "@index": "1",
+                                    "@type": "char",
+                                    "@size": "[1 6]",
+                                    "#text": "0x0A0A"
+                                }
+                            },
+                            {
+                                "@index": "11",
+                                "@type": "struct",
+                                "@size": "[1 1]",
+                                "name": {
+                                    "@index": "1",
+                                    "@type": "char",
+                                    "@size": "[1 17]",
+                                    "#text": "ISP_DPCC_RG_FAC_1"
+                                },
+                                "value": {
+                                    "@index": "1",
+                                    "@type": "char",
+                                    "@size": "[1 6]",
+                                    "#text": "0x2020"
+                                }
+                            },
+                            {
+                                "@index": "12",
+                                "@type": "struct",
+                                "@size": "[1 1]",
+                                "name": {
+                                    "@index": "1",
+                                    "@type": "char",
+                                    "@size": "[1 22]",
+                                    "#text": "ISP_DPCC_LINE_THRESH_2"
+                                },
+                                "value": {
+                                    "@index": "1",
+                                    "@type": "char",
+                                    "@size": "[1 6]",
+                                    "#text": "0x100C"
+                                }
+                            },
+                            {
+                                "@index": "13",
+                                "@type": "struct",
+                                "@size": "[1 1]",
+                                "name": {
+                                    "@index": "1",
+                                    "@type": "char",
+                                    "@size": "[1 23]",
+                                    "#text": "ISP_DPCC_LINE_MAD_FAC_2"
+                                },
+                                "value": {
+                                    "@index": "1",
+                                    "@type": "char",
+                                    "@size": "[1 6]",
+                                    "#text": "0x1810"
+                                }
+                            },
+                            {
+                                "@index": "14",
+                                "@type": "struct",
+                                "@size": "[1 1]",
+                                "name": {
+                                    "@index": "1",
+                                    "@type": "char",
+                                    "@size": "[1 17]",
+                                    "#text": "ISP_DPCC_PG_FAC_2"
+                                },
+                                "value": {
+                                    "@index": "1",
+                                    "@type": "char",
+                                    "@size": "[1 6]",
+                                    "#text": "0x0403"
+                                }
+                            },
+                            {
+                                "@index": "15",
+                                "@type": "struct",
+                                "@size": "[1 1]",
+                                "name": {
+                                    "@index": "1",
+                                    "@type": "char",
+                                    "@size": "[1 21]",
+                                    "#text": "ISP_DPCC_RND_THRESH_2"
+                                },
+                                "value": {
+                                    "@index": "1",
+                                    "@type": "char",
+                                    "@size": "[1 6]",
+                                    "#text": "0x0808"
+                                }
+                            },
+                            {
+                                "@index": "16",
+                                "@type": "struct",
+                                "@size": "[1 1]",
+                                "name": {
+                                    "@index": "1",
+                                    "@type": "char",
+                                    "@size": "[1 17]",
+                                    "#text": "ISP_DPCC_RG_FAC_2"
+                                },
+                                "value": {
+                                    "@index": "1",
+                                    "@type": "char",
+                                    "@size": "[1 6]",
+                                    "#text": "0x0808"
+                                }
+                            },
+                            {
+                                "@index": "17",
+                                "@type": "struct",
+                                "@size": "[1 1]",
+                                "name": {
+                                    "@index": "1",
+                                    "@type": "char",
+                                    "@size": "[1 22]",
+                                    "#text": "ISP_DPCC_LINE_THRESH_3"
+                                },
+                                "value": {
+                                    "@index": "1",
+                                    "@type": "char",
+                                    "@size": "[1 6]",
+                                    "#text": "0x2020"
+                                }
+                            },
+                            {
+                                "@index": "18",
+                                "@type": "struct",
+                                "@size": "[1 1]",
+                                "name": {
+                                    "@index": "1",
+                                    "@type": "char",
+                                    "@size": "[1 23]",
+                                    "#text": "ISP_DPCC_LINE_MAD_FAC_3"
+                                },
+                                "value": {
+                                    "@index": "1",
+                                    "@type": "char",
+                                    "@size": "[1 6]",
+                                    "#text": "0x0404"
+                                }
+                            },
+                            {
+                                "@index": "19",
+                                "@type": "struct",
+                                "@size": "[1 1]",
+                                "name": {
+                                    "@index": "1",
+                                    "@type": "char",
+                                    "@size": "[1 17]",
+                                    "#text": "ISP_DPCC_PG_FAC_3"
+                                },
+                                "value": {
+                                    "@index": "1",
+                                    "@type": "char",
+                                    "@size": "[1 6]",
+                                    "#text": "0x0403"
+                                }
+                            },
+                            {
+                                "@index": "20",
+                                "@type": "struct",
+                                "@size": "[1 1]",
+                                "name": {
+                                    "@index": "1",
+                                    "@type": "char",
+                                    "@size": "[1 21]",
+                                    "#text": "ISP_DPCC_RND_THRESH_3"
+                                },
+                                "value": {
+                                    "@index": "1",
+                                    "@type": "char",
+                                    "@size": "[1 6]",
+                                    "#text": "0x0806"
+                                }
+                            },
+                            {
+                                "@index": "21",
+                                "@type": "struct",
+                                "@size": "[1 1]",
+                                "name": {
+                                    "@index": "1",
+                                    "@type": "char",
+                                    "@size": "[1 17]",
+                                    "#text": "ISP_DPCC_RG_FAC_3"
+                                },
+                                "value": {
+                                    "@index": "1",
+                                    "@type": "char",
+                                    "@size": "[1 6]",
+                                    "#text": "0x0404"
+                                }
+                            },
+                            {
+                                "@index": "22",
+                                "@type": "struct",
+                                "@size": "[1 1]",
+                                "name": {
+                                    "@index": "1",
+                                    "@type": "char",
+                                    "@size": "[1 18]",
+                                    "#text": "ISP_DPCC_RO_LIMITS"
+                                },
+                                "value": {
+                                    "@index": "1",
+                                    "@type": "char",
+                                    "@size": "[1 6]",
+                                    "#text": "0x0A0A"
+                                }
+                            },
+                            {
+                                "@index": "23",
+                                "@type": "struct",
+                                "@size": "[1 1]",
+                                "name": {
+                                    "@index": "1",
+                                    "@type": "char",
+                                    "@size": "[1 17]",
+                                    "#text": "ISP_DPCC_RND_OFFS"
+                                },
+                                "value": {
+                                    "@index": "1",
+                                    "@type": "char",
+                                    "@size": "[1 6]",
+                                    "#text": "0x0FFF"
+                                }
+                            }
+                        ]
+                    }
+                }
+            }
+        },
+        "system": {
+            "@type": "struct",
+            "@size": "[1 1]",
+            "AFPS": {
+                "@index": "1",
+                "@type": "struct",
+                "@size": "[1 1]",
+                "aFpsDefault": {
+                    "@index": "1",
+                    "@type": "char",
+                    "@size": "[1 2]",
+                    "#text": "on"
+                }
+            }
+        },
+        "tuning": {
+            "awb": {
+                "@enable": "true",
+                "damping": "true",
+                "index": "2",
+                "mode": "2"
+            }
+        }
+    }
+}
