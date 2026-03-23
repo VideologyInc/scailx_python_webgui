@@ -149,9 +149,39 @@ def v4l2_format_mapto_gst(format_list):
     for fdict in format_list:
         print(fdict["pixelformat"], "=>", fourcc_to_gst(fdict["pixelformat"]))
 
+# For Boson camera, given width, height, framerate, and format=GRAY16_LE, return nnstreamer pipeline str.
+def boson_gray16_nnstreamer(w, h, fps, f_gst, out16=True):
+    # Always need this to avoid gst crash if using same width and height as input.
+    hh = h + 16
+    # These 2 values are calculated based on boson_stats.py output.
+    # out = (in - vmin) / (vmax - vmin) * 65535; (or *255 for 8bits)
+    beta = -5474.0
+    alpha = 112.77 if out16 else 0.43878
+    cmax = 65535.0 if out16 else 255.0
+    outype = "uint16" if out16 else "uint8"
+    outformat = "GRAY16_LE" if out16 else "GRAY8"
+
+    s = (
+        rf"video/x-raw,width={w},height={h},framerate={fps}/1,format={f_gst} ! "
+        r"videorate max-rate=10 ! video/x-raw,framerate=10/1 ! "
+        r"queue leaky=2 max-size-buffers=10 ! "
+        rf"videoscale ! video/x-raw, width={w}, height={hh} ! "
+        r"tensor_converter ! "
+        rf"tensor_transform mode=arithmetic option=typecast:float32,add:{beta},mul:{alpha} ! "
+        r"queue leaky=2 max-size-buffers=10 ! "
+        rf"tensor_transform mode=clamp option=0.0:{cmax} ! "
+        rf"tensor_transform mode=typecast option={outype} ! "
+        r"queue leaky=2 max-size-buffers=10 ! "
+        rf"tensor_decoder mode=direct_video option1={outformat} ! "
+        "videoconvert "
+    )
+
+    return s
+
 
 # Given one format dict, return its gstreamer string.
-def v4l2_format_to_gst(format_dict):
+# Now use camera_type to handle Boson camera GRAY16_LE using nnstreamer pipeline.
+def v4l2_format_to_gst(format_dict, camera_type=""):
     s_list = []
     for sz in format_dict["sizes"]:
         w = sz["width"]
@@ -159,9 +189,19 @@ def v4l2_format_to_gst(format_dict):
         fps = int(math.ceil(sz["fps"][0]))
         f = format_dict["pixelformat"]
         f_gst = fourcc_to_gst(f)
-        s = f"video/x-raw,width={w},height={h},framerate={fps}/1,format={f_gst} ! videoconvert"
-        t = (w, h, f"fps={fps},format={f_gst}", s)
-        s_list.append(t)
+        if camera_type=="boson" and f_gst=="GRAY16_LE":
+        # Boson gray16 special treatment.
+            s8 = boson_gray16_nnstreamer(w, h, fps, f_gst, False)
+            s16 = boson_gray16_nnstreamer(w, h, fps, f_gst, True)
+            t8 = (w, h, f"fps={fps},format={f_gst}, out=8bit", s8)
+            t16 = (w, h, f"fps={fps},format={f_gst}, out=16bit", s16)
+            s_list.append(t8)
+            s_list.append(t16)
+        else:
+        # Regular gst string.
+            s = f"video/x-raw,width={w},height={h},framerate={fps}/1,format={f_gst} ! videoconvert"
+            t = (w, h, f"fps={fps},format={f_gst}", s)
+            s_list.append(t)
 
     return s_list
 
@@ -170,17 +210,16 @@ def camera_to_gst_list(device):
     camera_type, cam_path = detect_camera_type(device)
 
     camera_formats = formats_filter_out_unwanted(parse_v4l2_formats(device))
-    # Add full resolution and framerate support for ZoomBlock (from visca commands)
     # print(camera_type)
-    if "zoomblock"==camera_type:
+    if camera_type=="zoomblock":
+    # Add full resolution and framerate support for ZoomBlock (from visca commands)
         print("Create new format list for ZoomBlock cameras.")
         camera_formats = add_formats_lvds(camera_formats)
-
     # print(json.dumps(camera_formats, indent=2))
 
     info_list = []
     for fd in camera_formats:
-        s_list = v4l2_format_to_gst(fd)
+        s_list = v4l2_format_to_gst(fd, camera_type)
         info_list += s_list
 
     return info_list
