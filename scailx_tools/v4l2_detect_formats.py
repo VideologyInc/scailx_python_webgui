@@ -202,24 +202,46 @@ def boson_gray16_nnstreamer(w, h, fps, f_gst, out16=True):
 # Two options inside:
 # Do videoconvert and no videoscale
 # OR do videoscale and scale back and no videoconvert.
-def object_detection_nnstreamer(w=320,h=256, use_scale=False,
-    model_name="/opt/imx8-isp/boson/yolov8n_float16.tflite", 
-    label_name="/opt/imx8-isp/boson/coco.txt"):
+def object_detection_nnstreamer(w=320,h=256, use_scale=False, use_npu=False, use_float=True):
+    if use_float:
+        model_name="/opt/imx8-isp/boson/yolov8n_float16.tflite"
+        label_name="/opt/imx8-isp/boson/coco.txt"
+    else:
+        model_name="/opt/imx8-isp/boson/thermal_yolov8n_320.tflite"
+        label_name="/opt/imx8-isp/boson/thermal.txt"
+
     # Handle convert or scale differently to maintain speed for 320 and display quality for 640 ;-)
     spre = "videoscale method=0 ! video/x-raw,width=320,height=320" if use_scale else "videoconvert ! video/x-raw,format=RGB"
     spost = f"queue leaky=2 max-size-buffers=10 ! videoscale method=0 ! video/x-raw,width={w},height={h} !" if use_scale else ""
+    npu_str = "custom=Delegate:External,ExtDelegateLib:libvx_delegate.so accelerator=true:npu" if use_npu else ""
+
+    sfloat = (
+        "tensor_transform mode=arithmetic option=typecast:float32,add:0.0,div:255.0 ! "
+        "queue leaky=2 max-size-buffers=10 ! "
+        f"tensor_filter latency=1 framework=tensorflow2-lite model={model_name} "
+        f"{npu_str}"
+        " ! tensor_transform mode=transpose option=1:0:2:3 ! "
+        "queue leaky=2 max-size-buffers=10 ! "
+        f"tensor_decoder mode=bounding_boxes option1=yolov8 option2={label_name} option4=320:320 option5=320:320 ! "
+    )
+
+    sint = (
+        "queue leaky=2 max-size-buffers=10 ! "
+        f"tensor_filter latency=1 framework=tensorflow2-lite model={model_name} "
+        f"{npu_str}"
+        " ! tensor_transform mode=transpose option=1:0:2:3 ! "
+        "queue leaky=2 max-size-buffers=10 ! "
+        "tensor_transform mode=arithmetic option=typecast:float32,add:-17.0,mul:0.0063448 ! "
+        f"tensor_decoder mode=bounding_boxes option1=yolov8 option2={label_name} option4=320:320 option5=320:320 ! "
+    )
+    stensor = sfloat if use_float else sint
 
     s = (
         "tee name=t "
         "t. ! queue leaky=2 max-size-buffers=10 ! "
         f"{spre} ! "
         "tensor_converter ! "
-        "tensor_transform mode=arithmetic option=typecast:float32,add:0.0,div:255.0 ! "
-        "queue leaky=2 max-size-buffers=10 ! "
-        f"tensor_filter latency=1 framework=tensorflow2-lite model={model_name} ! "
-        "tensor_transform mode=transpose option=1:0:2:3 ! "
-        "queue leaky=2 max-size-buffers=10 ! "
-        f"tensor_decoder mode=bounding_boxes option1=yolov8 option2={label_name} option4=320:320 option5=320:320 ! "
+        f"{stensor}"
         f"videoconvert ! {spost} mix.sink_0 "
         "t. ! queue leaky=2 max-size-buffers=10 ! videoconvert ! mix.sink_1 "
         "compositor name=mix sink_0::zorder=2 sink_1::zorder=1 ! videoconvert"
@@ -227,14 +249,14 @@ def object_detection_nnstreamer(w=320,h=256, use_scale=False,
     return s
 
 # Match w x h x fps x format to list to add object detection
-def object_detection_gst(w, h, fps, f_gst):
+def object_detection_gst(w, h, fps, f_gst, use_npu=False, use_float=True):
     if (w, h, f_gst) not in Object_Detection_List:
         return
     
     if w==320:
         # width is close to tensor 320 x 320, do scale pre-process and convert to RGB internally.
         if f_gst=="GRAY16_LE":
-            return boson_gray16_nnstreamer(w,h,fps,f_gst, False) + object_detection_nnstreamer()
+            return boson_gray16_nnstreamer(w,h,fps,f_gst, False) + object_detection_nnstreamer(w, h, False, use_npu, use_float)
         else:
             # Scale to match tensor 320 x 320.
             s_scale = (
@@ -242,11 +264,11 @@ def object_detection_gst(w, h, fps, f_gst):
                 "videorate max-rate=10 ! video/x-raw,framerate=10/1 ! "
                 "queue leaky=2 max-size-buffers=10 ! videoscale method=0 ! video/x-raw,width=320,height=320 ! "
             )
-            return s_scale + object_detection_nnstreamer()
+            return s_scale + object_detection_nnstreamer(w, h, False, use_npu, use_float)
     else:
         # width is far different from 320 x 320, do convert outside and scale / rescale inside before and after tensor.
         if f_gst=="GRAY16_LE":
-            return boson_gray16_nnstreamer(w,h,fps,f_gst, False) + object_detection_nnstreamer(w,h,True)
+            return boson_gray16_nnstreamer(w,h,fps,f_gst, False) + object_detection_nnstreamer(w,h,True, use_npu, use_float)
         else:
             # Convert to RGB
             s_convert = (
@@ -254,7 +276,7 @@ def object_detection_gst(w, h, fps, f_gst):
                 "videorate max-rate=10 ! video/x-raw,framerate=10/1 ! "
                 "queue leaky=2 max-size-buffers=10 ! videoconvert ! video/x-raw,format=RGB ! "
             )
-            return s_convert + object_detection_nnstreamer(w,h,True)
+            return s_convert + object_detection_nnstreamer(w,h,True, use_npu, use_float)
 
 
 
@@ -291,9 +313,13 @@ def v4l2_format_to_gst(format_dict, camera_type="", add_object_detection=False):
         
         # Add object detection gst str if required.
         if add_object_detection and camera_type=="boson":
-            sobj = object_detection_gst(w,h,fps,f_gst)
+            sobj = object_detection_gst(w,h,fps,f_gst, use_npu=False, use_float=True)
+            sthermal = object_detection_gst(w,h,fps,f_gst, use_npu=False, use_float=False)
             if sobj:
-                tobj = (w, h, f"fps={fps},format={f_gst}, AI yolov8", sobj)
+                tobj = (w, h, f"fps={fps},format={f_gst}, AI yolov8n", sobj)
+                obj_list.append(tobj)
+            if sthermal:
+                tobj = (w, h, f"fps={fps},format={f_gst}, AI thermal", sthermal)
                 obj_list.append(tobj)
 
     return s_list + obj_list
