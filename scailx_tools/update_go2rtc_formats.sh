@@ -4,9 +4,10 @@ echo Copy 3 files to update go2rtc format changes of the camera sensors.
 echo Copy go2rtc*.py to /usr/bin/
 cp go2rtc-create-cams-config.py /usr/bin/
 
-echo Copy two py files to /usr/lib/python3.12/site-packages/vdlg_lvds/ 
+echo Copy three py files to /usr/lib/python3.12/site-packages/vdlg_lvds/ 
 cp v4l2_detect_formats.py /usr/lib/python3.12/site-packages/vdlg_lvds/
 cp detect_cameras_live.py /usr/lib/python3.12/site-packages/vdlg_lvds/
+cp boson_stats.py /usr/lib/python3.12/site-packages/vdlg_lvds/
 
 echo Copy go2rtc.service and timer to /usr/lib/systemd/system/
 cp go2rtc.service /usr/lib/systemd/system/
