@@ -1,0 +1,6 @@
+# python3 requirements list for new packages needed for detect_imx_lib=ve.py etc.
+
+jc==1.25.6
+Pygments==2.20.0
+ruamel.yaml==0.19.1
+xmltodict==1.0.4
