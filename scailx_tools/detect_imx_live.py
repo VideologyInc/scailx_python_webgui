@@ -13,15 +13,7 @@ By:			jye@videologyinc.com
 import argparse
 import time
 import subprocess
-import re
 import json
-import glob
-import copy
-import math
-import os
-from pathlib import Path
-import io
-import warnings
 import jc
 import sys
 import time
@@ -146,7 +138,7 @@ def turn_off_aec_awb(device_path, aec=True, awb=True):
             print("vvget AEC Status: ", vvget_set_feature_off(id, "AEC", "AEC ExposureTime", "0.00957"))
         # Reset AWB with optimized gain input values.
         if awb:
-            print("vvget AWB Off: ", vvget_set_feature_off(id, "AWB", "GAIN INPUT", "1.1, 1, 1, 2.4"))
+            print("vvget AWB Off: ", vvget_set_feature_off(id, "AWB", "GAIN INPUT", "1.1, 1, 1, 3.0"))
     except Exception as e:
         print(f"vvget failed: {e}")
 
@@ -154,27 +146,30 @@ def turn_off_aec_awb(device_path, aec=True, awb=True):
 # Given initial camera status, use infinite loopt to check camera stream status every few seconds.
 def monitor_cameras_loop(device_path, camera_status, stream_status, interval, aec=True, awb=True):
 
-    while True:
-        current_camera_status, current_stream_status = detect_imx(device_path)
-        if current_camera_status == camera_status and current_stream_status==stream_status:
-            print("Camera and stream status unchanged")
-        elif current_camera_status != camera_status:
-            print("Camera status changed: ", current_camera_status)
-            # update status for next time check.
-            camera_status = current_camera_status
-            stream_status = current_stream_status
-            # Camera connection changed: restart go2rtc service.
-            restart_go2rtc()
-        elif current_stream_status != stream_status:
-            print("Stream status changed: ", current_camera_status)
-            # update status for next time check.
-            stream_status = current_stream_status
-            # Off => On change: need to turn off AEC and AWB
-            if current_stream_status:
-                turn_off_aec_awb(device_path, aec, awb)
+    try:
+        while True:
+            current_camera_status, current_stream_status = detect_imx(device_path)
+            if current_camera_status == camera_status and current_stream_status==stream_status:
+                print(f"Camera {current_camera_status} and stream {current_stream_status}")
+            elif current_camera_status != camera_status:
+                print("Camera status changed: ", current_camera_status)
+                # update status for next time check.
+                camera_status = current_camera_status
+                stream_status = current_stream_status
+                # Camera connection changed: restart go2rtc service.
+                restart_go2rtc()
+            elif current_stream_status != stream_status:
+                print("Stream status changed: ", current_stream_status)
+                # update status for next time check.
+                stream_status = current_stream_status
+                # Off => On change: need to turn off AEC and AWB
+                if current_stream_status:
+                    turn_off_aec_awb(device_path, aec, awb)
 
-        time.sleep(interval)
-
+            # sleep a few seconds for next check.    
+            time.sleep(interval)
+    except KeyboardInterrupt:
+        print("\nLoop stopped by user.")
 
 if __name__ == "__main__":
 
@@ -197,8 +192,8 @@ if __name__ == "__main__":
         "-i",
         "--interval",
         type=int,
-        default="3",
-        help="Interval in seconds to check cameras",
+        default=3,
+        help="Interval in seconds to check camera status",
     )
 
     args = parser.parse_args()
