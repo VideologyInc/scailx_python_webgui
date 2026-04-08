@@ -8,6 +8,7 @@ echo Copy three py files to /usr/lib/python3.12/site-packages/vdlg_lvds/
 cp v4l2_detect_formats.py /usr/lib/python3.12/site-packages/vdlg_lvds/
 cp detect_cameras_live.py /usr/lib/python3.12/site-packages/vdlg_lvds/
 cp boson_stats.py /usr/lib/python3.12/site-packages/vdlg_lvds/
+cp read_imx_json.py /usr/lib/python3.12/site-packages/vdlg_lvds/
 
 echo Copy go2rtc.service and timer to /usr/lib/systemd/system/
 cp go2rtc.service /usr/lib/systemd/system/

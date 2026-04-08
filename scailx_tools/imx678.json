@@ -1,5 +1,5 @@
 {
-	"AEC GAIN" : "40.0",
+	"AEC Gain" : "10.0",
 	"AEC ExposureTime" : "0.03072",
 	"AEC Sensitivity" : "100",
 	"GAIN INPUT" : "1.22,1.0,1.0,2.83",

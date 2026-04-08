@@ -8,21 +8,31 @@ Read imx parameters 'Window Name' and their values from a json file.
 
 import json
 
+AEC_LIST = [
+    "AEC Gain",
+    "AEC ExposureTime",
+    "AEC Sensitivity",
+]
+AWB_LIST = [
+    "GAIN INPUT",
+    "Offset INPUT",
+]
+
 IMX900_PARA = {
-    "AEC GAIN": "40.0",
+    "AEC Gain": "40.0",
     "AEC ExposureTime": "0.00957",
     "AEC Sensitivity": "100",
     "GAIN INPUT": "1.32,1.0,1.0,3.0",
     "Offset INPUT": "-29,-32,-33",
     "CPROC ON/OFF": "1",
     "Adjust brightness": "0",
-    "Adjust contrast": "1.2",
+    "Adjust contrast": "1.1",
     "Adjust saturation": "1.0",
     "Adjust HUE": "0",
 }
 
 IMX678_PARA = {
-    "AEC GAIN": "40.0",
+    "AEC Gain": "40.0",
     "AEC ExposureTime": "0.03072",
     "AEC Sensitivity": "100",
     "GAIN INPUT": "1.22,1.0,1.0,2.83",
@@ -35,7 +45,7 @@ IMX678_PARA = {
 }
 
 DEFAULT_PARA = {
-    "AEC GAIN": "40.0",
+    "AEC Gain": "40.0",
     "AEC ExposureTime": "0.009",
     "AEC Sensitivity": "100",
     "GAIN INPUT": "1.3,1.0,1.0,2.83",
@@ -48,7 +58,7 @@ DEFAULT_PARA = {
 }
 
 GRAY_PARA = {
-    "AEC GAIN": "40.0",
+    "AEC Gain": "40.0",
     "AEC ExposureTime": "0.009",
     "AEC Sensitivity": "100",
     "GAIN INPUT": "1.0,1.0,1.0,1.0",
@@ -101,6 +111,12 @@ def read_imx(filename):
 
     return {}
 
+# Parse only interest line from vvget output message.
+def parse_vvget_output(message, keyword):
+    for s in message.splitlines():
+        if keyword in s:
+            return "a"+s+"\n" if s[0:2]=="ec" else s+"\n"
+    return ""
 
 # imx900 = read_imx("imx900.json")
 # print(imx900)

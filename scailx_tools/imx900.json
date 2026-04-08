@@ -1,7 +1,7 @@
 {
-	"AEC GAIN" : "40.0",
+	"AEC Gain" : "10.0",
 	"AEC ExposureTime" : "0.00957",
-	"AEC Sensitivity" : "100",
+	"AEC Sensitivity" : "200",
 	"GAIN INPUT" : "1.32,1.0,1.0,3.0",
 	"Offset INPUT" : "-29,-32,-33",
 	"CPROC ON/OFF" : "1",
