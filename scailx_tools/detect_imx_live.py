@@ -20,7 +20,7 @@ import sys
 import time
 
 from vdlg_lvds.detect_cameras_live import detect_camera_type
-from vdlg_lvds.read_imx_json import read_imx, default_imx, AEC_LIST, AWB_LIST, parse_vvget_output
+from vdlg_lvds.read_imx_json import read_imx, default_imx, AEC_LIST, AWB_LIST, parse_vvget_output, save_dict_txt
 
 
 # Given jc parsed lsof output list of dict, check command containing isp_media (imx is available) or gst-launc (imx stream on).
@@ -99,24 +99,35 @@ def vvget_set_feature_off(camera_id, feature_name):
     # AEC or AWB correct values must follow steps: off, reset, set values; or reset, off, set values.
     # AEC OFF => AEC Reset
     if feature_name=="AEC":
-        vvget_off(camera_id, feature_name)
-        vvget_reset(camera_id, feature_name)
-        vvget_off(camera_id, feature_name)
+        # Keep trying to turn AEC off until get 0 ;-)
+        while True:
+            cmd2 = f"vvget {camera_id} '{feature_name} On/Off'"
+            result2 = subprocess.run(
+                cmd2,
+                shell=True,
+                capture_output=True,
+                text=True,
+                check=True,
+            )
+            valstr = parse_vvget_output(result2.stdout, feature_name+":")
+            if "0" in valstr:
+                break
+            vvget_off(camera_id, feature_name)
     else:
     # AWB Reset => AWB OFF
         vvget_off(camera_id, feature_name)
         vvget_reset(camera_id, feature_name)
         vvget_off(camera_id, feature_name)
 
-    # 2.2. Get bool status
-    cmd2 = f"vvget {camera_id} '{feature_name} On/Off'"
-    result2 = subprocess.run(
-        cmd2,
-        shell=True,
-        capture_output=True,
-        text=True,
-        check=True,
-    )
+        # 2.2. Get bool status
+        cmd2 = f"vvget {camera_id} '{feature_name} On/Off'"
+        result2 = subprocess.run(
+            cmd2,
+            shell=True,
+            capture_output=True,
+            text=True,
+            check=True,
+        )
     return parse_vvget_output(result2.stdout, feature_name+":")
 
 
@@ -157,7 +168,21 @@ def vvget_set_feature_values(camera_id, imx_para, aec, awb):
     return message
 
 
-def turn_off_aec_awb(device_path, imx_para, aec=True, awb=True):
+# Set values by para dict => txt file.
+def vvget_set_feature_txt(camera_id, txt_name):
+    tmp_values_name = "imx_para_values.txt"
+    cmd = f"vvget {camera_id} -i {txt_name} -o {tmp_values_name}"
+    result = subprocess.run(
+        cmd,
+        shell=True,
+        capture_output=True,
+        text=True,
+        check=True,
+    )
+    return parse_vvget_output(result.stdout, ":")
+
+
+def turn_off_aec_awb(device_path, txt_name, aec):
     dlen = len("/dev/video")
     # Do nothing if device path is not /dev/video?
     if len(device_path) <= dlen:
@@ -166,15 +191,19 @@ def turn_off_aec_awb(device_path, imx_para, aec=True, awb=True):
     id = int(device_path[dlen:])
 
     try:
-        # Reset AEC with optimized exposure time value.
+        # AEC off.
         print("========================================================")
         if aec:
             print("vvget AEC Status: ", vvget_set_feature_off(id, "AEC"))
-        # Reset AWB with optimized gain input values.
+        """
+        # AWB off.
         if awb:
             print("vvget AWB Status: ", vvget_set_feature_off(id, "AWB"))
+        """
 
-        print(vvget_set_feature_values(id, imx_para, aec, awb))
+        # print(vvget_set_feature_values(id, imx_para, aec, awb))
+        # Now use new version of vvget to set multiple features by one subprocess call.
+        print(vvget_set_feature_txt(id, txt_name))
         print("========================================================")
 
     except Exception as e:
@@ -183,7 +212,7 @@ def turn_off_aec_awb(device_path, imx_para, aec=True, awb=True):
 
 # Given initial camera status, use infinite loopt to check camera stream status every few seconds.
 def monitor_cameras_loop(
-    device_path, camera_status, stream_status, interval, imx_para, aec=True, awb=True
+    device_path, camera_status, stream_status, interval, txt_name, aec
 ):
 
     print(f"Camera {camera_status} and stream {stream_status}")
@@ -209,7 +238,7 @@ def monitor_cameras_loop(
                 stream_status = current_stream_status
                 # Off => On change: need to turn off AEC and AWB
                 if current_stream_status:
-                    turn_off_aec_awb(device_path, imx_para, aec, awb)
+                    turn_off_aec_awb(device_path, txt_name, aec)
 
             # sleep a few seconds for next check.
             time.sleep(interval)
@@ -266,6 +295,9 @@ if __name__ == "__main__":
     imx_para = (
         read_imx(args.json) if args.json.endswith(".json") else default_imx(camera_type)
     )
+    # Save para dict to txt file for new vvget to read it and set features all at once.
+    txt_name = "imx_para_tmp.txt"
+    save_dict_txt(imx_para, txt_name, args.aec or args.awb)
 
     # Get current camera status
     camera_status, stream_status = detect_imx(args.device)
@@ -276,7 +308,6 @@ if __name__ == "__main__":
         camera_status,
         stream_status,
         args.interval,
-        imx_para,
-        args.aec,
-        args.awb,
+        txt_name,
+        args.aec
     )

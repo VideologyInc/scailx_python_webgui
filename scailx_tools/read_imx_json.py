@@ -8,6 +8,7 @@ Read imx parameters 'Window Name' and their values from a json file.
 
 import json
 
+# Two list need to turn off page AEC and AWB to get correctly.
 AEC_LIST = [
     "AEC Gain",
     "AEC ExposureTime",
@@ -18,6 +19,7 @@ AWB_LIST = [
     "Offset INPUT",
 ]
 
+# Sample and default parameter dict in case json file read error.
 IMX900_PARA = {
     "AEC Gain": "40.0",
     "AEC ExposureTime": "0.00957",
@@ -57,6 +59,7 @@ DEFAULT_PARA = {
     "Adjust HUE": "0",
 }
 
+# Set saturation to 0 to simulate color to gray conversion without OpenCV and gstreamer videoconvert ;-)
 GRAY_PARA = {
     "AEC Gain": "40.0",
     "AEC ExposureTime": "0.009",
@@ -83,12 +86,12 @@ def default_imx(camera_type):
         return DEFAULT_PARA
 
 
-# Parse data dict from json file.
+# Parse data dict from json file if needed.
 def parse_imx(data_dict):
 
     return data_dict
 
-
+# Read camera parameters from a json file.
 def read_imx(filename):
 
     try:
@@ -111,12 +114,35 @@ def read_imx(filename):
 
     return {}
 
+# Save parameter dict to a txt file so that vvget can read.
+def save_dict_txt(para_dict, name, aec_awb_off=True):
+
+    try:
+        with open(name, "w", encoding="utf-8") as file:
+            # Need to add extra header to turn off AEC and AWB
+            if aec_awb_off:
+                s1 = "AEC On/Off : 0\n"
+                # sr = "AEC Reset : 1\n"
+                file.write(s1)
+                # AWB is fine with off only ;-)
+                s2 = "AWB On/Off : 0\n"
+                file.write(s2)
+
+            for key, val in para_dict.items():
+                sline = f"{key} : {val}\n"
+                file.write(sline)
+        return True
+    except:
+        print(f"Save file error {name}. Please check write permission to the folder.")
+        return False
+
 # Parse only interest line from vvget output message.
 def parse_vvget_output(message, keyword):
     for s in message.splitlines():
         if keyword in s:
             return "a"+s+"\n" if s[0:2]=="ec" else s+"\n"
     return ""
+    
 
 # imx900 = read_imx("imx900.json")
 # print(imx900)
