@@ -33,8 +33,12 @@ import cv2
 MAX_CAMERA_ID = 10
 """ Maximum camera index with /dev/video* to detect. """
 
-
 # Camera key words in device tree and its regular names
+# Currently supports 4 camera types:
+# global shutter = AR0234   => ar0234
+# ZoomBlock = lvds2mipi     => zoomblock
+# Boson = flir or boson     => boson
+# imx series = imx          => imx
 camera_dict = {
     "AR0234": "ar0234",
     "lvds2mipi": "zoomblock",

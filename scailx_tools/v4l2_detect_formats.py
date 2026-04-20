@@ -22,19 +22,8 @@ import glob
 import copy
 import math
 
-from vdlg_lvds.detect_cameras_live import detect_camera_type
+from vdlg_lvds.detect_cameras_live import detect_camera_type, camera_dict
 from vdlg_lvds.boson_stats import boson_show_telemetry as boson_calculate_linear
-
-# Camera key words in device tree and its regular names
-camera_dict = {
-    "AR0234": "ar0234",
-    "lvds2mipi": "zoomblock",
-    "flir": "boson",
-    "imx900": "imx900",
-    "imx678": "imx678",
-    "imx662": "imx662",
-}
-""" Camera key words in device tree and its regular names. """
 
 
 Format_Exclude_List = ["NM12", "YUV4", "YM24"]
@@ -499,15 +488,24 @@ def v4l2_format_to_gst(
     obj_list = []
 
     for sz in format_dict["sizes"]:
+        # Make sure we have these keys in dict.
+        if ("width" not in sz) or ("height" not in sz):
+            continue
+        if ("fps" not in sz) or (sz["fps"]==[]):
+            continue
+
         w = sz["width"]
         h = sz["height"]
+        if (w==0 or h==0):
+            continue
+
         fps = int(math.ceil(sz["fps"][0]))
         f = format_dict["pixelformat"]
         f_gst = fourcc_to_gst(f)
 
         # Exclude certain Boson formats first.
-        if camera_type == "boson" and (w, h, f_gst) in Boson_Exclude_List:
-            continue
+        # if camera_type == "boson" and (w, h, f_gst) in Boson_Exclude_List:
+        #    continue
 
         if camera_type == "boson" and f_gst == "GRAY16_LE":
             # Boson gray16 special treatment.
@@ -523,10 +521,10 @@ def v4l2_format_to_gst(
             t16 = (w, h, f"fps={fps},format={f_gst}, out=16bit", s16)
             s_list.append(t8)
             s_list.append(t16)
-        elif f_gst == "NV12GRAY8":
-            s = f"video/x-raw,width={w},height={h},framerate={fps}/1,format=NV12 ! videoconvert ! video/x-raw,format=GRAY8 ! videoconvert"
-            t = (w, h, f"fps={fps},format={f_gst}", s)
-            s_list.append(t)
+        # elif f_gst == "NV12GRAY8":
+        #    s = f"video/x-raw,width={w},height={h},framerate={fps}/1,format=NV12 ! videoconvert ! video/x-raw,format=GRAY8 ! videoconvert"
+        #    t = (w, h, f"fps={fps},format={f_gst}", s)
+        #    s_list.append(t)
         else:
             # Regular gst string.
             s = f"video/x-raw,width={w},height={h},framerate={fps}/1,format={f_gst} ! videoconvert"
@@ -578,7 +576,7 @@ def camera_to_gst_list(device):
         dev_len = len("/dev/video")
         camera_id = int(device[dev_len:]) if len(device) > dev_len else 0
         gray16_para = boson_calculate_linear(camera_id, 320, 256)
-        camera_formats = add_formats_boson(camera_formats)
+        # camera_formats = add_formats_boson(camera_formats)
     else:
         # Default 14bits to 16bits and 8bits tuple
         gray16_para = (0, 4.0, 0.0155649)

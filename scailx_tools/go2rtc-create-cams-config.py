@@ -8,6 +8,8 @@ import shutil
 from pathlib import Path
 
 from vdlg_lvds.v4l2_detect_formats import camera_to_gst_list
+from vdlg_lvds.detect_cameras_live import camera_dict
+
 
 """
 
@@ -21,23 +23,6 @@ File:   go2rtc-create-cams-config.py
 By:			Kobus (in 2025 and before) and jye@videologyinc.com
 
 """
-
-# Currently supports 4 camera types:
-# global shutter = AR0234   => ar0234
-# ZoomBlock = lvds2mipi     => zoomblock
-# Boson = flir or boson     => boson
-# imx series = imx          => imx
-
-# Camera key words in device tree and its regular names
-camera_dict = {
-    "AR0234": "ar0234",
-    "lvds2mipi": "zoomblock",
-    "flir": "boson",
-    "imx900": "imx900",
-    "imx678": "imx678",
-    "imx662": "imx662",
-}
-""" Camera key words in device tree and its regular names """
 
 
 # Camera gst dict (high resolution, low resolution and format multiple settings tuples with 4 items each)
