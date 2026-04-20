@@ -18,10 +18,18 @@ import subprocess
 import re
 import copy
 import math
+import json
 
 from vdlg_lvds.detect_cameras_live import detect_camera_type, camera_dict
 from vdlg_lvds.boson_stats import boson_show_telemetry as boson_calculate_linear
 
+# Maximum resolution Scailx decoder h264 supports.
+MAX_WIDTH = 1920
+MAX_HEIGHT = 1080
+
+
+Formats_Exclude_AR0234 = ["BGRA", "BGRx", "RGB"]
+"""Global shutter camera: remove unwanted formats"""
 
 Format_Exclude_List = ["NM12", "YUV4", "YM24"]
 """ Camera formats to exclude from go2rtc stream list. """
@@ -52,6 +60,17 @@ Object_Detection_List = [
 ]
 """ List of resolution and format to add thermal and object detection pipelines. """
 
+# Calculate stepwise closest value <=max if input > max.
+def closest_value(val, istep, max_val):
+    if val <= max_val:
+        return val
+
+    istep = max(istep, 1)
+    # val > max_val => diff = val - max; ns = diff//istep; ret = val - ns*step
+    ret = val - (val - max_val)//istep *istep
+
+    return ret if ret<=max_val else ret - istep
+
 
 def parse_v4l2_formats(device="/dev/video0"):
     """
@@ -81,6 +100,9 @@ def parse_v4l2_formats(device="/dev/video0"):
     size_pattern = re.compile(r"Size:\s+Discrete\s+(\d+)x(\d+)")
     fps_pattern = re.compile(r"Interval:\s+Discrete\s+.*?\s+\(([\d\.]+)\s+fps\)")
 
+    # For global shutter cameras etc.
+    stepwise_pattern = re.compile(r"Size: Stepwise (\d+)x(\d+) - (\d+)x(\d+) with step (\d+)/(\d+)")
+
     for line in output.splitlines():
         line = line.strip()
 
@@ -105,6 +127,21 @@ def parse_v4l2_formats(device="/dev/video0"):
             }
             current_format["sizes"].append(current_size)
             continue
+        
+        # Parse Stepwise Sizes (minx, miny, maxx, maxy, stepx, stepy)
+        if "Size: Stepwise" in line and current_format is not None:
+            stepwise_match = stepwise_pattern.search(line)
+            if stepwise_match:
+                # res = f"Stepwise: {match.group(1)}x{match.group(2)} to {match.group(3)}x{match.group(4)}, Step: {match.group(5)}x{match.group(6)}"
+                # Only use maximum resolution for now.
+                w = closest_value(int(stepwise_match.group(3)), int(stepwise_match.group(5)), MAX_WIDTH)
+                h = closest_value(int(stepwise_match.group(4)), int(stepwise_match.group(6)), MAX_HEIGHT)
+                current_size = {
+                    "width": w,
+                    "height": h,
+                    "fps": [],
+                }
+                current_format['sizes'].append(current_size)
 
         # Match FPS line
         fps_match = fps_pattern.search(line)
@@ -476,7 +513,7 @@ def v4l2_format_to_gst(
         # Make sure we have these keys in dict.
         if ("width" not in sz) or ("height" not in sz):
             continue
-        if ("fps" not in sz) or (sz["fps"]==[]):
+        if ("fps" not in sz):
             continue
 
         w = sz["width"]
@@ -484,9 +521,16 @@ def v4l2_format_to_gst(
         if (w==0 or h==0):
             continue
 
-        fps = int(math.ceil(sz["fps"][0]))
+        # print(sz)
+
+        # No fps field. Set to 60.
+        fps = 60 if (sz["fps"]==[]) else int(math.ceil(sz["fps"][0]))
         f = format_dict["pixelformat"]
         f_gst = fourcc_to_gst(f)
+
+        # Skip some slow formats of global shutter camera.
+        if camera_type=="ar0234" and f_gst in Formats_Exclude_AR0234:
+            continue
 
         if camera_type == "boson" and f_gst == "GRAY16_LE":
             # Boson gray16 special treatment.
@@ -543,13 +587,15 @@ def camera_to_gst_list(device):
     """
 
     camera_type, cam_path = detect_camera_type(device)
+    # print(camera_type)
 
     camera_formats = formats_filter_out_unwanted(parse_v4l2_formats(device))
-    # print(camera_type)
+
     if camera_type == "zoomblock":
         # Add full resolution and framerate support for ZoomBlock (from visca commands)
         print("Create new format list for ZoomBlock cameras.")
         camera_formats = add_formats_lvds(camera_formats)
+
     # print(json.dumps(camera_formats, indent=2))
 
     # For Boson camera, grab one frame of gray16 format and calculate stats for linear transform of gray16 => 16bit and 8bit

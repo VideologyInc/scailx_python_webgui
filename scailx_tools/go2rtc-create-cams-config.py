@@ -154,7 +154,8 @@ def get_camera_gst(name, vdev):
 
     """
 
-    if name == "zoomblock" or name == "boson" or name == "usb":
+    # For global shutter ar0234, use newly added Size: Stepwise max formats.
+    if name=="ar0234" or name == "zoomblock" or name == "boson" or name == "usb":
         # For Zoom Block camera through LVDS board, use newly created info list (from Visca commands).
         # For Boson and usb camera, use auto-generated format lists parsed from v4l2-ctl --list-formats-ext command.
         cam_real_path = Path(vdev).resolve()
@@ -166,7 +167,7 @@ def get_camera_gst(name, vdev):
         else:
             return info_list                  
     else:
-        # For global shutter ar0234 and Sony sensors imx series, use constant format list (no auto generated from v4l2 commands).
+        # For Sony sensors imx series, use constant format list (no auto generated from v4l2 commands).
         info_list = (
             camera_gst_dict[name]
             if name in camera_gst_dict
