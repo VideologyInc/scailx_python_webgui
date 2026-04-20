@@ -14,11 +14,8 @@ By:			jye@videologyinc.com
 """
 
 import argparse
-import time
 import subprocess
 import re
-import json
-import glob
 import copy
 import math
 
@@ -44,18 +41,6 @@ Fourcc_Dict = {
     "NV12Gray8": "NV12GRAY8",
 }
 """ dict of v4l2 FOURCC to gstreamer pixel format string conversion. """
-
-# Boson camera bug of 640 x 512 gray8 and gray16 formats (data packed as YUV or NV12 with UV channel black but labelled as gray8 or gray16 ;-).
-# Boson+ camera works fine without this problem.
-# Just exclude them for now.
-# To do, call Boson SDK py to detect Boson camera model number to exclude optionally.
-Boson_Exclude_List = [
-    (640, 512, "GRAY8"),
-    (640, 512, "GRAY16_LE"),
-    (640, 514, "GRAY8"),
-    (640, 514, "GRAY16_LE"),
-]
-""" Boson formats to exclude (only some Boson cameras are correct). """
 
 # Input framrrate is not important here because we'll videorate it to 10/1 ;-)
 Object_Detection_List = [
@@ -156,7 +141,7 @@ def formats_filter_out_unwanted(format_list):
     return format_list_filtered
 
 
-# For Boson camera, because of 640 x 512 gray8 issue, need to add extra 640 x 512 x NV12 to Gray8 conversion format ;-)
+# For Boson camera, add some formats.
 def add_formats_boson(format_list):
     """
     Given input camera's format list from other functions, add a few special one to replace problematic 640 x 512 gray.
@@ -502,10 +487,6 @@ def v4l2_format_to_gst(
         fps = int(math.ceil(sz["fps"][0]))
         f = format_dict["pixelformat"]
         f_gst = fourcc_to_gst(f)
-
-        # Exclude certain Boson formats first.
-        # if camera_type == "boson" and (w, h, f_gst) in Boson_Exclude_List:
-        #    continue
 
         if camera_type == "boson" and f_gst == "GRAY16_LE":
             # Boson gray16 special treatment.

@@ -3,7 +3,6 @@ import os
 import yaml
 import re
 import glob
-import tempfile
 import shutil
 from pathlib import Path
 
@@ -15,12 +14,13 @@ from vdlg_lvds.detect_cameras_live import camera_dict
 
 File:   go2rtc-create-cams-config.py
 
+2026.0420.  Added Boson 320 and Boson 640 formats without special formats exclusion.
 2026.0310.  Added more resolution formats for 3 Sony imx sensors from Framos driver repository xml files.
 2026.0302.  Added Zoom Block camera format full list (resolution, fps, formats) from Visca commands.
 2026.0226.  Added known camera popular resolution, framerate and format list. 
 2026.0226.  Fixed crashing if not /dev/video? detected.
 
-By:			Kobus (in 2025 and before) and jye@videologyinc.com
+By:			Kobus (in Dec 2025 and before) and jye@videologyinc.com (Since Jan 2026)
 
 """
 
@@ -32,24 +32,14 @@ camera_gst_dict = {
         (1280, 720, "default", "video/x-raw,width=1280,height=720,framerate=60/1"),
     ],
     "zoomblock": [
-        (1920, 1080, "default", "video/x-raw,width=1920,height=1080,framerate=25/1"),
-        (1280, 720, "default", "video/x-raw,width=1280,height=720,framerate=25/1"),
+        # Default Zoom Block format and framerate.
+        (1920, 1080, "default", "video/x-raw,width=1920,height=1080,framerate=60/1"),
+        (1280, 720, "default", "video/x-raw,width=1280,height=720,framerate=60/1"),
     ],
     "boson": [
-        (640, 512, "default", "video/x-raw,width=640,height=512,framerate=60/1"),
-        (320, 256, "default", "video/x-raw,width=320,height=256,framerate=60/1"),
-        (
-            640,
-            512,
-            "GRAY8",
-            "video/x-raw,width=640,height=512,framerate=60/1,format=GRAY8 ! videoconvert ! video/x-raw,format=NV12",
-        ),
-        (
-            320,
-            256,
-            "GRAY8",
-            "video/x-raw,width=320,height=256,framerate=60/1,format=GRAY8 ! videoconvert ! video/x-raw,format=NV12",
-        ),
+        # Both Boson 320 and Boson 640 support these color formats.
+        (640, 512, "default", "video/x-raw,width=640,height=512,format=NV12,framerate=60/1"),
+        (640, 514, "default", "video/x-raw,width=640,height=514,format=NV12,framerate=60/1"),
     ],
     # imx sensors use their *.xml from framos-vvcam-module repository
     "imx900": [
@@ -164,11 +154,19 @@ def get_camera_gst(name, vdev):
 
     """
 
-    # For Zoom Block camera through LVDS board, use newly created info list (from Visca commands).
     if name == "zoomblock" or name == "boson" or name == "usb":
+        # For Zoom Block camera through LVDS board, use newly created info list (from Visca commands).
+        # For Boson and usb camera, use auto-generated format lists parsed from v4l2-ctl --list-formats-ext command.
         cam_real_path = Path(vdev).resolve()
-        info_list = camera_to_gst_list(str(cam_real_path))
+        info_list = []
+        try:
+            info_list = camera_to_gst_list(str(cam_real_path))
+        except:
+            return []
+        else:
+            return info_list                  
     else:
+        # For global shutter ar0234 and Sony sensors imx series, use constant format list (no auto generated from v4l2 commands).
         info_list = (
             camera_gst_dict[name]
             if name in camera_gst_dict
