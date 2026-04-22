@@ -14,28 +14,22 @@ By:			jye@videologyinc.com
 """
 
 import argparse
-import time
 import subprocess
 import re
-import json
-import glob
 import copy
 import math
+import json
 
-from vdlg_lvds.detect_cameras_live import detect_camera_type
+from vdlg_lvds.detect_cameras_live import detect_camera_type, camera_dict
 from vdlg_lvds.boson_stats import boson_show_telemetry as boson_calculate_linear
 
-# Camera key words in device tree and its regular names
-camera_dict = {
-    "AR0234": "ar0234",
-    "lvds2mipi": "zoomblock",
-    "flir": "boson",
-    "imx900": "imx900",
-    "imx678": "imx678",
-    "imx662": "imx662",
-}
-""" Camera key words in device tree and its regular names. """
+# Maximum resolution Scailx decoder h264 supports.
+MAX_WIDTH = 1920
+MAX_HEIGHT = 1080
 
+
+Formats_Exclude_AR0234 = ["BGRA", "BGRx", "RGB"]
+"""Global shutter camera: remove unwanted formats"""
 
 Format_Exclude_List = ["NM12", "YUV4", "YM24"]
 """ Camera formats to exclude from go2rtc stream list. """
@@ -43,6 +37,7 @@ Format_Exclude_List = ["NM12", "YUV4", "YM24"]
 Desc_Exclude_List = ["Bayer", "JPEG", "10-bit", "12-bit", "5-6-5"]
 """ Camera description from v4l2-ctl --list-formats-ext command to exclude from go2rtc stream list. """
 
+# Added a few Bayer formats, etc.
 Fourcc_Dict = {
     "YUYV": "YUY2",
     "NV12": "NV12",
@@ -53,20 +48,12 @@ Fourcc_Dict = {
     "XR24": "BGRx",
     "AR24": "BGRA",
     "NV12Gray8": "NV12GRAY8",
+    "BA81": "rggb",
+    "RGGB": "rggb",
+    "GBRG": "gbrg",
+    "GRBG": "grbg",
 }
 """ dict of v4l2 FOURCC to gstreamer pixel format string conversion. """
-
-# Boson camera bug of 640 x 512 gray8 and gray16 formats (data packed as YUV or NV12 with UV channel black but labelled as gray8 or gray16 ;-).
-# Boson+ camera works fine without this problem.
-# Just exclude them for now.
-# To do, call Boson SDK py to detect Boson camera model number to exclude optionally.
-Boson_Exclude_List = [
-    (640, 512, "GRAY8"),
-    (640, 512, "GRAY16_LE"),
-    (640, 514, "GRAY8"),
-    (640, 514, "GRAY16_LE"),
-]
-""" Boson formats to exclude (only some Boson cameras are correct). """
 
 # Input framrrate is not important here because we'll videorate it to 10/1 ;-)
 Object_Detection_List = [
@@ -77,6 +64,17 @@ Object_Detection_List = [
     (640, 512, "NV12GRAY8"),
 ]
 """ List of resolution and format to add thermal and object detection pipelines. """
+
+# Calculate stepwise closest value <=max if input > max.
+def closest_value(val, istep, max_val):
+    if val <= max_val:
+        return val
+
+    istep = max(istep, 1)
+    # val > max_val => diff = val - max; ns = diff//istep; ret = val - ns*step
+    ret = val - (val - max_val)//istep *istep
+
+    return ret if ret<=max_val else ret - istep
 
 
 def parse_v4l2_formats(device="/dev/video0"):
@@ -107,6 +105,9 @@ def parse_v4l2_formats(device="/dev/video0"):
     size_pattern = re.compile(r"Size:\s+Discrete\s+(\d+)x(\d+)")
     fps_pattern = re.compile(r"Interval:\s+Discrete\s+.*?\s+\(([\d\.]+)\s+fps\)")
 
+    # For global shutter cameras etc.
+    stepwise_pattern = re.compile(r"Size: Stepwise (\d+)x(\d+) - (\d+)x(\d+) with step (\d+)/(\d+)")
+
     for line in output.splitlines():
         line = line.strip()
 
@@ -131,6 +132,21 @@ def parse_v4l2_formats(device="/dev/video0"):
             }
             current_format["sizes"].append(current_size)
             continue
+        
+        # Parse Stepwise Sizes (minx, miny, maxx, maxy, stepx, stepy)
+        if "Size: Stepwise" in line and current_format is not None:
+            stepwise_match = stepwise_pattern.search(line)
+            if stepwise_match:
+                # res = f"Stepwise: {match.group(1)}x{match.group(2)} to {match.group(3)}x{match.group(4)}, Step: {match.group(5)}x{match.group(6)}"
+                # Only use maximum resolution for now.
+                w = closest_value(int(stepwise_match.group(3)), int(stepwise_match.group(5)), MAX_WIDTH)
+                h = closest_value(int(stepwise_match.group(4)), int(stepwise_match.group(6)), MAX_HEIGHT)
+                current_size = {
+                    "width": w,
+                    "height": h,
+                    "fps": [],
+                }
+                current_format['sizes'].append(current_size)
 
         # Match FPS line
         fps_match = fps_pattern.search(line)
@@ -167,7 +183,7 @@ def formats_filter_out_unwanted(format_list):
     return format_list_filtered
 
 
-# For Boson camera, because of 640 x 512 gray8 issue, need to add extra 640 x 512 x NV12 to Gray8 conversion format ;-)
+# For Boson camera, add some formats.
 def add_formats_boson(format_list):
     """
     Given input camera's format list from other functions, add a few special one to replace problematic 640 x 512 gray.
@@ -499,14 +515,26 @@ def v4l2_format_to_gst(
     obj_list = []
 
     for sz in format_dict["sizes"]:
+        # Make sure we have these keys in dict.
+        if ("width" not in sz) or ("height" not in sz):
+            continue
+        if ("fps" not in sz):
+            continue
+
         w = sz["width"]
         h = sz["height"]
-        fps = int(math.ceil(sz["fps"][0]))
+        if (w==0 or h==0):
+            continue
+
+        # print(sz)
+
+        # No fps field. Set to 60.
+        fps = 60 if (sz["fps"]==[]) else int(math.ceil(sz["fps"][0]))
         f = format_dict["pixelformat"]
         f_gst = fourcc_to_gst(f)
 
-        # Exclude certain Boson formats first.
-        if camera_type == "boson" and (w, h, f_gst) in Boson_Exclude_List:
+        # Skip some slow formats of global shutter camera.
+        if camera_type=="ar0234" and f_gst in Formats_Exclude_AR0234:
             continue
 
         if camera_type == "boson" and f_gst == "GRAY16_LE":
@@ -523,10 +551,10 @@ def v4l2_format_to_gst(
             t16 = (w, h, f"fps={fps},format={f_gst}, out=16bit", s16)
             s_list.append(t8)
             s_list.append(t16)
-        elif f_gst == "NV12GRAY8":
-            s = f"video/x-raw,width={w},height={h},framerate={fps}/1,format=NV12 ! videoconvert ! video/x-raw,format=GRAY8 ! videoconvert"
-            t = (w, h, f"fps={fps},format={f_gst}", s)
-            s_list.append(t)
+        # elif f_gst == "NV12GRAY8":
+        #    s = f"video/x-raw,width={w},height={h},framerate={fps}/1,format=NV12 ! videoconvert ! video/x-raw,format=GRAY8 ! videoconvert"
+        #    t = (w, h, f"fps={fps},format={f_gst}", s)
+        #    s_list.append(t)
         else:
             # Regular gst string.
             s = f"video/x-raw,width={w},height={h},framerate={fps}/1,format={f_gst} ! videoconvert"
@@ -564,13 +592,15 @@ def camera_to_gst_list(device):
     """
 
     camera_type, cam_path = detect_camera_type(device)
+    # print(camera_type)
 
     camera_formats = formats_filter_out_unwanted(parse_v4l2_formats(device))
-    # print(camera_type)
+
     if camera_type == "zoomblock":
         # Add full resolution and framerate support for ZoomBlock (from visca commands)
         print("Create new format list for ZoomBlock cameras.")
         camera_formats = add_formats_lvds(camera_formats)
+
     # print(json.dumps(camera_formats, indent=2))
 
     # For Boson camera, grab one frame of gray16 format and calculate stats for linear transform of gray16 => 16bit and 8bit
@@ -578,7 +608,7 @@ def camera_to_gst_list(device):
         dev_len = len("/dev/video")
         camera_id = int(device[dev_len:]) if len(device) > dev_len else 0
         gray16_para = boson_calculate_linear(camera_id, 320, 256)
-        camera_formats = add_formats_boson(camera_formats)
+        # camera_formats = add_formats_boson(camera_formats)
     else:
         # Default 14bits to 16bits and 8bits tuple
         gray16_para = (0, 4.0, 0.0155649)
