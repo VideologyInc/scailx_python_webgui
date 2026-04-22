@@ -37,6 +37,7 @@ Format_Exclude_List = ["NM12", "YUV4", "YM24"]
 Desc_Exclude_List = ["Bayer", "JPEG", "10-bit", "12-bit", "5-6-5"]
 """ Camera description from v4l2-ctl --list-formats-ext command to exclude from go2rtc stream list. """
 
+# Added a few Bayer formats, etc.
 Fourcc_Dict = {
     "YUYV": "YUY2",
     "NV12": "NV12",
@@ -47,6 +48,10 @@ Fourcc_Dict = {
     "XR24": "BGRx",
     "AR24": "BGRA",
     "NV12Gray8": "NV12GRAY8",
+    "BA81": "rggb",
+    "RGGB": "rggb",
+    "GBRG": "gbrg",
+    "GRBG": "grbg",
 }
 """ dict of v4l2 FOURCC to gstreamer pixel format string conversion. """
 

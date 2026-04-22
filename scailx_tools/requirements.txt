@@ -1,6 +1,11 @@
 # python3 requirements list for new packages needed for detect_imx_lib=ve.py etc.
+# And for pytest packages
 
 jc==1.25.6
 Pygments==2.20.0
 ruamel.yaml==0.19.1
 xmltodict==1.0.4
+pytest==9.0.3
+pytest-cov==7.1.0
+pytest-benchmark==5.2.3
+pytest-timeout==2.4.0

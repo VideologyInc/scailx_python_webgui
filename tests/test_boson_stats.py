@@ -1,3 +1,12 @@
+"""
+
+pytest to test boson_stats with benchmark.
+
+2026.0422.  Created.
+
+By: jye@videologyinc.com
+
+"""
 
 from vdlg_lvds.boson_stats import boson_show_telemetry
 
@@ -23,7 +32,7 @@ def test_boson_stats(prefix):
         print(f"An error occurred: {e}")
         return
   
-    assert (alpha16 is not 0) and (alpha8 is not 0)
+    assert (alpha16 !=0) and (alpha8 !=0)
 
     print("Gray16 transform coefficietnts: ")
     print(f"out16 = (in16 - {beta}) x {alpha16}")
@@ -44,4 +53,15 @@ def test_not_boson_stats():
         print(f"An error occurred: {e}")
         return
   
-    assert (alpha16 is not 0) and (alpha8 is not 0)
+    assert (alpha16 !=0) and (alpha8 !=0)
+
+
+# Test benchmark speed to calculate boson stats without saving to file.
+@pytest.mark.parametrize("width, height", [
+    (320, 256),
+    (640, 512),
+    (640, 514),
+])
+def test_boson_stats_speed(benchmark, width, height):
+
+    ret = benchmark(boson_show_telemetry, 1, width, height, "", False)
