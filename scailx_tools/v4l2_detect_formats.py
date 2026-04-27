@@ -547,18 +547,18 @@ def v4l2_format_to_gst(
                 boson_gray16_nnstreamer(w, h, fps, f_gst, True, gray16_para)
                 + "videoconvert "
             )
-            t8 = (w, h, f"fps={fps},format={f_gst}, out=8bit", s8)
-            t16 = (w, h, f"fps={fps},format={f_gst}, out=16bit", s16)
+            t8 = (w, h, f"fps={fps},format={f_gst}, out=8bit", s8, fps)
+            t16 = (w, h, f"fps={fps},format={f_gst}, out=16bit", s16, fps)
             s_list.append(t8)
             s_list.append(t16)
         # elif f_gst == "NV12GRAY8":
         #    s = f"video/x-raw,width={w},height={h},framerate={fps}/1,format=NV12 ! videoconvert ! video/x-raw,format=GRAY8 ! videoconvert"
-        #    t = (w, h, f"fps={fps},format={f_gst}", s)
+        #    t = (w, h, f"fps={fps},format={f_gst}", s, fps)
         #    s_list.append(t)
         else:
             # Regular gst string.
             s = f"video/x-raw,width={w},height={h},framerate={fps}/1,format={f_gst} ! videoconvert"
-            t = (w, h, f"fps={fps},format={f_gst}", s)
+            t = (w, h, f"fps={fps},format={f_gst}", s, fps)
             s_list.append(t)
 
         # Add object detection gst str if required.
@@ -566,10 +566,10 @@ def v4l2_format_to_gst(
             sobj = object_detection_gst(w, h, fps, f_gst, False, True, gray16_para)
             sthermal = object_detection_gst(w, h, fps, f_gst, False, False, gray16_para)
             if sobj:
-                tobj = (w, h, f"fps={fps},format={f_gst}, AI yolov8n", sobj)
+                tobj = (w, h, f"fps={fps},format={f_gst}, AI yolov8n", sobj, fps)
                 obj_list.append(tobj)
             if sthermal:
-                tobj = (w, h, f"fps={fps},format={f_gst}, AI thermal", sthermal)
+                tobj = (w, h, f"fps={fps},format={f_gst}, AI thermal", sthermal, fps)
                 obj_list.append(tobj)
 
     return s_list + obj_list
