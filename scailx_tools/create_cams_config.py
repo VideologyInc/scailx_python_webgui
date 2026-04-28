@@ -217,6 +217,14 @@ def get_camera_settings(name, vdev):
 
         return setiing_list
 
+# Check whether one_list is a duplcate one in 2nd list of lists ;-)
+def is_duplicate(one_list, multi_list):
+    if multi_list==[]:
+        return False
+    for name, onels in multi_list:
+        if (one_list == onels):
+            return True
+    return False
 
 def create_cam_config() -> (list[tuple], list[dict]):
     cam_config = list[tuple[str, str, int, int, int, str, str]]()
@@ -238,7 +246,8 @@ def create_cam_config() -> (list[tuple], list[dict]):
 
         info_list = get_camera_gst(name, vdev)
         settings_list = get_camera_settings(name, vdev)
-        cam_settings_list.extend((name, settings_list))
+        if settings_list !=[]:
+            cam_settings_list.append((name, settings_list))
 
         # VPU quality settings: qp above35 gives a grainy image. Below 20 the bitrate starts getting excessive.
         # Parse all resolutions and formats of the camera, may be >=2 ;-)
@@ -260,7 +269,9 @@ def create_cam_config() -> (list[tuple], list[dict]):
 
                 info_list = get_camera_gst(name, vdev)
                 settings_list = get_camera_settings(name, vdev)
-                cam_settings_list.extend((name, settings_list))
+                # Double check duplicate usb camera settings at same same device path.
+                if settings_list !=[] and (not is_duplicate(settings_list, cam_settings_list)):
+                    cam_settings_list.append((name, settings_list))
 
                 for info in info_list:
                     width, height, format_str, gst_str, fps = info
