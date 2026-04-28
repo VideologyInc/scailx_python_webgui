@@ -18,6 +18,8 @@ File:   create_cams_config.py
 2026.0310.  Added more resolution formats for 3 Sony imx sensors from Framos driver repository xml files.
 2026.0420.  Moved camera detection logic to separate file create_cams_config.py, added type hints and refactored code.
 
+2026.0428.  Added functions to generate camera settings list compatible with Portal.
+
 By:			Kobus (in 2025 and before), jye@videologyinc.com and mmikhaliuk@piesoft.us
 
 """
@@ -236,7 +238,7 @@ def create_cam_config() -> (list[tuple], list[dict]):
 
         info_list = get_camera_gst(name, vdev)
         settings_list = get_camera_settings(name, vdev)
-        cam_settings_list.extend(settings_list)
+        cam_settings_list.extend((name, settings_list))
 
         # VPU quality settings: qp above35 gives a grainy image. Below 20 the bitrate starts getting excessive.
         # Parse all resolutions and formats of the camera, may be >=2 ;-)
@@ -258,7 +260,7 @@ def create_cam_config() -> (list[tuple], list[dict]):
 
                 info_list = get_camera_gst(name, vdev)
                 settings_list = get_camera_settings(name, vdev)
-                cam_settings_list.extend(settings_list)
+                cam_settings_list.extend((name, settings_list))
 
                 for info in info_list:
                     width, height, format_str, gst_str, fps = info

@@ -9,8 +9,10 @@ from create_cams_config import create_cam_config
 File:   go2rtc-create-cams-config.py
 
 2026.0420.  Moved camera detection logic to separate file create_cams_config.py.
-
 By:	 mmikhaliuk@piesoft.us
+
+2026.0428.  Added functions to generate camera settings list compatible with Portal.
+By:  jye@videologyinc.com
 
 """
 

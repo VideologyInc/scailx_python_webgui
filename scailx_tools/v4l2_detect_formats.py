@@ -9,6 +9,8 @@ File:   v4l2_detect_formats.py
 2026.0302.  Added Zoom Block camera format full list (resolution, fps, formats) from Visca commands.
 2026.0227.  Detect formats by parsing from v4l2 command v4l2-ctl -d /dev/video0 --list-formats-ext outputs.
 
+2026.0428.  Added functions to generate camera settings list compatible with Portal exclude all nnstreamer strings.
+
 By:			jye@videologyinc.com
 
 """
@@ -646,40 +648,41 @@ def camera_to_setting_list(device):
 
     # Skip all info using nnstreamer now for camera input settings.
     setting_list = []
-    for sz in camera_formats["sizes"]:
-        # Make sure we have these keys in dict.
-        if ("width" not in sz) or ("height" not in sz):
-            continue
-        if "fps" not in sz:
-            continue
+    for fd in camera_formats:
+        for sz in fd["sizes"]:
+            # Make sure we have these keys in dict.
+            if ("width" not in sz) or ("height" not in sz):
+                continue
+            if "fps" not in sz:
+                continue
 
-        w = sz["width"]
-        h = sz["height"]
-        if w == 0 or h == 0:
-            continue
+            w = sz["width"]
+            h = sz["height"]
+            if w == 0 or h == 0:
+                continue
 
-        # print(sz)
+            # print(sz)
 
-        # No fps field. Set to 60.
-        fps = 60 if (sz["fps"] == []) else int(math.ceil(sz["fps"][0]))
-        f = format_dict["pixelformat"]
-        f_gst = fourcc_to_gst(f)
+            # No fps field. Set to 60.
+            fps = 60 if (sz["fps"] == []) else int(math.ceil(sz["fps"][0]))
+            f = fd["pixelformat"]
+            f_gst = fourcc_to_gst(f)
 
-        # Skip some slow formats of global shutter camera.
-        if camera_type == "ar0234" and f_gst in Formats_Exclude_AR0234:
-            continue
+            # Skip some slow formats of global shutter camera.
+            if camera_type == "ar0234" and f_gst in Formats_Exclude_AR0234:
+                continue
 
-        # Regular gst string.
-        # s = f"video/x-raw,width={w},height={h},framerate={fps}/1,format={f_gst} ! videoconvert"
-        # t = (w, h, f"fps={fps},format={f_gst}", s, fps)
-        one = {}
-        one["format"] = f_gst
-        one["fps"] = fps
-        one["resolution"] = f"{w}x{h}"
-        one["device"] = device
-        setiing_list.append(one)
+            # Regular gst string.
+            # s = f"video/x-raw,width={w},height={h},framerate={fps}/1,format={f_gst} ! videoconvert"
+            # t = (w, h, f"fps={fps},format={f_gst}", s, fps)
+            one = {}
+            one["format"] = f_gst
+            one["fps"] = fps
+            one["resolution"] = f"{w}x{h}"
+            one["device"] = device
+            setting_list.append(one)
 
-    return setiing_list
+    return setting_list
 
 
 # Example Usage
@@ -699,9 +702,20 @@ if __name__ == "__main__":
         "-d", "--device", type=str, default="/dev/video0", help="camera device path"
     )
 
+    # Default is False.
+    parser.add_argument("-s", "--settings", action="store_true", help="generate and show camera settings only. Default = False.")
+
     args = parser.parse_args()
 
-    info_list = camera_to_gst_list(args.device)
+    if args.settings:
+        # Get and show camera settings compatible with Portal.
+        settings_list = camera_to_setting_list(args.device)
 
-    for info in info_list:
-        print(info)
+        for one_setting in settings_list:
+            print(one_setting)
+    else:
+        # Get go2RTC version of camera formats list containing gstreamer strings.
+        info_list = camera_to_gst_list(args.device)
+
+        for info in info_list:
+            print(info)
