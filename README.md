@@ -4,6 +4,8 @@ Scailx simple web ui
 
 Updates.
 
+2026.0428.  Added functions and codes to generate cemara settings list for Portal. They are saved to /var/tmp/cam_config.json.
+
 2026.0422.	Added subfolder ~/tests following standard pytest structure with 3 pytest files + assets subfolder to do go2rtc py codes unit tests.
 
 2026.0410.	Added detect_imx_live.py and new ~/imx/vvget version 1.10 to set/get camera parameters from json and txt file when streams starts.
