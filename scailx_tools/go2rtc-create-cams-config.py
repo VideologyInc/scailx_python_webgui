@@ -17,9 +17,10 @@ By:	 mmikhaliuk@piesoft.us
 
 def main():
     with open("/var/tmp/cam_config_new.yaml", "w") as f:
-        print(f'Start get camera config from device tree path to file {f.name}')
+        print(f"Start get camera config from device tree path to file {f.name}")
         config = {"streams": {}}
-        cam_config = create_cam_config()
+        # Camera settings list is NOT used by go2RTC but by Portal instead.
+        cam_config, cam_settings_list = create_cam_config()
         # cam_config = [("cam1-gs-AR0234", "/dev/video-isi-csi1", 1280, 720, 60, "default", "video/x-raw,width=1280,height=720,framerate=60/1")]
         for cam_config_item in cam_config:
             name, vdev, width, height, _fps, format_str, gst_str = cam_config_item
@@ -33,6 +34,7 @@ def main():
 
     # Copy /var/tmp/cam_config_new.yaml to /var/tmp/cam_config.yaml
     shutil.copyfile("/var/tmp/cam_config_new.yaml", "/var/tmp/cam_config.yaml")
+
 
 if __name__ == "__main__":
     main()
