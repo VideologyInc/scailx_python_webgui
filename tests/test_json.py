@@ -21,6 +21,7 @@ def test_camera_dict(camera_dict_name):
 
     assert camera_dict != {}
 
+    print()
     print(camera_dict)
 
 
@@ -33,4 +34,5 @@ def test_camera_gst(camera_gst_name):
 
     assert camera_gst != {}
 
+    print()
     print(camera_gst)
