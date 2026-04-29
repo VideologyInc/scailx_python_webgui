@@ -16,5 +16,4 @@ def xml_to_json(xml_name, json_name):
         json.dump(data_dict, json_file, indent=4)
 
 
-
 xml_to_json("IMX662_Basic_1920x1080.xml", "IMX662_Basic_1920x1080.json")
