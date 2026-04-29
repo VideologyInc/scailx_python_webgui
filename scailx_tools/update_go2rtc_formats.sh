@@ -5,6 +5,9 @@ echo Copy go2rtc*.py to /usr/bin/
 cp go2rtc-create-cams-config.py /usr/bin/
 cp create_cams_config.py /usr/bin/
 
+echo It needs two new json files.
+cp const/*.json /etc/default/
+
 echo Copy a few utility py files to /usr/lib/python3.12/site-packages/vdlg_lvds/ 
 cp v4l2_detect_formats.py /usr/lib/python3.12/site-packages/vdlg_lvds/
 cp detect_cameras_live.py /usr/lib/python3.12/site-packages/vdlg_lvds/
