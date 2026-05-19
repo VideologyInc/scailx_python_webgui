@@ -144,12 +144,13 @@ def create_cam_config() -> (list[tuple], list[dict]):
         # Get camera name and check its duplicate count as id.
         name = detect_camera_by_name(cam)
         camera_id = get_camera_id_by_name(name, cam_name_dict)
+        cam_real_path = str(Path(vdev).resolve())
 
         # Get cameramatching gst info
         info_list = get_camera_gst(name, vdev)
         settings_list = get_camera_settings(name, vdev)
         if settings_list != []:
-            cam_settings_list.append((name+ str(camera_id), settings_list))
+            cam_settings_list.append((name+ "_" + str(camera_id) + "_" + cam_real_path, settings_list))
 
         # VPU quality settings: qp above35 gives a grainy image. Below 20 the bitrate starts getting excessive.
         # Parse all resolutions and formats of the camera, may be >=2 ;-)
@@ -158,7 +159,7 @@ def create_cam_config() -> (list[tuple], list[dict]):
             if fps is None:
                 framerate = re.search(r"framerate=(\d+)/(\d+)", gst_str).group(1)
                 fps = int(framerate)
-            cam_config.append((cam + str(camera_id), vdev, width, height, fps, format_str, gst_str))
+            cam_config.append((cam+ "_" + str(camera_id) + "_" + cam_real_path, vdev, width, height, fps, format_str, gst_str))
 
     # Do the same for usb camera if any. Just one now ;-)
     usb_list = glob.glob("/dev/v4l/by-path/*")
