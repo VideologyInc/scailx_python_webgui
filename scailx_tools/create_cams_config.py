@@ -22,6 +22,8 @@ File:   create_cams_config.py
 
 2026.0428.  Moved camera_dict and camera_gst_dict to separate json files (by Alex) or import from detect_cameras_live (by Ping).
 
+2026.0519.  Added camera name + id + device path to 2 lists used by go2RTC and portal for multiple cameras with same name.
+
 By:			Kobus (in 2025 and before), jye@videologyinc.com and mmikhaliuk@piesoft.us
 
 """

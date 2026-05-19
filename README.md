@@ -2,7 +2,9 @@ Scailx simple web ui
 
 ============================================================================
 
-Updates.
+Updates in ~/scailx_tools/.
+
+2026.0519.	Added (camera name + id + device path) to 2 lists used by go2RTC and Portal.
 
 2026.0428.  Added functions and codes to generate cemara settings list for Portal. They are saved to /var/tmp/cam_config.json.
 
