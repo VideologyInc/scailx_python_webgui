@@ -30,6 +30,10 @@ boson_stats.py
 check_fix_hostname.py		
 
 	Check Scailx device hostname and fix using avahi or MAC address.
+	
+create_cams_config.py
+
+	Splitted from go2rtc*.py to do main job to generate 2 camera settings lists used by go2RTC (yaml version) and portal (json version).
 
 detect_cameras_live.py		
 
