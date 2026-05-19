@@ -174,7 +174,6 @@ def create_cam_config() -> (list[tuple], list[dict]):
                 usb_path_list.append(vdev)
 
                 name = "usb"
-                camera_id = get_camera_id_by_name(name, cam_name_dict)
 
                 info_list = get_camera_gst(name, vdev)
                 settings_list = get_camera_settings(name, vdev)
@@ -182,15 +181,16 @@ def create_cam_config() -> (list[tuple], list[dict]):
                 if settings_list != [] and (
                     not is_duplicate(settings_list, cam_settings_list)
                 ):
-                    cam_settings_list.append((name + str(camera_id), settings_list))
+                    camera_id = get_camera_id_by_name(name, cam_name_dict)
+                    cam_settings_list.append((name + str(camera_id) + "_" + vdev, settings_list))
 
-                for info in info_list:
-                    width, height, format_str, gst_str, fps = info
-                    if fps is None:
-                        fps = 30
-                    cam_config.append(
-                        (name + str(camera_id), vdev, width, height, fps, format_str, gst_str)
-                    )
+                    for info in info_list:
+                        width, height, format_str, gst_str, fps = info
+                        if fps is None:
+                            fps = 30
+                        cam_config.append(
+                            (name + str(camera_id)+ "_" + vdev, vdev, width, height, fps, format_str, gst_str)
+                        )
     return cam_config, cam_settings_list
 
 
