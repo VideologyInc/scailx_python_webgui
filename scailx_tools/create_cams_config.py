@@ -112,10 +112,23 @@ def is_duplicate(one_list, multi_list):
             return True
     return False
 
+# Check camera name in dict and return its count as id.
+# Update dict at the same time.
+def get_camera_id_by_name(name, cam_name_dict):
+    if name in cam_name_dict:
+        cam_name_dict[name] +=1
+        return cam_name_dict[name]
+    else:
+        cam_name_dict[name] =0
+        return 0
 
 def create_cam_config() -> (list[tuple], list[dict]):
     cam_config = list[tuple[str, str, int, int, int, str, str]]()
     cam_settings_list = []
+
+    # To count duplicate camera name counts and get 0 if not on the list.
+    cam_name_dict = {}
+
     # iterate over cam overlays in /proc/device-tree/chosen/overlays/
     for camfile in glob.iglob("/proc/device-tree/chosen/overlays/cam*"):
         cam = os.path.basename(camfile)
@@ -128,13 +141,15 @@ def create_cam_config() -> (list[tuple], list[dict]):
             continue
         vdev = devlist[0]
 
-        # Get camera name and matching gst info
+        # Get camera name and check its duplicate count as id.
         name = detect_camera_by_name(cam)
+        camera_id = get_camera_id_by_name(name, cam_name_dict)
 
+        # Get cameramatching gst info
         info_list = get_camera_gst(name, vdev)
         settings_list = get_camera_settings(name, vdev)
         if settings_list != []:
-            cam_settings_list.append((name, settings_list))
+            cam_settings_list.append((name+ str(camera_id), settings_list))
 
         # VPU quality settings: qp above35 gives a grainy image. Below 20 the bitrate starts getting excessive.
         # Parse all resolutions and formats of the camera, may be >=2 ;-)
@@ -143,16 +158,23 @@ def create_cam_config() -> (list[tuple], list[dict]):
             if fps is None:
                 framerate = re.search(r"framerate=(\d+)/(\d+)", gst_str).group(1)
                 fps = int(framerate)
-            cam_config.append((cam, vdev, width, height, fps, format_str, gst_str))
+            cam_config.append((cam + str(camera_id), vdev, width, height, fps, format_str, gst_str))
 
     # Do the same for usb camera if any. Just one now ;-)
     usb_list = glob.glob("/dev/v4l/by-path/*")
+    usb_path_list = []
     if usb_list:
         # Find first usb camera on the list.
         for s in usb_list:
             if "usb" in s:
                 vdev = str(Path(s).resolve())
+                # Check duplicate usb device path and skip it.
+                if vdev in usb_path_list:
+                    continue
+                usb_path_list.append(vdev)
+
                 name = "usb"
+                camera_id = get_camera_id_by_name(name, cam_name_dict)
 
                 info_list = get_camera_gst(name, vdev)
                 settings_list = get_camera_settings(name, vdev)
@@ -160,14 +182,14 @@ def create_cam_config() -> (list[tuple], list[dict]):
                 if settings_list != [] and (
                     not is_duplicate(settings_list, cam_settings_list)
                 ):
-                    cam_settings_list.append((name, settings_list))
+                    cam_settings_list.append((name + str(camera_id), settings_list))
 
                 for info in info_list:
                     width, height, format_str, gst_str, fps = info
                     if fps is None:
                         fps = 30
                     cam_config.append(
-                        (name, vdev, width, height, fps, format_str, gst_str)
+                        (name + str(camera_id), vdev, width, height, fps, format_str, gst_str)
                     )
     return cam_config, cam_settings_list
 
