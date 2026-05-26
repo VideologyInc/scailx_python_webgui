@@ -23,7 +23,7 @@ def parse_media_ctl(device=None):
     type_regex = re.compile(r"type\s+(.*?)\s+subtype\s+(.*?)\s+flags\s+(.*)")
     node_regex = re.compile(r"device node name\s+(.*)")
     pad_regex = re.compile(r"\s+pad(\d+):\s+(Sink|Source)")
-    format_regex = re.compile(r"\[fmt:(.*?)/(.*?) field:(.*?)\]")
+    format_regex = re.compile(r"\[stream:(.*?)/(.*?) field:(.*?)\]")
     link_regex = re.compile(r"->\s+\"(.*?)\":(\d+)\s+\[(.*?)\]")
 
     current_entity_id = None
@@ -53,11 +53,9 @@ def parse_media_ctl(device=None):
             if "type" in line:
                 t_match = type_regex.search(line)
                 if t_match:
-                    topology['entities'][current_entity_id].update({
-                        'type': t_match.group(1).strip(),
-                        'subtype': t_match.group(2).strip(),
-                        'flags': t_match.group(3).strip()
-                    })
+                    topology['entities'][current_entity_id]['type'] = t_match.group(1).strip()
+                    topology['entities'][current_entity_id]['subtype'] = t_match.group(2).strip()
+                    topology['entities'][current_entity_id]['flags'] = t_match.group(3).strip()
             
             elif "device node name" in line:
                 n_match = node_regex.search(line)
@@ -77,7 +75,7 @@ def parse_media_ctl(device=None):
                     }
             
             # Parse Formats
-            elif "[fmt:" in line:
+            elif "[stream:" in line:
                 f_match = format_regex.search(line)
                 if f_match and 'pads' in topology['entities'][current_entity_id]:
                     latest_pad = max(topology['entities'][current_entity_id]['pads'].keys())
@@ -96,6 +94,11 @@ def parse_media_ctl(device=None):
                         'target_pad': int(l_match.group(2)),
                         'flags': l_match.group(3).split(',')
                     })
+
+    for key, val in topology['entities'].items():
+        for kp in list(val['pads'].keys()):
+            if val['pads'][kp]['links']==[]:
+                val['pads'].pop(kp)
 
     return topology
 
