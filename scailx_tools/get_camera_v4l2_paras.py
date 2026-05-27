@@ -159,6 +159,15 @@ def get_v4l2_devices():
 
     return devices
 
+# Given device dict, detect all /dev/media? nodes and output their list
+def get_media_list(device_dict):
+    media_list = []
+    for camera_name, nodes in device_dict.items():
+        if "/dev/media" in nodes[0]:
+            media_list.append(nodes[0])
+    
+    return media_list
+
 # Given detected entities, extract camera path and subdev path with v4l2 controls.
 def extract_media_subdev(topo):
     ret_list = []
@@ -176,7 +185,7 @@ def extract_media_subdev(topo):
     return ret_list
 
 # Given input device dict, extract its subdev with corresponding csi list.
-def extract_v4l_subdev(device_dict):
+def extract_v4l2_subdev(device_dict):
     ret_list = []
 
     for camera_name, nodes in device_dict.items():
@@ -194,23 +203,32 @@ def extract_v4l_subdev(device_dict):
 
 # Run both media-ctl and v4l2-ctl commands to get valid (name, mipi path, subdev path) list 
 def get_v4l2_subdev(show=False):
-    # Run media-ctl command.
-    parsed_topology = parse_media_ctl()
-    if show:
-        print(json.dumps(parsed_topology, indent=4))
-
-    subdev_list = extract_media_subdev(parsed_topology)
-
     # Run v4l2-ctl --list-devices command
     device_mapping = get_v4l2_devices()
-    if show:
-        for camera_name, nodes in device_mapping.items():
-            print(f"Camera: {camera_name}")
-            print(f"  Nodes: {', '.join(nodes)}\n")
+    media_list = get_media_list(device_mapping)
 
-    v4l_subdev_list = extract_v4l_subdev(device_mapping)
+    full_subdev_list = []
+    # Run media-ctl command on each /dev/media? media device.
+    for media in media_list:
+        parsed_topology = parse_media_ctl(media)
+        if show:
+            print(json.dumps(parsed_topology, indent=4))
 
-    return subdev_list + v4l_subdev_list
+        subdev_list = extract_media_subdev(parsed_topology)
+
+        # extend subdev list
+        full_subdev_list.extend(subdev_list)
+
+        if show:
+            for camera_name, nodes in device_mapping.items():
+                print(f"Camera: {camera_name}")
+                print(f"  Nodes: {', '.join(nodes)}\n")
+
+    v4l2_subdev_list = extract_v4l2_subdev(device_mapping)
+    # Also extend list from v4l2 command.
+    full_subdev_list.extend(v4l2_subdev_list)
+
+    return full_subdev_list
 
 
 # Example usage
