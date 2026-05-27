@@ -114,7 +114,7 @@ def get_camera_settings(name, vdev):
 def is_duplicate(one_list, multi_list):
     if multi_list == []:
         return False
-    for name, onels in multi_list:
+    for name, onels, vdev, subdev in multi_list:
         if one_list == onels:
             return True
     return False
