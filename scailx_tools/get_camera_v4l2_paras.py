@@ -171,7 +171,7 @@ def extract_media_subdev(topo):
         if mipi_path.exists():
             mipi_str = str(mipi_path) 
             subdev = val["device_node"]
-            ret_list.append((name, mipi, subdev))
+            ret_list.append((name, mipi_str, subdev))
     
     return ret_list
 
