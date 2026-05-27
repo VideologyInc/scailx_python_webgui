@@ -6,6 +6,7 @@ import re
 from pathlib import Path
 
 from vdlg_lvds.v4l2_detect_formats import camera_to_gst_list, camera_to_setting_list
+from vdlg_lvds.get_camera_v4l2_paras import get_v4l2_subdev, mipi_to_subdev
 
 """
 
@@ -23,6 +24,8 @@ File:   create_cams_config.py
 2026.0428.  Moved camera_dict and camera_gst_dict to separate json files (by Alex) or import from detect_cameras_live (by Ping).
 
 2026.0519.  Added camera name + id + device path to 2 lists used by go2RTC and portal for multiple cameras with same name.
+
+2026.0527.  Added get camera v4l2 sundev path using media-ctl and v4l2-ctl commands.
 
 By:			Kobus (in 2025 and before), jye@videologyinc.com and mmikhaliuk@piesoft.us
 
@@ -48,6 +51,8 @@ try:
 except:
     from vdlg_lvds.detect_cameras_live import camera_gst_dict
 
+# Only these cameras have v4l2 subdev to get parameter controls.
+Camera_V4l_SubDev_List = ["ar0234", "imx662", "imx678", "imx900"]
 
 # Given camera name from device tree, find its matching regular name in camera_dict.
 def detect_camera_by_name(cam):
@@ -125,6 +130,10 @@ def get_camera_id_by_name(name, cam_name_dict):
         return 0
 
 def create_cam_config() -> (list[tuple], list[dict]):
+
+    # Get v4l2 subdev for ar0234 and imx cameras
+    subdev_list = get_v4l2_subdev()
+
     cam_config = list[tuple[str, str, int, int, int, str, str]]()
     cam_settings_list = []
 
@@ -148,11 +157,14 @@ def create_cam_config() -> (list[tuple], list[dict]):
         camera_id = get_camera_id_by_name(name, cam_name_dict)
         cam_real_path = str(Path(vdev).resolve())
 
+        # Get camera v4l2 subdev if on camera list
+        subdev = mipi_to_subdev(vdev, subdev_list) if name in Camera_V4l_SubDev_List else ""
+
         # Get cameramatching gst info
         info_list = get_camera_gst(name, vdev)
         settings_list = get_camera_settings(name, vdev)
         if settings_list != []:
-            cam_settings_list.append((name+ "_" + str(camera_id) + "_" + cam_real_path, settings_list))
+            cam_settings_list.append((name+ "_" + str(camera_id) + "_" + cam_real_path, settings_list, vdev, subdev))
 
         # VPU quality settings: qp above35 gives a grainy image. Below 20 the bitrate starts getting excessive.
         # Parse all resolutions and formats of the camera, may be >=2 ;-)
@@ -185,7 +197,7 @@ def create_cam_config() -> (list[tuple], list[dict]):
                     not is_duplicate(settings_list, cam_settings_list)
                 ):
                     camera_id = get_camera_id_by_name(name, cam_name_dict)
-                    cam_settings_list.append((name + str(camera_id) + "_" + vdev, settings_list))
+                    cam_settings_list.append((name + str(camera_id) + "_" + vdev, settings_list, vdev, vdev))
 
                     for info in info_list:
                         width, height, format_str, gst_str, fps = info

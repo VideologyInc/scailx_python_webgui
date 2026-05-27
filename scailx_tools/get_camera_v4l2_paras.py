@@ -230,6 +230,12 @@ def get_v4l2_subdev(show=False):
 
     return full_subdev_list
 
+# Given mipi_str and subdev list, detect match and return or "".
+def mipi_to_subdev(mipi_str, subdev_list):
+    for sub in subdev_list:
+        if mipi_str == sub[1]:
+            return sub[2]
+    return ""
 
 # Example usage
 if __name__ == "__main__":
