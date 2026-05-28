@@ -164,7 +164,7 @@ def create_cam_config() -> (list[tuple], list[dict]):
         info_list = get_camera_gst(name, vdev)
         settings_list = get_camera_settings(name, vdev)
         if settings_list != []:
-            cam_settings_list.append((name+ "_" + str(camera_id) + "_" + cam_real_path, settings_list, vdev, subdev))
+            cam_settings_list.append((name+ "_" + str(camera_id), settings_list, vdev, subdev))
 
         # VPU quality settings: qp above35 gives a grainy image. Below 20 the bitrate starts getting excessive.
         # Parse all resolutions and formats of the camera, may be >=2 ;-)
@@ -173,7 +173,7 @@ def create_cam_config() -> (list[tuple], list[dict]):
             if fps is None:
                 framerate = re.search(r"framerate=(\d+)/(\d+)", gst_str).group(1)
                 fps = int(framerate)
-            cam_config.append((cam+ "_" + str(camera_id) + "_" + cam_real_path, vdev, width, height, fps, format_str, gst_str))
+            cam_config.append((cam+ "_" + str(camera_id), vdev, width, height, fps, format_str, gst_str))
 
     # Do the same for usb camera if any. Just one now ;-)
     usb_list = glob.glob("/dev/v4l/by-path/*")
@@ -197,14 +197,14 @@ def create_cam_config() -> (list[tuple], list[dict]):
                     not is_duplicate(settings_list, cam_settings_list)
                 ):
                     camera_id = get_camera_id_by_name(name, cam_name_dict)
-                    cam_settings_list.append((name + str(camera_id) + "_" + vdev, settings_list, vdev, vdev))
+                    cam_settings_list.append((name + str(camera_id), settings_list, vdev, vdev))
 
                     for info in info_list:
                         width, height, format_str, gst_str, fps = info
                         if fps is None:
                             fps = 30
                         cam_config.append(
-                            (name + str(camera_id)+ "_" + vdev, vdev, width, height, fps, format_str, gst_str)
+                            (name + str(camera_id), vdev, width, height, fps, format_str, gst_str)
                         )
     return cam_config, cam_settings_list
 
