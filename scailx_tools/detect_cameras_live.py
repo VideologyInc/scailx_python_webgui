@@ -19,6 +19,8 @@ import os
 from pathlib import Path
 import warnings
 
+from vdlg_lvds.get_v4l2_linuxpy import get_camera_controls
+
 warnings.filterwarnings("ignore")
 os.environ["OPENCV_LOG_LEVEL"] = "OFF"
 os.environ["GST_DEBUG"] = "*:0"
@@ -306,6 +308,10 @@ def detect_cameras():
     for id in range(0, MAX_CAMERA_ID):
         camera_path = prefix + str(id)
         camera_name, devicetree_name = detect_camera_type(camera_path)
+        if camera_name == "usb":
+            camera_controls = get_camera_controls(camera_path)
+            if camera_controls == {}:
+                continue
         if camera_name != "":
             # Check camera on/off using OpenCV.
             is_on = check_camera(camera_path)
