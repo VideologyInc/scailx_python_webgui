@@ -42,20 +42,23 @@ def show_control_status(device: str) -> None:
 
 
 def get_camera_controls(device: str):
-    with Device(device) as cam:
-        ctrl_dict = {}
-        for ctrl in cam.controls.values():
-            if isinstance(ctrl, IntegerControl):
-                ctrl_dict[ctrl.name] = ["Int", ctrl.value, ctrl.minimum, ctrl.maximum, ctrl.step, ctrl.default, str(ctrl.flags)]
-            elif isinstance(ctrl, BooleanControl):
-                ctrl_dict[ctrl.name] = ["Bool", ctrl.value, ctrl.default, str(ctrl.flags)]
-            elif isinstance(ctrl, MenuControl):
-                ctrl_menu = {}
-                for key, value in ctrl.items():
-                    ctrl_menu[key] = value
-                ctrl_dict[ctrl.name] = ["Menu", ctrl.value, ctrl.default, ctrl_menu]
+    try:
+        with Device(device) as cam:
+            ctrl_dict = {}
+            for ctrl in cam.controls.values():
+                if isinstance(ctrl, IntegerControl):
+                    ctrl_dict[ctrl.name] = ["Int", ctrl.value, ctrl.minimum, ctrl.maximum, ctrl.step, ctrl.default, str(ctrl.flags)]
+                elif isinstance(ctrl, BooleanControl):
+                    ctrl_dict[ctrl.name] = ["Bool", ctrl.value, ctrl.default, str(ctrl.flags)]
+                elif isinstance(ctrl, MenuControl):
+                    ctrl_menu = {}
+                    for key, value in ctrl.items():
+                        ctrl_menu[key] = value
+                    ctrl_dict[ctrl.name] = ["Menu", ctrl.value, ctrl.default, ctrl_menu]
 
-        return ctrl_dict
+            return ctrl_dict
+    except:
+        return {}
 
     return {}
 

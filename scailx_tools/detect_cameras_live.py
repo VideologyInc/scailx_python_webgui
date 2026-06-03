@@ -5,6 +5,7 @@
 File:   detect_cameras_live.py
 
 2026.0306.  Detect camera live connection using device tree and camera path.
+2026.0603.  Added usb camera live detection using package linuxpy.
 
 By:			jye@videologyinc.com
 
@@ -18,6 +19,9 @@ import glob
 import os
 from pathlib import Path
 import warnings
+
+import sys
+import socket
 
 from vdlg_lvds.get_v4l2_linuxpy import get_camera_controls
 
@@ -364,7 +368,8 @@ def monitor_cameras_loop(camera_status, interval):
     while True:
         current_camera_status = detect_cameras()
         if current_camera_status == camera_status:
-            print("Camera status unchanged")
+            pass
+            # print("Camera status unchanged")
         else:
             print("Camera status changed: ", current_camera_status)
             camera_status = current_camera_status
@@ -376,6 +381,16 @@ def monitor_cameras_loop(camera_status, interval):
 
         time.sleep(interval)
 
+# Use socket to make sure we run only one instance.
+def ensure_single_instance_socket(socket_name="unique_app_socket"):
+    global _socket_lock
+    _socket_lock = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
+    try:
+        # A leading '\0' byte defines an abstract socket namespace in Linux
+        _socket_lock.bind(f"\0{socket_name}")
+    except socket.error:
+        print("Application is already running.", file=sys.stderr)
+        sys.exit(1)
 
 if __name__ == "__main__":
     """
@@ -384,6 +399,8 @@ if __name__ == "__main__":
     With user input argument of interval gap in seconds, the program loops to check camera status regularly and restart go2rtc.service if number of items changed.
 
     """
+    
+    ensure_single_instance_socket()
 
     parser = argparse.ArgumentParser(
         description="Detect cameras live",
