@@ -9,3 +9,5 @@ pytest==9.0.3
 pytest-cov==7.1.0
 pytest-benchmark==5.2.3
 pytest-timeout==2.4.0
+v4l2py==3.0.0
+linuxpy==0.24.0
