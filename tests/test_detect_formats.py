@@ -18,7 +18,7 @@ from vdlg_lvds.v4l2_detect_formats import (
 )
 
 # Must use importlib to import module containing "-" ;-)
-cam_config = importlib.import_module("vdlg_lvds.go2rtc-create-cams-config")
+cam_config = importlib.import_module("vdlg_lvds.create_cams_config")
 
 import pytest
 
@@ -37,6 +37,7 @@ def test_camera_to_gst_list(camera_id):
     assert info_list is not []
 
     print(camera_dev, "number of formats = ", len(info_list))
+    print(info_list)
 
 
 # Test fourcc to gst
@@ -60,6 +61,7 @@ def test_parse_v4l2_formats(camera_id):
     assert fmt_list is not []
 
     print(camera_dev, "parse formats = ", len(fmt_list))
+    print(fmt_list)
 
 
 # Test get_camera_gst.
@@ -83,3 +85,4 @@ def test_get_camera_gst(camera_id):
     assert info_list is not []
 
     print(name, camera_dev, "detected formats = ", len(info_list))
+    print(info_list)
