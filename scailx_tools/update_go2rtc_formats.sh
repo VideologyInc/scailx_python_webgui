@@ -15,6 +15,7 @@ cp boson_stats.py /usr/lib/python3.12/site-packages/vdlg_lvds/
 cp read_imx_json.py /usr/lib/python3.12/site-packages/vdlg_lvds/
 cp get_camera_v4l2_paras.py /usr/lib/python3.12/site-packages/vdlg_lvds/
 cp get_v4l2_linuxpy.py /usr/lib/python3.12/site-packages/vdlg_lvds/
+cp zoomblock_settings.py /usr/lib/python3.12/site-packages/vdlg_lvds/
 
 echo Copy go2rtc.service and check_usb_live.service to /usr/lib/systemd/system/
 cp go2rtc.service /usr/lib/systemd/system/
