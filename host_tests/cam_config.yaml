@@ -1,0 +1,73 @@
+streams:
+  cam0-gs-AR0234_0_1280x720_NV12_fps=15: exec:gst-launch-1.0 -q v4l2src device=/dev/video-isi-csi0
+    ! video/x-raw,width=1280,height=720,framerate=15/1 ! vpuenc_h264 qp-max=30 qp-min=20
+    ! fdsink
+  cam0-gs-AR0234_0_1280x720_NV12_fps=24: exec:gst-launch-1.0 -q v4l2src device=/dev/video-isi-csi0
+    ! video/x-raw,width=1280,height=720,framerate=24/1 ! vpuenc_h264 qp-max=30 qp-min=20
+    ! fdsink
+  cam0-gs-AR0234_0_1280x720_NV12_fps=30: exec:gst-launch-1.0 -q v4l2src device=/dev/video-isi-csi0
+    ! video/x-raw,width=1280,height=720,framerate=30/1 ! vpuenc_h264 qp-max=30 qp-min=20
+    ! fdsink
+  cam0-gs-AR0234_0_1280x720_NV12_fps=60: exec:gst-launch-1.0 -q v4l2src device=/dev/video-isi-csi0
+    ! video/x-raw,width=1280,height=720,framerate=60/1 ! vpuenc_h264 qp-max=30 qp-min=20
+    ! fdsink
+  cam0-gs-AR0234_0_1280x960_NV12_fps=15: exec:gst-launch-1.0 -q v4l2src device=/dev/video-isi-csi0
+    ! video/x-raw,width=1280,height=960,framerate=15/1 ! vpuenc_h264 qp-max=30 qp-min=20
+    ! fdsink
+  cam0-gs-AR0234_0_1280x960_NV12_fps=24: exec:gst-launch-1.0 -q v4l2src device=/dev/video-isi-csi0
+    ! video/x-raw,width=1280,height=960,framerate=24/1 ! vpuenc_h264 qp-max=30 qp-min=20
+    ! fdsink
+  cam0-gs-AR0234_0_1280x960_NV12_fps=30: exec:gst-launch-1.0 -q v4l2src device=/dev/video-isi-csi0
+    ! video/x-raw,width=1280,height=960,framerate=30/1 ! vpuenc_h264 qp-max=30 qp-min=20
+    ! fdsink
+  cam0-gs-AR0234_0_1280x960_NV12_fps=60: exec:gst-launch-1.0 -q v4l2src device=/dev/video-isi-csi0
+    ! video/x-raw,width=1280,height=960,framerate=60/1 ! vpuenc_h264 qp-max=30 qp-min=20
+    ! fdsink
+  cam0-gs-AR0234_0_1920x1080_NV12_fps=15: exec:gst-launch-1.0 -q v4l2src device=/dev/video-isi-csi0
+    ! video/x-raw,width=1920,height=1080,framerate=15/1 ! vpuenc_h264 qp-max=30 qp-min=20
+    ! fdsink
+  cam0-gs-AR0234_0_1920x1080_NV12_fps=24: exec:gst-launch-1.0 -q v4l2src device=/dev/video-isi-csi0
+    ! video/x-raw,width=1920,height=1080,framerate=24/1 ! vpuenc_h264 qp-max=30 qp-min=20
+    ! fdsink
+  cam0-gs-AR0234_0_1920x1080_NV12_fps=30: exec:gst-launch-1.0 -q v4l2src device=/dev/video-isi-csi0
+    ! video/x-raw,width=1920,height=1080,framerate=30/1 ! vpuenc_h264 qp-max=30 qp-min=20
+    ! fdsink
+  cam0-gs-AR0234_0_1920x1080_NV12_fps=60: exec:gst-launch-1.0 -q v4l2src device=/dev/video-isi-csi0
+    ! video/x-raw,width=1920,height=1080,framerate=60/1 ! vpuenc_h264 qp-max=30 qp-min=20
+    ! fdsink
+  cam0-gs-AR0234_0_320x320_NV12_fps=15: exec:gst-launch-1.0 -q v4l2src device=/dev/video-isi-csi0
+    ! video/x-raw,width=320,height=320,framerate=15/1 ! vpuenc_h264 qp-max=30 qp-min=20
+    ! fdsink
+  cam0-gs-AR0234_0_320x320_NV12_fps=24: exec:gst-launch-1.0 -q v4l2src device=/dev/video-isi-csi0
+    ! video/x-raw,width=320,height=320,framerate=24/1 ! vpuenc_h264 qp-max=30 qp-min=20
+    ! fdsink
+  cam0-gs-AR0234_0_320x320_NV12_fps=30: exec:gst-launch-1.0 -q v4l2src device=/dev/video-isi-csi0
+    ! video/x-raw,width=320,height=320,framerate=30/1 ! vpuenc_h264 qp-max=30 qp-min=20
+    ! fdsink
+  cam0-gs-AR0234_0_320x320_NV12_fps=60: exec:gst-launch-1.0 -q v4l2src device=/dev/video-isi-csi0
+    ! video/x-raw,width=320,height=320,framerate=60/1 ! vpuenc_h264 qp-max=30 qp-min=20
+    ! fdsink
+  cam0-gs-AR0234_0_640x480_NV12_fps=15: exec:gst-launch-1.0 -q v4l2src device=/dev/video-isi-csi0
+    ! video/x-raw,width=640,height=480,framerate=15/1 ! vpuenc_h264 qp-max=30 qp-min=20
+    ! fdsink
+  cam0-gs-AR0234_0_640x480_NV12_fps=24: exec:gst-launch-1.0 -q v4l2src device=/dev/video-isi-csi0
+    ! video/x-raw,width=640,height=480,framerate=24/1 ! vpuenc_h264 qp-max=30 qp-min=20
+    ! fdsink
+  cam0-gs-AR0234_0_640x480_NV12_fps=30: exec:gst-launch-1.0 -q v4l2src device=/dev/video-isi-csi0
+    ! video/x-raw,width=640,height=480,framerate=30/1 ! vpuenc_h264 qp-max=30 qp-min=20
+    ! fdsink
+  cam0-gs-AR0234_0_640x480_NV12_fps=60: exec:gst-launch-1.0 -q v4l2src device=/dev/video-isi-csi0
+    ! video/x-raw,width=640,height=480,framerate=60/1 ! vpuenc_h264 qp-max=30 qp-min=20
+    ! fdsink
+  cam0-gs-AR0234_0_640x640_NV12_fps=15: exec:gst-launch-1.0 -q v4l2src device=/dev/video-isi-csi0
+    ! video/x-raw,width=640,height=640,framerate=15/1 ! vpuenc_h264 qp-max=30 qp-min=20
+    ! fdsink
+  cam0-gs-AR0234_0_640x640_NV12_fps=24: exec:gst-launch-1.0 -q v4l2src device=/dev/video-isi-csi0
+    ! video/x-raw,width=640,height=640,framerate=24/1 ! vpuenc_h264 qp-max=30 qp-min=20
+    ! fdsink
+  cam0-gs-AR0234_0_640x640_NV12_fps=30: exec:gst-launch-1.0 -q v4l2src device=/dev/video-isi-csi0
+    ! video/x-raw,width=640,height=640,framerate=30/1 ! vpuenc_h264 qp-max=30 qp-min=20
+    ! fdsink
+  cam0-gs-AR0234_0_640x640_NV12_fps=60: exec:gst-launch-1.0 -q v4l2src device=/dev/video-isi-csi0
+    ! video/x-raw,width=640,height=640,framerate=60/1 ! vpuenc_h264 qp-max=30 qp-min=20
+    ! fdsink

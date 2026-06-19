@@ -2,6 +2,26 @@ Scailx simple web ui
 
 ============================================================================
 
+Windows host tests of go2rtc streams:
+
+2026.0619.  Added new subfolder ~\hosts_test with py program running on Windows python venv to test Scailx device go2rtc streams automatically.
+
+Syntax and examples:
+
+	python test_go2rtc_https.py -h		(show help)
+	
+	python test_go2rtc_https.py -s cam0-gs-AR0234_0_1280x720_NV12_fps=15 --hostname scailx-ai-boson8 -v 1  
+	(show video and do auto tests, press q to exit video window)
+
+	python test_go2rtc_https.py --hostname scailx-ai-boson8 -v 1  
+	(show video using first item from cam_config.yaml from Scailx device, and do auto tests, press q to exit video window)
+
+	python test_go2rtc_https.py --hostname scailx-ai-boson8
+	(get cam_config.yaml from Scailx device, and do auto tests only, no video to display)
+
+
+============================================================================
+
 Updates in ~/scailx_tools/.
 
 2026.0603.  Added detect usb live service to work together with go2rtc service. It needs new package linuxpy.
