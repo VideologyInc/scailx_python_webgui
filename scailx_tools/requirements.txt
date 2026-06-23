@@ -11,3 +11,5 @@ pytest-benchmark==5.2.3
 pytest-timeout==2.4.0
 v4l2py==3.0.0
 linuxpy==0.24.0
+hide_warnings==0.17
+
