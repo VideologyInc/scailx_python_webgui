@@ -30,6 +30,8 @@ TIMEOUT = 1000
 
 # fps is similar
 FPS_THRESHOLD = 0.5
+# fps is very close
+FPS_CLOSE = 0.1
 
 # lvds ZoomBlock cameras, we support 8 settings of resolution + fps.
 zoomblock_settings_dict = {
@@ -175,6 +177,7 @@ def test_lvds_resolutions(lvds_serial_device, lvds_device_path, lvds_fw_version)
     lowest_sim_brand = ""
 
     cnt_match = 0
+    cnt_close = 0
     cnt_similar = 0
     cnt_diff = 0
     cnt_fail = 0
@@ -190,6 +193,8 @@ def test_lvds_resolutions(lvds_serial_device, lvds_device_path, lvds_fw_version)
             if setting[0]==w and setting[1]==h:
                 if setting[2]==fps:
                     cnt_match +=1
+                elif math.fabs(setting[2] - fps)<=FPS_CLOSE:
+                    cnt_close +=1
                 elif math.fabs(setting[2] - fps)<=FPS_THRESHOLD:
                     cnt_similar +=1
                 else:
@@ -211,7 +216,7 @@ def test_lvds_resolutions(lvds_serial_device, lvds_device_path, lvds_fw_version)
         std_cv = statistics.stdev(fps_list_in_vs_cv)          
         print(f"{setting} stats, set/get diff = {mean_get:.4f}, {std_get:.4f}, gst diff = {mean_pipe:.4f}, {std_pipe:.4f}, OpenCV diff = {mean_cv:.4f}, {std_cv:.4f}")
 
-    print(f"Resolution and fps visca set / get stats:  match = {cnt_match}, similar = {cnt_similar}, diff = {cnt_diff}, fail = {cnt_fail}")
+    print(f"Resolution and fps visca set / get stats:  match = {cnt_match}, very close = {cnt_close}, similar = {cnt_similar}, diff = {cnt_diff}, fail = {cnt_fail}")
 
 
 """
