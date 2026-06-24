@@ -45,6 +45,21 @@ zoomblock_settings_dict = {
     "1080p60" : (1920, 1080, 60)
 }
 
+# reboot hex in bytearray
+REBOOT_DATA = bytearray.fromhex("8101040000FF")
+
+
+# Utility function to reboot lvds and get serial info for benchmark.
+def lvds_reboot_info(lvds_serial_device, test_brand_flag):
+    reboot_hex = "8101040000FF"
+    data = bytearray.fromhex(reboot_hex)
+
+    with open(os.devnull, 'w') as f, redirect_stdout(f):
+        response_data = lvds_serial_device.transceive(data, start_wait_ms=TIMEOUT)
+        if test_brand_flag:
+            brand = detect_camera_brand(lvds_serial_device)
+
+
 # Return 1st valid /dev/camera? path for lvds zoomblock camera.
 def get_first_lvds():
     prefix = "/dev/video"
@@ -121,6 +136,20 @@ def test_lvds_serial(lvds_serial_device):
     brand = detect_camera_brand(lvds_serial_device)
 
     assert brand == "videology"
+
+def test_reboot_lvds(lvds_serial_device):
+    response_data = lvds_serial_device.transceive(REBOOT_DATA, start_wait_ms=TIMEOUT)
+    response_hex = response_data.hex()
+    assert str(response_hex)=="9041ff9051ff"
+    print("lvds reboot ", REBOOT_DATA.hex(), " => ", response_hex)
+
+
+# Make sure reboot and serial work in pairs multiple times.
+def test_reboot_multi_check(benchmark, lvds_serial_device):
+    benchmark.pedantic(lvds_reboot_info, args=(lvds_serial_device, True), iterations=10, rounds=10)
+
+def test_reboot_multi_nocheck(benchmark, lvds_serial_device):
+    benchmark.pedantic(lvds_reboot_info, args=(lvds_serial_device, False), iterations=10, rounds=10)
 
 # Test lvds serial send and receive hex data.
 # 4 hex strings mean inquire: camera info, camera id, AE mode, Zoom Position.
