@@ -133,18 +133,21 @@ def test_lvds_stream(url):
 # ============================================
 # scailx reboot and lvds streams access tests.
 # ============================================
-def test_scailx_reboot_lvds(hostname, url, gap):
+def test_scailx_reboot_lvds(hostname, url, gap, idle):
 
     # about 4 seconds
     retr, reboot_time = test_scailx_reboot_and_back(hostname)
     if not retr:
         return False
 
-    # plus another 18 seconds for go2rtc.
+    # waif another 20 seconds for go2rtc to access stream.
     time.sleep(gap)
     # now stream access.
     ret, shape = open_go2rtc_frame(url)
     print(url, "=>", ret, shape)
+
+    # sleep a few seconds before next reboot.
+    time.sleep(idle)
 
     return ret
 
@@ -178,6 +181,13 @@ if __name__ == "__main__":
         default=20,
         help="gap in seconds after reboot to test lvds stream.",
     )
+    parser.add_argument(
+        "-i",
+        "--idle",
+        type=int,
+        default=5,
+        help="idle time in seconds after lvds stream access before next Scailx reboot.",
+    )
 
     parser.add_argument(
         "-n",
@@ -189,7 +199,8 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    if not ping(args.hostname):
+    ret, pretime = wait_for_device(args.hostname)
+    if not ret:
         print(f"ping {args.hostname} error")
         exit(1)
 
@@ -213,7 +224,7 @@ if __name__ == "__main__":
     cnt_pass = 0
     for i in range(args.num):
         ret = test_scailx_reboot_lvds(
-            args.hostname, stream_str_list[2] + str(lvds_stream), args.gap
+            args.hostname, stream_str_list[2] + str(lvds_stream), args.gap, args.idle
         )
         if ret:
             cnt_pass += 1
