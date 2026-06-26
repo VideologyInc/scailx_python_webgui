@@ -4,6 +4,8 @@ Scailx simple web ui
 
 Windows host tests of go2rtc streams:
 
+2026.0622.  Added new program to test Scailx reboot and lvds stream access.
+
 2026.0619.  Added new subfolder ~\hosts_test with py program running on Windows python venv to test Scailx device go2rtc streams automatically.
 
 Syntax and examples:
@@ -23,6 +25,8 @@ Syntax and examples:
 ============================================================================
 
 Updates in ~/scailx_tools/.
+
+2026.0626.	Added in ~/tests folder new pytest program to do lvds B7 vs B8 driver serial, set/get resolution + frame rate, and visca reboot tests.
 
 2026.0603.  Added detect usb live service to work together with go2rtc service. It needs new package linuxpy.
 
