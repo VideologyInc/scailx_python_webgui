@@ -181,8 +181,11 @@ def test_lvds_serial_multi(lvds_serial_device):
 			
 # Test set / get resolution + fps multiple times and measure accuracy using OpenCV.
 def test_lvds_resolutions(lvds_serial_device, lvds_device_path, lvds_fw_version):
+    verbose = False
+    # sleep 3 seconds between each pair of set / get resolution
+    gap = 3
 
-    test_cnt = 10
+    test_cnt = 100
 
     brand = detect_camera_brand(lvds_serial_device)
 
@@ -199,12 +202,6 @@ def test_lvds_resolutions(lvds_serial_device, lvds_device_path, lvds_fw_version)
         test_gstream_framerates = ["25/1", "30000/1001", "30/1", "50/1", "60000/1001", "60/1"]
         check_framerates = [25, 29.97, 30, 50, 59.94, 60]
 
-    lowest_similarity = 101.0
-    lowest_sim_fps = 0
-    lowest_sim_height = 0
-    lowest_sim_width = 0
-    lowest_sim_brand = ""
-
     cnt_match = 0
     cnt_close = 0
     cnt_similar = 0
@@ -212,12 +209,20 @@ def test_lvds_resolutions(lvds_serial_device, lvds_device_path, lvds_fw_version)
     cnt_fail = 0
 
     for resolution_str, setting in zoomblock_settings_dict.items():
+
+        # if (resolution_str != "1080p30" and resolution_str != "1080p50"):
+        #    continue
+        
         fps_list_in_vs_pipe = []
         fps_list_in_vs_cv = []
         fps_list_in_vs_get = []
         for i in range(test_cnt):
-            with open(os.devnull, 'w') as f, redirect_stdout(f):
+            time.sleep(gap)
+            if verbose:
                 set_resolution(lvds_serial_device, resolution_str, brand)
+            else:
+                with open(os.devnull, 'w') as f, redirect_stdout(f):
+                    set_resolution(lvds_serial_device, resolution_str, brand)
             w, h, fps = get_resolution_tuple(lvds_device_path)
             if setting[0]==w and setting[1]==h:
                 if setting[2]==fps:
