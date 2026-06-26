@@ -57,7 +57,7 @@ def open_go2rtc_frame(stream_url):
             cv2.destroyAllWindows()
             return False, None
 
-    return False
+    return False, None
 
 
 # Given stream name list, test it one by one by grabbing one frame each.
