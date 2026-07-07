@@ -3,6 +3,7 @@ lvds2mipi Driver B8 ZoomBlock Tests
 Before running any pytests on Scailx devices, we need to install its python packages.
 
 cd ~/scailx_tools
+
 pip3 install -r requirements.txt
 
 Now we can start pytest. Option -s to show stdout and stderr. Option -k "abc" to specify keyword to test.
