@@ -9,7 +9,7 @@ ssh root@scailx-ai.local systemctl start webservice.service
 # Usage
 http://sacilx-ai.local:8089
 
-===============================================================================================================
+================================================
 
 Windows host tests of go2rtc streams:
 
