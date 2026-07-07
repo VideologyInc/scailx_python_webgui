@@ -1,17 +1,17 @@
-## Scailx simple web ui. 
+# Scailx simple web ui. 
 It has detailed curves of graphics to monitor system resource usage.
 
-# Install on device
+## Install on device
 ssh root@scailx-ai.local pip install git+https://github.com/VideologyInc/scailx_python_webgui.git
 
 ssh root@scailx-ai.local systemctl start webservice.service
 
-# Usage
+## Usage
 http://sacilx-ai.local:8089
 
-================================================
+====================================================
 
-Windows host tests of go2rtc streams:
+## Windows host tests of go2rtc streams:
 
 2026.0622.  Added new program to test Scailx reboot and lvds stream access.
 
@@ -30,9 +30,9 @@ Syntax and examples:
 	python test_go2rtc_https.py --hostname scailx-ai-boson8
 	(get cam_config.yaml from Scailx device, and do auto tests only, no video to display)
 
+====================================================
 
-
-Updates in ~/scailx_tools/.
+## Updates in ~/scailx_tools/.
 
 2026.0626.	Added in ~/tests folder new pytest program to do lvds B7 vs B8 driver serial, set/get resolution + frame rate, and visca reboot tests.
 
@@ -54,8 +54,9 @@ Updates in ~/scailx_tools/.
 
 2025.1215.	Added check_fix_hostname.py to use avahi to check hostname conflict and fix it.
 
+====================================================
 
-go2rtc related changes. 5 files are related
+## go2rtc related changes. 5 files are related
 
 go2rtc-create-cams-config.py    Need to copy to /usr/bin/ to override original.
 
@@ -67,8 +68,9 @@ go2rtc.service                  Need to copy to /usr/lib/systemd/system/go2rtc.s
 
 update_go2rtc_formats.sh		Bash script to do above copy commands. Reboot scailx to make them effective.
 
+====================================================
 
-Semi-automatic live usb camera format detection on webrtc.
+## Semi-automatic live usb camera format detection on webrtc.
 
 Run following program. 
 It will loop to check camera connection every 5 seconds. 
