@@ -1,0 +1,7 @@
+streams:
+  cam1-lvds2mipi_0_1920x1080_fps=60,format=NV12: exec:gst-launch-1.0 -q v4l2src device=/dev/video-isi-csi1
+    ! video/x-raw,width=1920,height=1080,framerate=60/1,format=NV12 ! videoconvert
+    ! vpuenc_h264 qp-max=30 qp-min=20 ! fdsink
+  cam1-lvds2mipi_0_1920x1080_fps=60,format=YUY2: exec:gst-launch-1.0 -q v4l2src device=/dev/video-isi-csi1
+    ! video/x-raw,width=1920,height=1080,framerate=60/1,format=YUY2 ! videoconvert
+    ! vpuenc_h264 qp-max=30 qp-min=20 ! fdsink

@@ -1,0 +1,225 @@
+#! /usr/bin/env python3
+import glob
+import json
+import os
+import re
+from pathlib import Path
+
+from vdlg_lvds.v4l2_detect_formats import camera_to_gst_list, camera_to_setting_list
+from vdlg_lvds.get_camera_v4l2_paras import get_v4l2_subdev, mipi_to_subdev
+
+"""
+
+File:   create_cams_config.py
+
+2026.0226.  Fixed crashing if not /dev/video? detected.
+2026.0226.  Added known camera popular resolution, framerate and format list. 
+
+2026.0302.  Added Zoom Block camera format full list (resolution, fps, formats) from Visca commands.
+2026.0310.  Added more resolution formats for 3 Sony imx sensors from Framos driver repository xml files.
+2026.0420.  Moved camera detection logic to separate file create_cams_config.py, added type hints and refactored code.
+
+2026.0428.  Added functions to generate camera settings list compatible with Portal.
+
+2026.0428.  Moved camera_dict and camera_gst_dict to separate json files (by Alex) or import from detect_cameras_live (by Ping).
+
+2026.0519.  Added camera name + id + device path to 2 lists used by go2RTC and portal for multiple cameras with same name.
+
+2026.0527.  Added get camera v4l2 sundev path using media-ctl and v4l2-ctl commands.
+
+By:			Kobus (in 2025 and before), jye@videologyinc.com and mmikhaliuk@piesoft.us
+
+"""
+
+# Currently supports 4 camera types:
+# global shutter = AR0234   => ar0234
+# ZoomBlock = lvds2mipi     => zoomblock
+# Boson = flir or boson     => boson
+# imx series = imx          => imx
+
+# Camera key words in device tree and its regular names
+try:
+    with open("/etc/default/camera_dict.json", "r") as f:
+        camera_dict = json.load(f)
+except:
+    from vdlg_lvds.detect_cameras_live import camera_dict
+
+# Camera gst dict (high resolution, low resolution and format multiple settings tuples with 5 items each)
+try:
+    with open("/etc/default/camera_gst_dict.json", "r") as f:
+        camera_gst_dict = json.load(f)
+except:
+    from vdlg_lvds.detect_cameras_live import camera_gst_dict
+
+# Only these cameras have v4l2 subdev to get parameter controls.
+Camera_V4l_SubDev_List = ["ar0234", "imx662", "imx678", "imx900"]
+
+# Given camera name from device tree, find its matching regular name in camera_dict.
+def detect_camera_by_name(cam):
+    for key, val in camera_dict.items():
+        if key in cam:
+            return val
+    # cannot find matching camera, use default global shutter ar0234.
+    return "ar0234"
+
+
+# Given camera name, return its width, height and gst string.
+# To Do, for ZoomBlock cameras connected through LVDS2MIPI port, still need to detect and get camera gst info using gst-device-monitor ;-)
+# Or with a more complex way, get its format using v4l2-ctl --list-formats-ext and "translate" to gst strings ;-)
+def get_camera_gst(name, vdev):
+    # For Zoom Block camera through LVDS board, use newly created info list (from Visca commands).
+    if name == "zoomblock" or name == "boson" or name == "usb":
+        cam_real_path = Path(vdev).resolve()
+        info_list = camera_to_gst_list(str(cam_real_path))
+    else:
+        info_list = (
+            camera_gst_dict[name]
+            if name in camera_gst_dict
+            else camera_gst_dict["ar0234"]
+        )
+    return info_list
+
+
+# Given camera name, and device path, return its Portal pipeline component ["data"]["settings"] dict list;-)
+def get_camera_settings(name, vdev):
+    # For Zoom Block camera through LVDS board, use newly created info list (from Visca commands).
+    if name == "zoomblock" or name == "boson" or name == "usb":
+        cam_real_path = Path(vdev).resolve()
+        setting_list = camera_to_setting_list(str(cam_real_path))
+
+        return setting_list
+    else:
+        # For regular global shutter camera ar0234 and usb cameras, get its gst info from dict.
+        # Then convert to Portal node settings dict list.
+        info_list = (
+            camera_gst_dict[name]
+            if name in camera_gst_dict
+            else camera_gst_dict["ar0234"]
+        )
+        setiing_list = []
+        for info in info_list:
+            # Each info has 5 fields = (width, height, descr, gst, fps)
+            one = {}
+            one["format"] = "NV12" if info[2] == "default" else info[2]
+            one["fps"] = info[4]
+            one["resolution"] = f"{info[0]}x{info[1]}"
+            cam_real_path = Path(vdev).resolve()
+            one["device"] = str(cam_real_path)
+            setiing_list.append(one)
+
+        return setiing_list
+
+
+# Check whether one_list is a duplcate one in 2nd list of lists ;-)
+def is_duplicate(one_list, multi_list):
+    if multi_list == []:
+        return False
+    for name, onels, vdev, subdev in multi_list:
+        if one_list == onels:
+            return True
+    return False
+
+# Check camera name in dict and return its count as id.
+# Update dict at the same time.
+def get_camera_id_by_name(name, cam_name_dict):
+    if name in cam_name_dict:
+        cam_name_dict[name] +=1
+        return cam_name_dict[name]
+    else:
+        cam_name_dict[name] =0
+        return 0
+
+def create_cam_config() -> (list[tuple], list[dict]):
+
+    # Get v4l2 subdev for ar0234 and imx cameras
+    subdev_list = get_v4l2_subdev()
+
+    cam_config = list[tuple[str, str, int, int, int, str, str]]()
+    cam_settings_list = []
+
+    # To count duplicate camera name counts and get 0 if not on the list.
+    cam_name_dict = {}
+
+    # iterate over cam overlays in /proc/device-tree/chosen/overlays/
+    for camfile in glob.iglob("/proc/device-tree/chosen/overlays/cam*"):
+        cam = os.path.basename(camfile)
+        camlist = re.findall(r"cam(\d+)-(\w+)", cam)
+        if len(camlist) == 0:
+            continue
+        idn, typ = camlist[0]
+        devlist = glob.glob(f"/dev/video*csi{idn}")
+        if len(devlist) == 0:
+            continue
+        vdev = devlist[0]
+
+        # Get camera name and check its duplicate count as id.
+        name = detect_camera_by_name(cam)
+        camera_id = get_camera_id_by_name(name, cam_name_dict)
+        cam_real_path = str(Path(vdev).resolve())
+
+        # Get camera v4l2 subdev if on camera list
+        subdev = mipi_to_subdev(vdev, subdev_list) if name in Camera_V4l_SubDev_List else ""
+
+        # Get cameramatching gst info
+        info_list = get_camera_gst(name, vdev)
+        settings_list = get_camera_settings(name, vdev)
+        if settings_list != []:
+            cam_settings_list.append((name+ "_" + str(camera_id), settings_list, vdev, subdev))
+
+        # VPU quality settings: qp above35 gives a grainy image. Below 20 the bitrate starts getting excessive.
+        # Parse all resolutions and formats of the camera, may be >=2 ;-)
+        for info in info_list:
+            width, height, format_str, gst_str, fps = info
+            if fps is None:
+                framerate = re.search(r"framerate=(\d+)/(\d+)", gst_str).group(1)
+                fps = int(framerate)
+            if name == "ar0234":
+                format_str += f"_fps={fps}"
+            cam_config.append((cam+ "_" + str(camera_id), vdev, width, height, fps, format_str, gst_str))
+
+    # Do the same for usb camera if any. Just one now ;-)
+    usb_list = glob.glob("/dev/v4l/by-path/*")
+    usb_path_list = []
+    if usb_list:
+        # Find first usb camera on the list.
+        for s in usb_list:
+            if "usb" in s:
+                vdev = str(Path(s).resolve())
+                # Check duplicate usb device path and skip it.
+                if vdev in usb_path_list:
+                    continue
+                usb_path_list.append(vdev)
+
+                name = "usb"
+
+                info_list = get_camera_gst(name, vdev)
+                settings_list = get_camera_settings(name, vdev)
+                # Double check duplicate usb camera settings at same same device path.
+                if settings_list != [] and (
+                    not is_duplicate(settings_list, cam_settings_list)
+                ):
+                    camera_id = get_camera_id_by_name(name, cam_name_dict)
+                    cam_settings_list.append((name + str(camera_id), settings_list, vdev, vdev))
+
+                    for info in info_list:
+                        width, height, format_str, gst_str, fps = info
+                        if fps is None:
+                            fps = 30
+                        cam_config.append(
+                            (name + str(camera_id), vdev, width, height, fps, format_str, gst_str)
+                        )
+    return cam_config, cam_settings_list
+
+
+def main():
+    with open("/var/tmp/cams_config.json", "w") as f:
+        print(f"Start get camera config from device tree path to file {f.name}")
+        cam_config, cam_settings_list = create_cam_config()
+
+        print(cam_settings_list)
+
+        json.dump(cam_settings_list, f, indent=4)
+
+
+if __name__ == "__main__":
+    main()
