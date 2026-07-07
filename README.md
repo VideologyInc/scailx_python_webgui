@@ -1,6 +1,12 @@
 Scailx simple web ui
 
-============================================================================
+# Install on device
+ssh root@scailx-ai.local pip install git+https://github.com/VideologyInc/scailx_python_webgui.git
+
+ssh root@scailx-ai.local systemctl start webservice.service
+
+# Usage
+http://sacilx-ai.local:8089
 
 Windows host tests of go2rtc streams:
 
@@ -22,7 +28,6 @@ Syntax and examples:
 	(get cam_config.yaml from Scailx device, and do auto tests only, no video to display)
 
 
-============================================================================
 
 Updates in ~/scailx_tools/.
 
@@ -46,7 +51,6 @@ Updates in ~/scailx_tools/.
 
 2025.1215.	Added check_fix_hostname.py to use avahi to check hostname conflict and fix it.
 
-============================================================================
 
 go2rtc related changes. 5 files are related
 
@@ -60,7 +64,6 @@ go2rtc.service                  Need to copy to /usr/lib/systemd/system/go2rtc.s
 
 update_go2rtc_formats.sh		Bash script to do above copy commands. Reboot scailx to make them effective.
 
-============================================================================
 
 Semi-automatic live usb camera format detection on webrtc.
 
