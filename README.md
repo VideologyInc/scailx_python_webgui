@@ -1,4 +1,5 @@
-Scailx simple web ui
+## Scailx simple web ui. 
+It has detailed curves of graphics to monitor system resource usage.
 
 # Install on device
 ssh root@scailx-ai.local pip install git+https://github.com/VideologyInc/scailx_python_webgui.git
@@ -7,6 +8,8 @@ ssh root@scailx-ai.local systemctl start webservice.service
 
 # Usage
 http://sacilx-ai.local:8089
+
+===============================================================================================================
 
 Windows host tests of go2rtc streams:
 
