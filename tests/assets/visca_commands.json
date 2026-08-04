@@ -7,7 +7,7 @@
 	"commands": {"ae_up" : "8101040E02FF", "ae_down" : "8101040E03FF", 
 		"wb_preset0" : "8101043500FF", "wb_preset1" : "8101043501FF", "wb_preset2" : "8101043502FF", 
 		"wb_preset3" : "8101043503FF", "wb_preset4" : "8101043504FF", "wb_preset5" : "8101043505FF", 
-		"detail_up" : "8101040202FF", "detail_down" : "8101040203FF".
+		"detail_up" : "8101040202FF", "detail_down" : "8101040203FF",
 		"gain_reset" : "8101040C00FF", "bright_reset" : "8101040D00FF", 
 		"mirror_on" : "8101046102FF", "mirror_off" : "8101046103FF", 
 		"flip_on" : "8101046602FF", "flip_off" : "8101046603FF", 
