@@ -1,7 +1,19 @@
 streams:
-  cam1-lvds2mipi_0_1920x1080_fps=60,format=NV12: exec:gst-launch-1.0 -q v4l2src device=/dev/video-isi-csi1
-    ! video/x-raw,width=1920,height=1080,framerate=60/1,format=NV12 ! videoconvert
+  cam0-imx900_0_1008x704_default: exec:gst-launch-1.0 -q v4l2src device=/dev/video-isp-csi0
+    ! video/x-raw,width=1008,height=704,framerate=15/1,format=YUY2 ! vpuenc_h264 qp-max=30
+    qp-min=20 ! fdsink
+  cam0-imx900_0_1024x768_default: exec:gst-launch-1.0 -q v4l2src device=/dev/video-isp-csi0
+    ! video/x-raw,width=1024,height=768,framerate=15/1,format=YUY2 ! vpuenc_h264 qp-max=30
+    qp-min=20 ! fdsink
+  cam0-imx900_0_1280x720_default: exec:gst-launch-1.0 -q v4l2src device=/dev/video-isp-csi0
+    ! video/x-raw,width=1280,height=720,framerate=15/1,format=YUY2 ! vpuenc_h264 qp-max=30
+    qp-min=20 ! fdsink
+  cam0-imx900_0_1920x1080_default: exec:gst-launch-1.0 -q v4l2src device=/dev/video-isp-csi0
+    ! video/x-raw,width=1920,height=1080,framerate=15/1,format=YUY2 ! vpuenc_h264
+    qp-max=30 qp-min=20 ! fdsink
+  cam1-lvds2mipi_0_1280x720_fps=30,format=NV12: exec:gst-launch-1.0 -q v4l2src device=/dev/video-isi-csi1
+    ! video/x-raw,width=1280,height=720,framerate=30/1,format=NV12 ! videoconvert
     ! vpuenc_h264 qp-max=30 qp-min=20 ! fdsink
-  cam1-lvds2mipi_0_1920x1080_fps=60,format=YUY2: exec:gst-launch-1.0 -q v4l2src device=/dev/video-isi-csi1
-    ! video/x-raw,width=1920,height=1080,framerate=60/1,format=YUY2 ! videoconvert
+  cam1-lvds2mipi_0_1280x720_fps=30,format=YUY2: exec:gst-launch-1.0 -q v4l2src device=/dev/video-isi-csi1
+    ! video/x-raw,width=1280,height=720,framerate=30/1,format=YUY2 ! videoconvert
     ! vpuenc_h264 qp-max=30 qp-min=20 ! fdsink

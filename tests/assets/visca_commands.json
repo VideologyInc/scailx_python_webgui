@@ -1,0 +1,20 @@
+{
+	"inquiry": {"camera_info" : "81090002FF", "camera_id" : "81090422FF",  
+		"zoom_pos" : "81090447FF", "zoom_preset" : "81090467FF",
+		"ae_mode" : "81090439FF", "ae_level" : "8109044EFF", "wb_mode" : "81090435FF", "detail" : "81090442FF",
+		"mirror" : "81090461FF", "flip" : "81090466FF" 
+		},
+	"commands": {"ae_up" : "8101040E02FF", "ae_down" : "8101040E03FF", 
+		"wb_preset0" : "8101043500FF", "wb_preset1" : "8101043501FF", "wb_preset2" : "8101043502FF", 
+		"wb_preset3" : "8101043503FF", "wb_preset4" : "8101043504FF", "wb_preset5" : "8101043505FF", 
+		"detail_up" : "8101040202FF", "detail_down" : "8101040203FF".
+		"gain_reset" : "8101040C00FF", "bright_reset" : "8101040D00FF", 
+		"mirror_on" : "8101046102FF", "mirror_off" : "8101046103FF", 
+		"flip_on" : "8101046602FF", "flip_off" : "8101046603FF", 
+		"ir_on" : "8101040102FF", "ir_off" : "8101040103FF", 
+		"zoom_direct" : "810104470p0q0r0sFF",
+		"zoom_set0" : "810104670100FF", "zoom_set1" : "810104670101FF", "zoom_set2" : "810104670102FF", "zoom_set3" : "810104670103FF", "zoom_set4" : "810104670104FF", 
+		"zoom_run0" : "810104670200FF", "zoom_run1" : "810104670201FF", "zoom_run2" : "810104670202FF", "zoom_run3" : "810104670203FF", "zoom_run4" : "810104670204FF",
+		"zoom_clear": "81010467030FFF"
+		}
+}

@@ -1,6 +1,7 @@
-
 import fcntl
 import glob
+import json
+
 from pathlib import Path
 from vdlg_lvds.serial import LvdsSerial
 from vdlg_lvds.ioctl import *
@@ -33,6 +34,7 @@ def camera_gst_name(root_path):
     full_path = Path(root_path) / "tests" / "assets" / "camera_gst_dict.json"
     return str(full_path.relative_to(Path.cwd()))
 
+
 # lvds device path
 @pytest.fixture
 def lvds_device_path():
@@ -40,11 +42,13 @@ def lvds_device_path():
     default_lvds = lvds_devs[0] if lvds_devs else "/dev/v4l-subdev1"
     return default_lvds
 
+
 # lvds serial device object
 @pytest.fixture
 def lvds_serial_device(lvds_device_path):
     serial_device = LvdsSerial(lvds_device_path)
     return serial_device
+
 
 # firmware version: B7 or new B8, etc.
 @pytest.fixture
@@ -56,3 +60,30 @@ def lvds_fw_version(lvds_device_path):
         return ret
 
     return "N/A"
+
+
+# visca commands related fixtures
+
+
+# Return tuple of visca inquiry dict, visca command dict and visca zoom table dict
+@pytest.fixture
+def visca_dicts(root_path):
+    full_path = Path(root_path) / "tests" / "assets" / "visca_commands.json"
+    visca_json_name = str(full_path.relative_to(Path.cwd()))
+    with open(visca_json_name, "r") as f:
+        visca_cmd_dict = json.load(f)
+
+    full_path = Path(root_path) / "tests" / "assets" / "visca_zoom_table.json"
+    visca_zoom_name = str(full_path.relative_to(Path.cwd()))
+    with open(visca_zoom_name, "r") as g:
+        visca_zoom_dict = json.load(g)
+
+    if (
+        (visca_cmd_dict is not None)
+        and (visca_zoom_dict is not None)
+        and ("inquiry" in visca_cmd_dict)
+        and ("commands" in visca_cmd_dict)
+    ):
+        return visca_cmd_dict["inquiry"], visca_cmd_dict["commands"], visca_zoom_dict
+    else:
+        return None, None, None
