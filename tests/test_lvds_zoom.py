@@ -96,11 +96,9 @@ def visca_zoom_scale(lvds_serial_device, zoom_pqrs, scale, zoom_table, zoom_pos_
                 return nchecks
         # time.sleep(0.05)
 
-#######################################################################################
-
 # speed test function called by benchmark.
 # method = VISCA_INQ or VISCA_CMD
-def lvds_visca(lvds_serial_device, visca_dicts, method = VISCA_INQ):
+def lvds_visca(lvds_serial_device, visca_dicts, method = VISCA_INQ, show_response=False):
     visca_inq, visca_cmd, visca_zoom = visca_dicts
 
     if method == VISCA_INQ:
@@ -108,6 +106,8 @@ def lvds_visca(lvds_serial_device, visca_dicts, method = VISCA_INQ):
             data = bytearray.fromhex(inq)
             response_data = lvds_serial_device.transceive(data, start_wait_ms=TIMEOUT)
             response_hex = response_data.hex()
+            if show_response:
+                print(key, inq, " => ", response_hex)
     elif method == VISCA_CMD:
         for key, cmd in visca_cmd.items():
             # Skip 2 ir commands for now.
@@ -118,7 +118,10 @@ def lvds_visca(lvds_serial_device, visca_dicts, method = VISCA_INQ):
             data = bytearray.fromhex(cmd)
             response_data = lvds_serial_device.transceive(data, start_wait_ms=TIMEOUT)
             response_hex = response_data.hex()
+            if show_response:
+                print(key, cmd, " => ", response_hex)
 
+#######################################################################################
 
 
 # Test lvds serial with visca inquiry.
@@ -183,6 +186,14 @@ def test_visca_commands_time(benchmark, lvds_serial_device, visca_dicts):
         lvds_visca, args=(lvds_serial_device, visca_dicts, VISCA_CMD), iterations=10, rounds=10
     )
 
+def test_visca_inq_cmd(lvds_serial_device, visca_dicts):
+    num_inq, num_cmd, num_zoom = count_items(visca_dicts)
+    print("Number of Visca Inquiries = ", num_inq)
+    print("Number of Visca Commands (not Zoom related) = ", num_cmd)
+
+    lvds_visca(lvds_serial_device, visca_dicts, VISCA_INQ, True)
+    lvds_visca(lvds_serial_device, visca_dicts, VISCA_CMD, True)
+
 ###################################################################
 # Zoom related tests
 
@@ -214,3 +225,4 @@ def test_visca_zoom_direct(lvds_serial_device, visca_dicts):
         print(f"Scale {scale}, elapsed time = {elapsed_ms:.2f} ms, checks = {nchecks}, average time = {ave_ms:.2f} \n")
     # Reset to zoom 1
     # visca_zoom_scale(lvds_serial_device, zoom_pqrs, 1, visca_zoom)
+
