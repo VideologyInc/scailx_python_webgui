@@ -26,6 +26,9 @@ import pytest
 # timeout is 1 sec.
 TIMEOUT = 1000
 
+# timeout in seconds using float
+TIMEOUT_SEC = 5.0
+
 # enum to do benchmark test of 3 types
 VISCA_INQ = 1
 VISCA_CMD = 2
@@ -52,6 +55,48 @@ def count_items(my_dicts):
 
     return num_inq, num_cmd, num_zoom
 
+
+# Zoom direct by scale to match zoom table.
+# Need to replace 0p0q0r0s using strings from zoom table
+# zoompqrs = 810104470p0q0r0sFF.
+# scale is 1,2,3,...,10.
+# zoom_pos_inq = zoom_pos inquiry string
+# check_pos = True to use zoom_pos inquiry to check current position util it matches the set position.
+# check_pos = False to return immediately.
+def visca_zoom_scale(lvds_serial_device, zoom_pqrs, scale, zoom_table, zoom_pos_inq, check_pos = False):
+    zoom_pos = zoom_table[str(scale)]
+    zoom_8char = "0" + zoom_pos[0] + "0" + zoom_pos[1] + "0" + zoom_pos[2] + "0" + zoom_pos[3]
+    n = len("81010447")
+    zoom_cmd = zoom_pqrs[0:n] + zoom_8char + "FF"
+
+    data = bytearray.fromhex(zoom_cmd)
+    response_data = lvds_serial_device.transceive(data, start_wait_ms=TIMEOUT)
+    response_hex = response_data.hex()
+
+    print("scale = ", scale, ": ", zoom_cmd, " => ", response_hex)
+
+    if not check_pos:
+        return 0
+
+    # Call zoom_pos
+    nchecks = 0
+    start_time = time.monotonic()
+    while time.monotonic() < start_time + TIMEOUT_SEC:
+        data = bytearray.fromhex(zoom_pos_inq)
+        response_data = lvds_serial_device.transceive(data, start_wait_ms=TIMEOUT)
+        response_hex = response_data.hex()
+
+        nchecks +=1
+        # should be in format y0500p0q0r0sFF
+        if len(response_hex) == len("y0500p0q0r0sFF"):
+            current_8char = response_hex[4:12]
+            # print(current_8char)
+            # Current position string matches input cmd string. => Done.
+            if current_8char.casefold() == zoom_8char.casefold():
+                return nchecks
+        # time.sleep(0.05)
+
+#######################################################################################
 
 # speed test function called by benchmark.
 # method = VISCA_INQ or VISCA_CMD
@@ -137,3 +182,35 @@ def test_visca_commands_time(benchmark, lvds_serial_device, visca_dicts):
     benchmark.pedantic(
         lvds_visca, args=(lvds_serial_device, visca_dicts, VISCA_CMD), iterations=10, rounds=10
     )
+
+###################################################################
+# Zoom related tests
+
+def test_visca_zoom_direct(lvds_serial_device, visca_dicts):
+    visca_inq, visca_cmd, visca_zoom = visca_dicts
+
+    zoom_pqrs = visca_cmd["zoom_direct"]
+    zoom_pos_inq = visca_inq["zoom_pos"]
+
+    # Nocheck tests
+    for scale in range(1,11):
+        start = time.monotonic()
+        visca_zoom_scale(lvds_serial_device, zoom_pqrs, scale, visca_zoom, zoom_pos_inq, False)
+        end = time.monotonic()
+        # The resulting unit here is strictly in seconds
+        elapsed_ms = (end - start)*1000 
+        print(f"Scale {scale}, elapsed time = {elapsed_ms:.2f} ms \n")
+
+    # Check to verify zoom position tests.
+    # Set zoom from scale = 1, .., 10.
+    for scale in range(1,11):
+        start = time.monotonic()
+        nchecks = visca_zoom_scale(lvds_serial_device, zoom_pqrs, scale, visca_zoom, zoom_pos_inq, True)
+        end = time.monotonic()
+        # The resulting unit here is strictly in seconds
+        elapsed_ms = (end - start)*1000
+        # total inq + cmd = Number of checks inq + 1 (set zoom direction)
+        ave_ms = elapsed_ms / (nchecks + 1)
+        print(f"Scale {scale}, elapsed time = {elapsed_ms:.2f} ms, checks = {nchecks}, average time = {ave_ms:.2f} \n")
+    # Reset to zoom 1
+    # visca_zoom_scale(lvds_serial_device, zoom_pqrs, 1, visca_zoom)
