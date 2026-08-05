@@ -20,3 +20,17 @@ pytest -s -k "test_reboot_multi"  (visca command to reboot ZoomBlock camera with
 
 pytest -s -k "test_lvds_resolution"  (set/get resolution + fps tests)
 
+========== New Visca serial communication inquiry, commands and zoom tests ===============
+
+For zoom tests, please open Web browswer 1984 port and a ZoomBlock camera video stream to see its effects.
+
+pytest -s -k "test_lvds_inquiry"    (visca inquiry tests)
+
+pytest -s -k "test_lvds_commands"   (visca command tests)
+
+pytest -s -k "time"    (benchmark visca inquiry and command timing)
+
+pytest -s -k "inq_cmd"  (visca inquiry and command tests with response)
+
+pytest -s -k "zoom_direct"  (Visca zoom direct without and with zoom position checks)
+
