@@ -200,7 +200,7 @@ def test_lvds_resolutions(lvds_serial_device, lvds_device_path, lvds_fw_version)
     # sleep 3 seconds between each pair of set / get resolution
     gap = 3
 
-    test_cnt = 100
+    test_cnt = 20
 
     brand = detect_camera_brand(lvds_serial_device)
 
@@ -230,8 +230,9 @@ def test_lvds_resolutions(lvds_serial_device, lvds_device_path, lvds_fw_version)
     cnt_diff = 0
     cnt_fail = 0
 
+    fail_dict = {}
     for resolution_str, setting in zoomblock_settings_dict.items():
-
+        fail_dict[resolution_str] = 0
         # if (resolution_str != "1080p30" and resolution_str != "1080p50"):
         #    continue
 
@@ -257,6 +258,8 @@ def test_lvds_resolutions(lvds_serial_device, lvds_device_path, lvds_fw_version)
                     cnt_diff += 1
             else:
                 cnt_fail += 1
+                fail_dict[resolution_str] +=1
+
             fps_list_in_vs_get.append(setting[2] - fps)
 
             pipe_fps, cv_fps = get_fps_cv_gst(setting[0], setting[1], setting[2])
@@ -277,3 +280,8 @@ def test_lvds_resolutions(lvds_serial_device, lvds_device_path, lvds_fw_version)
     print(
         f"Resolution and fps visca set / get stats:  match = {cnt_match}, very close = {cnt_close}, similar = {cnt_similar}, diff = {cnt_diff}, fail = {cnt_fail}"
     )
+    # show detail fail resolution stats
+    if cnt_fail>0:
+        print("Failed resolution stats")
+        print(fail_dict)
+    

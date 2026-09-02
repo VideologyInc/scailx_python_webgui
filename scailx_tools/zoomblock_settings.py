@@ -60,9 +60,19 @@ def get_res_string_to_v4l2_struct(str_with_at):
 def get_formats_lvds():
     lvds_device, current = zoomblock_get_resolution()
 
-    if current !="":
+    if current !="" and (not current.startswith("0")):
         return get_res_string_to_v4l2_struct(current)
     else:
+        # Try to set resolution from the dict until successful
+        for res, val in zoomblock_settings_dict.items():
+            zoomblock_set_resolution(lvds_device, res)
+            dev, current = zoomblock_get_resolution()
+
+            print(current)
+
+            if current !="" and (not current.startswith("0")):
+                return get_res_string_to_v4l2_struct(current)
+
         return []
     
 
@@ -125,6 +135,10 @@ if __name__ == "__main__":
     )
 
     parser.add_argument(
+        "-f", "--first", type=int, default=0, help="Show current format and set / get valid formats until successful."
+    )
+
+    parser.add_argument(
         "-s", "--show", type=int, default=0, help="Show available setting list to set. Default = 0."
     )
 
@@ -148,6 +162,9 @@ if __name__ == "__main__":
 
     if args.show:
         show_zoomblock_settings()
+
+    if args.first:
+        get_formats_lvds()
 
     lvds_device, current = zoomblock_get_resolution()
     print("Current resolution and framerate is:", current)
