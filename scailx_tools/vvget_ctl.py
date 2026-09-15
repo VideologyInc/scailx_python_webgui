@@ -280,6 +280,12 @@ def set_ctrls(cam_id, pairs):
         except RuntimeError as e:
             print(f"failed to set {ctrl['id']}: {e}", file=sys.stderr)
 
+    # Post-condition: the ISP 3A daemon can re-enable AEC *after* a manual value
+    # write (auto exposure re-asserts its on/auto default), silently overriding
+    # the value we just set. Re-assert AEC off once the writes are in.
+    if "aec" in groups and "auto_exposure" not in explicit:
+        _ensure_off(cam_id, AEC_ONOFF)
+
 
 # ---------------------------------------------------------------------------
 # cli
